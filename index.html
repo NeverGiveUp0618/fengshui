@@ -11,7 +11,7 @@
 </head>
 <body>
   <div class="grain"></div>
-  <a class="portal" id="portal" href="https://nevergiveup0618.github.io/all-project/" aria-label="返回五术堂">⌂</a>
+  <a class="portal" id="portal" href="https://nevergiveup0618.github.io/all-project/" aria-label="返回易术堂">⌂</a>
   <main class="app">
     <header class="mast">
       <div>
@@ -24,6 +24,12 @@
     </header>
 
     <section class="today" id="today"></section>
+
+    <section class="section">
+      <div class="section-head"><div><p>KNOWLEDGE ATLAS</p><h2>完整知识图鉴</h2></div><span id="library-count"></span></div>
+      <div class="library-tools"><input id="library-search" type="search" placeholder="搜索：过峡 / 明堂 / 罗盘 / 八煞"><div class="library-tabs" id="library-tabs"></div></div>
+      <div class="library-list" id="library-list"></div>
+    </section>
 
     <section class="section">
       <div class="section-head"><div><p>LEARNING PATH</p><h2>学习路径</h2></div><span id="path-progress">0 / 12</span></div>
@@ -59,6 +65,7 @@
     </article>
   </div>
 
+  <script src="library.js"></script>
   <script src="app.js"></script>
   <script>if(window.top!==window.self){var p=document.getElementById('portal');if(p)p.remove()}</script>
 </body>
