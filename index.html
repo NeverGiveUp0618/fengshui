@@ -27,12 +27,18 @@
 
     <section class="section">
       <div class="section-head"><div><p>KNOWLEDGE ATLAS</p><h2>完整知识图鉴</h2></div><span id="library-count"></span></div>
+      <p class="section-note">用于查概念、辨区别和回查教材；每日学习请从上方课程目录进入。</p>
       <div class="library-tools"><input id="library-search" type="search" placeholder="搜索：过峡 / 明堂 / 罗盘 / 八煞"><div class="library-tabs" id="library-tabs"></div></div>
       <div class="library-list" id="library-list"></div>
     </section>
 
     <section class="section">
-      <div class="section-head"><div><p>LEARNING PATH</p><h2>学习路径</h2></div><span id="path-progress">0 / 12</span></div>
+      <div class="section-head"><div><p>DAILY COURSE CATALOG</p><h2>每日课程目录</h2></div><span id="path-progress">0 / 12</span></div>
+      <div class="course-tabs" id="course-tabs">
+        <button class="on" data-course-mode="all">全部课程</button>
+        <button data-course-mode="todo">待学习</button>
+        <button data-course-mode="done">已学 · 可重学</button>
+      </div>
       <div class="path" id="path"></div>
     </section>
 
