@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#171b1d">
+  <meta name="description" content="每天十分钟，以图识形，学习龙、砂、水、穴与城市风水。">
+  <title>观山 · 风水识形</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <a class="portal" id="portal" href="https://nevergiveup0618.github.io/all-project/" aria-label="返回五术堂">⌂</a>
+  <main class="app">
+    <header class="mast">
+      <div>
+        <div class="seal">观</div>
+        <p class="eyebrow">FENG SHUI · VISUAL STUDY</p>
+        <h1>观山</h1>
+        <p class="subtitle">以图识形 · 由形察气</p>
+      </div>
+      <button class="streak" id="streak" type="button"><b>0</b><span>连续学习</span></button>
+    </header>
+
+    <section class="today" id="today"></section>
+
+    <section class="section">
+      <div class="section-head"><div><p>LEARNING PATH</p><h2>学习路径</h2></div><span id="path-progress">0 / 12</span></div>
+      <div class="path" id="path"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><p>QUICK REFERENCE</p><h2>识形速查</h2></div></div>
+      <div class="reference-grid">
+        <button data-ref="five">五星辨形<span>木火土金水</span></button>
+        <button data-ref="four">四象定位<span>前后左右</span></button>
+        <button data-ref="water">水形吉凶<span>环抱与反弓</span></button>
+        <button data-ref="check">选宅六看<span>城市实用</span></button>
+      </div>
+    </section>
+
+    <footer>取材于个人课程笔记 · 学习整理使用</footer>
+  </main>
+
+  <div class="sheet" id="lesson-sheet" aria-hidden="true">
+    <div class="sheet-mask" data-close></div>
+    <article class="sheet-panel">
+      <button class="sheet-close" data-close type="button">×</button>
+      <div id="lesson-content"></div>
+    </article>
+  </div>
+
+  <div class="sheet" id="ref-sheet" aria-hidden="true">
+    <div class="sheet-mask" data-ref-close></div>
+    <article class="sheet-panel ref-panel">
+      <button class="sheet-close" data-ref-close type="button">×</button>
+      <div id="ref-content"></div>
+    </article>
+  </div>
+
+  <script src="app.js"></script>
+  <script>if(window.top!==window.self){var p=document.getElementById('portal');if(p)p.remove()}</script>
+</body>
+</html>
