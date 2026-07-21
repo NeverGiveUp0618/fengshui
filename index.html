@@ -42,6 +42,14 @@
       <textarea id="field-notes" rows="4" placeholder="现场记录：位置、朝向、距离、风速、道路与水势……"></textarea>
     </section>
 
+    <section class="section image-training">
+      <div class="section-head"><div><p>VISUAL QUIZ BANK</p><h2>识形图片题库</h2></div><span id="image-progress">0 / 60</span></div>
+      <p class="section-note">一图五练：辨形、找证据、排误判、现场动作、综合结论。</p>
+      <div class="image-stages" id="image-stages"></div>
+      <div class="image-bank-actions"><button data-image-mode="next">继续练习</button><button data-image-mode="wrong">错图重练</button></div>
+      <div class="image-recent" id="image-recent"></div>
+    </section>
+
     <section class="section">
       <div class="section-head"><div><p>KNOWLEDGE ATLAS</p><h2>完整知识图鉴</h2></div><span id="library-count"></span></div>
       <p class="section-note">用于查概念、辨区别和回查教材；每日学习请从上方课程目录进入。</p>
@@ -88,7 +96,16 @@
     </article>
   </div>
 
+  <div class="sheet" id="image-sheet" aria-hidden="true">
+    <div class="sheet-mask" data-image-close></div>
+    <article class="sheet-panel image-panel">
+      <button class="sheet-close" data-image-close type="button">×</button>
+      <div id="image-content"></div>
+    </article>
+  </div>
+
   <script src="library.js"></script>
+  <script src="image-bank.js"></script>
   <script src="app.js"></script>
   <script>if(window.top!==window.self){var p=document.getElementById('portal');if(p)p.remove()}</script>
 </body>
