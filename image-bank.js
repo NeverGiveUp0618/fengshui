@@ -10,7 +10,10 @@ const IMAGE_SEEDS=[
  {stage:'城市实景',title:'聚水与直泄',type:'flow',source:'《家居风水高级课程合集》城市观水',label:'曲缓停聚与笔直快速对比',term:'聚与泄',evidence:'是否减速、回旋、交汇并有关栏',wrong:'认为水越多就越好',action:'观察雨水、车流和人流在哪里减速',result:'判断明堂能否承接真实动势'},
  {stage:'城市实景',title:'龙虎关系',type:'dragonTiger',source:'《杨公风水初级合集》察砂',label:'左右两侧向中心顾护',term:'龙虎环抱',evidence:'两侧走势内顾、协调且不逼压',wrong:'死背青龙必须高于白虎',action:'从中心比较左右距离、高度和朝向',result:'判断左右是否真正护卫中心'},
  {stage:'综合判断',title:'靠山与逼压',type:'backing',source:'《家居风水高级课程合集》城市点穴',label:'后方有承托但保留合适距离',term:'有靠',evidence:'稳定完整、尺度适中且不挡光',wrong:'后楼越高越近就越好',action:'同时检查采光、通风与消防间距',result:'区分稳定承托与贴身逼压'},
- {stage:'综合判断',title:'城市选宅层级',type:'city',source:'《家居风水高级课程合集》城市寻龙',label:'从片区逐步缩小到住宅内部',term:'先外后内',evidence:'片区、小区、楼栋、楼层、户型、室内',wrong:'只凭门向、楼层或摆件判断整体',action:'每一层先排除最明显的一项问题',result:'形成可复核的分层筛选结论'}
+ {stage:'综合判断',title:'城市选宅层级',type:'city',source:'《家居风水高级课程合集》城市寻龙',label:'从片区逐步缩小到住宅内部',term:'先外后内',evidence:'片区、小区、楼栋、楼层、户型、室内',wrong:'只凭门向、楼层或摆件判断整体',action:'每一层先排除最明显的一项问题',result:'形成可复核的分层筛选结论'},
+ {stage:'罗盘识读',title:'罗盘的构成',type:'compass',photo:'assets/photos/luopan-structure.jpg',source:'《从零开始学罗盘》第12节 揭开罗盘的神秘面纱',label:'天池定向、内盘承理气、外盘配天心十道读数',term:'天池、内盘、外盘与天心十道',evidence:'中央天池是指南针，外圈方盘配十字红线',wrong:'磁针没和海底红线重合就直接读数',action:'先转内盘让磁针与海底红线南北重合再读数',result:'确认读盘的方向基准正确'},
+ {stage:'罗盘识读',title:'地盘二十四山',type:'mount24',source:'《从零开始学罗盘》第16节 地盘二十四山',label:'八卦、天干、地支合成二十四山，每山十五度',term:'地盘二十四山',evidence:'整盘三百六十度平分二十四份，每山十五度',wrong:'把二十四个字当孤立符号死背',action:'按后天八卦定位、四正配天干、余位装地支',result:'用二十四山读出坐山朝向'},
+ {stage:'罗盘识读',title:'反复黄泉',type:'huangquan',source:'《从零开始学罗盘》第18节 天干八路黄泉',label:'特定坐向在黄泉方见水主凶，庚丁与坤互为黄泉',term:'天干八路黄泉',evidence:'坐向与来去水的忌讳组合，犯之易有意外',wrong:'一见黄泉就断大凶，忽略救贫黄泉',action:'测准坐向后对照黄泉方查有无来去水或道路',result:'排查坐向是否犯反复黄泉'}
 ];
 const IMAGE_MODES=[
  ['辨形','这幅图首先在训练哪个概念？','term'],
@@ -20,6 +23,12 @@ const IMAGE_MODES=[
  ['综合结论','在不脱离现实条件的前提下，可得出什么结论？','result']
 ];
 const IMAGE_BANK=IMAGE_SEEDS.flatMap((s,si)=>IMAGE_MODES.map((m,mi)=>{
- const correct=s[m[2]],pool=IMAGE_SEEDS.filter((_,i)=>i!==si).map(x=>x[m[2]]),d1=pool[(si+mi*2)%pool.length],d2=pool[(si+mi*3+4)%pool.length],answers=[correct,d1,d2],shift=(si+mi)%3;
+ const correct=s[m[2]];
+ // 干扰项池：排除本题、去重、并剔除与正解同值者，确保三个选项互不相同
+ const pool=[...new Set(IMAGE_SEEDS.filter((_,i)=>i!==si).map(x=>x[m[2]]).filter(v=>v!==correct))];
+ const d1=pool[(si*2+mi)%pool.length];
+ let d2=pool[(si*3+mi*2+4)%pool.length];
+ if(d2===d1)d2=pool[(si*3+mi*2+5)%pool.length];
+ const answers=[correct,d1,d2],shift=(si+mi)%3;
  return{id:si*5+mi+1,stage:s.stage,title:s.title,mode:m[0],question:m[1],type:s.type,photo:s.photo||'',source:s.source,why:`${correct}。${s.label}；判断时仍需结合距离、尺度与现场条件。`,answers:[...answers.slice(shift),...answers.slice(0,shift)],correct:(3-shift)%3};
 }));
