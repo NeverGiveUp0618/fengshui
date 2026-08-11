@@ -30,6 +30,12 @@
       <div id="report-content"></div>
     </section>
 
+    <section class="section textbook">
+      <div class="section-head"><div><p>TEXTBOOK</p><h2>教材精读</h2></div><span id="textbook-progress"></span></div>
+      <p class="section-note">从头到尾读一遍，把散的知识点串成体系；查单个概念用下面的知识图鉴。</p>
+      <div id="textbook-list" class="textbook-list"></div>
+    </section>
+
     <section class="section fieldwork">
       <details class="fold" id="fold-field">
         <summary>
@@ -97,6 +103,14 @@
     </article>
   </div>
 
+  <div class="sheet" id="textbook-sheet" aria-hidden="true">
+    <div class="sheet-mask" data-tb-close></div>
+    <article class="sheet-panel textbook-panel">
+      <button class="sheet-close" data-tb-close type="button">×</button>
+      <div id="textbook-content"></div>
+    </article>
+  </div>
+
   <div class="sheet" id="image-sheet" aria-hidden="true">
     <div class="sheet-mask" data-image-close></div>
     <article class="sheet-panel image-panel">
@@ -105,6 +119,7 @@
     </article>
   </div>
 
+  <script src="data/textbook.js"></script>
   <script src="library.js"></script>
   <script src="knowledge-detail.js"></script>
   <script src="image-bank.js"></script>

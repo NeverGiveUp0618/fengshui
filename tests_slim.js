@@ -4,7 +4,7 @@ const dom=new JSDOM(fs.readFileSync(D+'index.html','utf8'),{runScripts:'dangerou
 const errs=[];
 dom.virtualConsole.on('jsdomError',e=>{if(!/scrollTo|Not implemented|scrollIntoView/.test(e.message))errs.push(e.message)});
 const w=dom.window,d=w.document;
-['library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
+['data/textbook.js','library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
   const sc=d.createElement('script'); sc.textContent=fs.readFileSync(D+f,'utf8'); d.body.appendChild(sc);
 });
 setTimeout(()=>{

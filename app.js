@@ -142,4 +142,48 @@ document.body.addEventListener('click',e=>{const ar=e.target.closest('[data-auto
 document.body.addEventListener('change',e=>{if(!e.target.matches('[data-field]'))return;let f={};try{f=JSON.parse(localStorage.getItem('guanshan_field')||'{}')}catch(x){}f[e.target.dataset.field]=e.target.checked;localStorage.setItem('guanshan_field',JSON.stringify(f));renderField()});
 $('#field-notes').addEventListener('input',e=>localStorage.setItem('guanshan_field_notes',e.target.value));
 $('#library-search').addEventListener('input',e=>{libraryQuery=e.target.value.trim();renderLibrary()});
-render();renderLibrary();renderReport();renderField();renderImageBank();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+/* ===== 教材精读（data/textbook.js 是 build.py 的产物，源在 Obsidian/学习/风水教材/）=====
+   定位分工：教材＝从头系统读｜精读课＝视觉识形卡｜知识图鉴＝速查单个概念。
+   三者不重写同一段内容，教材末尾用「延伸」链到图鉴，不复制。 */
+const readState=()=>{try{return JSON.parse(localStorage.getItem('guanshan_read')||'{}')}catch(e){return{}}};
+const saveRead=s=>localStorage.setItem('guanshan_read',JSON.stringify(s));
+const tbKey=(b,n)=>`${b}-${n}`;
+function tbStats(){const rd=readState();let done=0,total=0;TEXTBOOKS.forEach(b=>b.lessons.forEach(l=>{total++;if(rd[tbKey(b.id,l.n)])done++}));return{done,total}}
+function renderTextbook(){if(typeof TEXTBOOKS==='undefined'||!$('#textbook-list'))return;const rd=readState();
+  $('#textbook-list').innerHTML=TEXTBOOKS.map(b=>{const done=b.lessons.filter(l=>rd[tbKey(b.id,l.n)]).length;
+    return`<div class="tb-book"><div class="tb-book-head"><div><b>${b.name}</b><small>${b.sub}</small></div><em>${done} / ${b.lessons.length}</em></div>`+
+      b.groups.map(([g,a,z])=>{const ls=b.lessons.filter(l=>l.n>=a&&l.n<=z),gd=ls.filter(l=>rd[tbKey(b.id,l.n)]).length;
+        return`<details class="tb-group"${gd<ls.length&&gd>0?' open':''}><summary><b>${g}</b><span>${gd} / ${ls.length}</span></summary>`+
+          ls.map(l=>`<button class="tb-item${rd[tbKey(b.id,l.n)]?' done':''}" data-tb="${b.id}:${l.n}"><i>${l.n}</i><span>${l.t}</span><em>${l.c}字</em></button>`).join('')+`</details>`}).join('')+`</div>`}).join('');
+  const s=tbStats();$('#textbook-progress').textContent=`${s.done} / ${s.total}`}
+function openTextbook(bid,n){const b=TEXTBOOKS.find(x=>x.id===bid);if(!b)return;const l=b.lessons.find(x=>x.n===+n);if(!l)return;const rd=readState(),isRead=!!rd[tbKey(bid,l.n)];
+  const grp=(b.groups.find(([,a,z])=>l.n>=a&&l.n<=z)||[''])[0];
+  const body=l.p.map(p=>typeof p==='string'?`<p>${p}</p>`:`<blockquote class="verse">${p.v.map(v=>`<span>${v}</span>`).join('')}</blockquote>`).join('');
+  const prev=b.lessons.find(x=>x.n===l.n-1),next=b.lessons.find(x=>x.n===l.n+1);
+  /* 延伸＝双源：图鉴能搜到就链图鉴，搜不到就找精读课（五星山名只有精读课有），
+     两边都没有的词直接不显示——否则点过去是「没有找到相关知识点」的死链。*/
+  const hits=l.hints.map(h=>{
+    if(LIBRARY.some(x=>(x.title+x.summary+x.source).includes(h)))return{h,to:'lib'};
+    const li=LESSONS.findIndex(x=>(x.title+x.sub+x.lead).includes(h));
+    return li>=0?{h,to:'lesson',i:li}:null}).filter(Boolean);
+  /* ⚠️ 按精读课去重：木/火/土/金/水五个词只落在两门精读课上，
+     不去重就是五个按钮点进同两个地方。去重后直接显示课名，比显示词准确。*/
+  const seen={},hits2=hits.filter(x=>x.to==='lib'||!seen[x.i]&&(seen[x.i]=1));
+  const links=hits2.length?`<div class="tb-links"><h3>延伸查阅</h3><p>本课涉及的概念，可在知识图鉴或精读课里看细节：</p><div>${hits2.map(x=>x.to==='lib'?`<button data-tb-link="${x.h}">${x.h}</button>`:`<button data-tb-lesson="${x.i}" data-tb-word="${x.h}">${LESSONS[x.i].title} · 精读课</button>`).join('')}</div></div>`:'';
+  $('#textbook-content').innerHTML=`<p class="lesson-kicker">${b.name} · ${grp} · 第 ${l.n} / ${b.lessons.length} 课</p><h2>${l.t}</h2>`+
+    (l.alt.length?`<p class="tb-alt">原稿另留标题：${l.alt.join(' / ')}</p>`:'')+
+    `<div class="tb-doc">${body}</div>${links}`+
+    `<div class="tb-foot"><button class="tb-done${isRead?' done':''}" data-tb-done="${bid}:${l.n}">${isRead?'✓ 已读完':'标记读完'}</button>`+
+    `<div class="tb-nav">${prev?`<button data-tb="${bid}:${prev.n}">‹ 上一课</button>`:'<span></span>'}${next?`<button data-tb="${bid}:${next.n}">下一课 ›</button>`:'<span></span>'}</div></div>`+
+    `<p class="source">出处：${b.source} · 讲稿整理，未改动原意</p>`;
+  toggleSheet('#textbook-sheet',true);const pn=document.querySelector('#textbook-sheet .sheet-panel');if(pn)pn.scrollTop=0}
+function markRead(bid,n){const rd=readState(),k=tbKey(bid,n);rd[k]=rd[k]?0:1;if(!rd[k])delete rd[k];saveRead(rd);
+  if(rd[k]){let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));renderStreak()}
+  renderTextbook();openTextbook(bid,n)}
+document.body.addEventListener('click',e=>{
+  const tb=e.target.closest('[data-tb]');if(tb){const[b,n]=tb.dataset.tb.split(':');openTextbook(b,n);return}
+  const td=e.target.closest('[data-tb-done]');if(td){const[b,n]=td.dataset.tbDone.split(':');markRead(b,+n);return}
+  const tls=e.target.closest('[data-tb-lesson]');if(tls){toggleSheet('#textbook-sheet',false);openLesson(+tls.dataset.tbLesson);return}
+  const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
+  if(e.target.closest('[data-tb-close]')){toggleSheet('#textbook-sheet',false)}});
+render();renderLibrary();renderReport();renderField();renderImageBank();renderTextbook();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
