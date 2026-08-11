@@ -53,7 +53,7 @@ setTimeout(()=>{
     return n===6?true:'实为'+n;});
   t('27 课全部可点',()=>{const n=list.querySelectorAll('[data-tb]').length;
     return n===27?true:'实为'+n;});
-  t('总进度显示 0 / 82（精讲55＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 82'?true:
+  t('总进度显示 0 / 92（精讲65＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 92'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
 
   console.log('\n— 阅读页 —');
@@ -84,7 +84,7 @@ setTimeout(()=>{
     return rd['fs01-18']?true:'没写入：'+JSON.stringify(rd);});
   t('按钮变成已读完',()=>{const b=d.getElementById('textbook-content').querySelector('[data-tb-done]');
     return b.classList.contains('done')&&/已读完/.test(b.textContent)?true:'状态没变：'+b.textContent;});
-  t('首页总进度跟着变 1 / 82',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 82'?true:
+  t('首页总进度跟着变 1 / 92',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 92'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('目录里该课打了勾',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'没打勾');
   t('计入连续学习（写了 history）',()=>{const h=JSON.parse(w.localStorage.getItem('guanshan_history')||'{}');
@@ -147,11 +147,11 @@ setTimeout(()=>{
   const LEC=G('LECTURES');
   t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===4?true:'实为'+(LEC||[]).length);
   t('A/B/C/D 四类齐全',()=>LEC.map(x=>x.c).join('')==='ABCD'?true:LEC.map(x=>x.c).join(''));
-  t('共 55 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===55?true:'实为'+n;});
+  t('共 65 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===65?true:'实为'+n;});
   t('每条正文都有块',()=>{const bad=LEC.flatMap(c=>c.items).filter(i=>!i.blocks||!i.blocks.length);
     return bad.length===0?true:bad.map(x=>x.t).join(',');});
   t('正文条目都带教材引文',()=>{
-    const bad=LEC.flatMap(c=>c.items).filter(i=>i.nq===0&&!/未收入|进度|未展开/.test(i.t));
+    const bad=LEC.flatMap(c=>c.items).filter(i=>i.nq===0&&!/未收入|进度|未展开|归属说明|完成情况/.test(i.t));
     return bad.length===0?true:'无引文：'+bad.map(x=>x.n||x.t).join(',');});
   t('引文都带出处',()=>{
     const qs=LEC.flatMap(c=>c.items).flatMap(i=>i.blocks.filter(b=>b.t==='q'));
@@ -162,7 +162,7 @@ setTimeout(()=>{
     const bad=qs.filter(q=>!/^(初级|中级|家居|高级|第一课)/.test(q.src));
     return bad.length===0?true:'异常出处：'+bad.slice(0,3).map(q=>q.src).join('｜');});
   const lecList=d.getElementById('lecture-list');
-  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===55?true:
+  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===65?true:
     '实为'+(lecList?lecList.querySelectorAll('[data-lec]').length:0));
   t('四类分组都在',()=>lecList.querySelectorAll('.tb-group').length===4?true:
     '实为'+lecList.querySelectorAll('.tb-group').length);
@@ -192,15 +192,34 @@ setTimeout(()=>{
   lc.querySelector('[data-lec-done]').click();
   t('精讲读完标记写盘',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return rd['lec-AA1']?true:'没写入';});
-  t('总进度含精讲（55+27=82）',()=>/\/ 82$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
+  t('总进度含精讲（65+27=92）',()=>/\/ 92$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
     const b=LEC.find(x=>x.c==='B');
     return b.items.some(i=>i.blocks.some(x=>x.t==='table'))?true:'没解析出表格';});
 
+  t('C 类已补齐（无未展开条目）',()=>{
+    const c=LEC.find(x=>x.c==='C');
+    const bad=c.items.filter(i=>/未展开|待整合/.test(i.t));
+    return bad.length===0?true:'仍有：'+bad.map(x=>x.t).join(',');});
+  t('二十四凶穴 24 种都在正文里',()=>{
+    const c=LEC.find(x=>x.c==='C'),txt=JSON.stringify(c.items);
+    const miss=['死块','吐穴','露胎','白虎捶胸','青龙钻怀','背主','反肘','欺主','无辅',
+      '断颈缠头','无实','操戈','擎拳','相斗','覆体','龙虎成冈','假抱','斜飞','边活边死',
+      '龙衔虎','仰瓦','绷面','吹胎','破头'].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺：'+miss.join(',');});
+  t('穴上九星九个都在',()=>{
+    const c=LEC.find(x=>x.c==='C'),txt=JSON.stringify(c.items);
+    const miss=['太阳','太阴','金水','天财','紫气','天罡','孤曜','燥火','扫荡'].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺：'+miss.join(',');});
+  t('五星结穴五种都在',()=>{
+    const c=LEC.find(x=>x.c==='C'),txt=JSON.stringify(c.items);
+    const miss=['木星结穴','火星结穴','土星结穴','金星结穴','水星结穴'].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺：'+miss.join(',');});
+
   console.log('\n— 工程 —');
   const sw=fs.readFileSync(D+'sw.js','utf8');
-  t('sw 版本已 bump',()=>/guanshan-v19/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v21/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');

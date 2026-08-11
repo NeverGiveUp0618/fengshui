@@ -163,8 +163,8 @@ def main():
                     nc += len(''.join(v)) if isinstance(v, list) else len(str(v))
             it['nq'] = nq
             it['c'] = nc
-            # 自检：正文条目必须有引文（"未收入""进度"这类收尾节除外）
-            if nq == 0 and not re.search(r'未收入|进度|未展开', it['t']):
+            # 自检：正文条目必须有引文。收尾／说明性小节除外——它们本来就不引原文。
+            if nq == 0 and not re.search(r'未收入|进度|未展开|归属说明|完成情况|待整合', it['t']):
                 problems.append(f'{name} {it["n"]}「{it["t"]}」没有一处教材引文')
         cats.append({'c': code, 'name': name, 'intro': intro, 'items': items})
 
