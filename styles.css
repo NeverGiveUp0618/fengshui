@@ -43,18 +43,9 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
 .fold[open]>summary .section-head{margin-bottom:14px}
 .fold>summary:hover .section-head::after{color:#c8b183}
 
-/* ⭐ 宽屏铺开（2026-08-11）：.section 是 main.app 的直接子元素，
-   比其余几站少一层，直接在 main.app 上开 grid 即可。
-   今日卡(.today)与页头跨满整行，其余版块分列。 */
+/* ⭐ 宽屏拉开（2026-08-11 修正）：布局不变，只放开容器宽度。
+   ⚠️ 这站容器用的是 width:min(100%,520px) 而不是 max-width，要改 width。
+   ⚠️ 初版做成了 .section 重排多列，用户反馈「整体布局都变了」，已撤销。 */
 @media(min-width:900px){
-  /* ⚠️ 这站的容器用的是 width:min(100%,520px) 而不是 max-width，
-     只写 max-width 覆盖不了 width，必须一起改。 */
-  main.app{width:min(100%,1060px);max-width:none;
-           display:grid;grid-template-columns:1fr 1fr;
-           gap:0 22px;align-content:start;align-items:start}
-  main.app>*{grid-column:1/-1}
-  main.app>.section{grid-column:auto}
-}
-@media(min-width:1400px){
-  main.app{width:min(100%,1400px);grid-template-columns:repeat(3,1fr)}
+  main.app{width:min(100%,1600px)}
 }
