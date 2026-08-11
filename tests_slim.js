@@ -29,22 +29,36 @@ setTimeout(()=>{
     const items=lib.querySelectorAll('[data-knowledge]');
     return items.length>0?true:'点了没出条目';});
 
-  console.log('\n— 折叠版块 —');
-  ['fold-field','fold-ref'].forEach(id=>{
-    const el=d.getElementById(id);
-    t(`${id} 存在且默认收起`,()=>el&&!el.open?true:(el?'默认是展开的':'找不到'));
-  });
-  t('实地勘察内容仍被渲染（收起≠不渲染）',()=>{
-    const n=d.querySelectorAll('#field-list .field-item, #field-list [data-complete], #field-list > *').length;
+  console.log('\n— 底部菜单（五个 tab）—');
+  const nav=d.getElementById('tabbar'), btns=[...nav.querySelectorAll('[data-tab]')];
+  t('底栏 5 个 tab',()=>btns.length===5?true:'实为'+btns.length);
+  t('tab 与 view 一一对应',()=>{
+    const miss=btns.map(b=>b.dataset.tab).filter(k=>!d.getElementById('view-'+k));
+    return miss.length===0?true:'缺 view：'+miss.join(',');});
+  t('默认只展开今日',()=>{
+    const on=[...d.querySelectorAll('.view.active')].map(v=>v.id);
+    return on.length===1&&on[0]==='view-today'?true:'实为'+on.join(',');});
+  t('点「查」能切过去',()=>{
+    btns.find(b=>b.dataset.tab==='find').click();
+    const on=[...d.querySelectorAll('.view.active')].map(v=>v.id);
+    return on.length===1&&on[0]==='view-find'?true:'实为'+on.join(',');});
+  t('切换后底栏高亮跟着走',()=>{
+    const on=btns.filter(b=>b.classList.contains('on')).map(b=>b.dataset.tab);
+    return on.length===1&&on[0]==='find'?true:'实为'+on.join(',');});
+  t('抬头副标题跟着换',()=>/知识图鉴/.test(d.getElementById('mast-sub').textContent)?true:'没换');
+  t('折叠版块已拆掉（内容不再藏在 details 里）',()=>
+    !d.getElementById('fold-field')&&!d.getElementById('fold-ref')&&
+    !d.querySelector('#view-drill details, #view-find details')?true:'还有 details 包着');
+  t('实地勘察内容仍被渲染',()=>{
+    const n=d.querySelectorAll('#field-list > *').length;
     return n>0?true:'field-list 是空的';});
   t('速查卡一张不少',()=>{
-    const n=d.querySelectorAll('#fold-ref [data-ref]').length;
+    const n=d.querySelectorAll('#ref-grid [data-ref]').length;
     return n===7?true:'实为'+n;});
-  d.getElementById('fold-field').open=true;
-  t('展开后内容可见',()=>d.getElementById('fold-field').open===true?true:'展不开');
+  btns.find(b=>b.dataset.tab==='today').click();
 
   console.log('\n— 其余版块未受影响 —');
-  ['today','report-content','image-progress','featured'].forEach(id=>{
+  ['today','report-content','image-progress','featured-path'].forEach(id=>{
     const el=d.getElementById(id);
     if(el) t(`#${id} 仍在`,()=>true);
   });

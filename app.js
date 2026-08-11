@@ -217,6 +217,29 @@ document.body.addEventListener('click',e=>{
   const tb=e.target.closest('[data-tb]');if(tb){const[b,n]=tb.dataset.tb.split(':');openTextbook(b,n);return}
   const td=e.target.closest('[data-tb-done]');if(td){const[b,n]=td.dataset.tbDone.split(':');markRead(b,+n);return}
   const tls=e.target.closest('[data-tb-lesson]');if(tls){toggleSheet('#textbook-sheet',false);openLesson(+tls.dataset.tbLesson);return}
-  const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
+  const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);showTab('find');$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
   if(e.target.closest('[data-tb-close]')){toggleSheet('#textbook-sheet',false)}});
 render();renderLibrary();renderReport();renderField();renderImageBank();renderLectures();renderTextbook();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+/* ---- 底部菜单（2026-08-11）----
+   首页原来五个版块一路铺到底，用户反馈「太长了」，改成五个 tab。
+   ⚠️ 返回键：sheet 开着时先关 sheet 并把 tab 状态补回去，别让返回键
+      隔着弹层去切 tab —— 安卓上这是最容易踩的一步。 */
+const TABS={today:'以图识形 · 由形察气',book:'体系精讲 · 原文通读',drill:'识形题库 · 实地勘察',find:'知识图鉴 · 识形速查',me:'学习报告 · 本机保存'};
+let curTab='today';
+function showTab(name,push=true){
+  if(!TABS[name])name='today';
+  curTab=name;
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  const sub=$('#mast-sub');if(sub)sub.textContent=TABS[name];
+  if(push){history.pushState({tab:name},'','#'+name);window.scrollTo(0,0)}
+}
+document.body.addEventListener('click',e=>{
+  const t=e.target.closest('[data-tab]');if(t){showTab(t.dataset.tab)}});
+window.addEventListener('popstate',e=>{
+  const open=document.querySelector('.sheet.on');
+  if(open){toggleSheet('#'+open.id,false);history.pushState({tab:curTab},'','#'+curTab);return}
+  showTab((e.state&&e.state.tab)||location.hash.slice(1)||'today',false)});
+(function(){const t=location.hash.slice(1);showTab(TABS[t]?t:'today',false);
+  history.replaceState({tab:curTab},'','#'+curTab)})();

@@ -275,6 +275,8 @@ setTimeout(()=>{
       '被贼','翻棺','生水','地漏','天白','认龙立向'].filter(n=>!txt.includes(n));
     return miss.length===0?true:'缺：'+miss.join(',');});
 
+  t('教材版块住进「学」tab',()=>d.querySelector('#view-book #lecture-list')?true:'不在 view-book 里');
+
   console.log('\n— 知识点清单页 —');
   t('zhishi.html 存在',()=>fs.existsSync(D+'zhishi.html')?true:'没有');
   t('data/index.js 存在',()=>fs.existsSync(D+'data/index.js')?true:'没有');
@@ -295,7 +297,7 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v27/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v28/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
