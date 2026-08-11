@@ -53,7 +53,7 @@ setTimeout(()=>{
     return n===6?true:'实为'+n;});
   t('27 课全部可点',()=>{const n=list.querySelectorAll('[data-tb]').length;
     return n===27?true:'实为'+n;});
-  t('总进度显示 0 / 92（精讲65＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 92'?true:
+  t('总进度显示 0 / 124（精讲97＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 124'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
 
   console.log('\n— 阅读页 —');
@@ -84,7 +84,7 @@ setTimeout(()=>{
     return rd['fs01-18']?true:'没写入：'+JSON.stringify(rd);});
   t('按钮变成已读完',()=>{const b=d.getElementById('textbook-content').querySelector('[data-tb-done]');
     return b.classList.contains('done')&&/已读完/.test(b.textContent)?true:'状态没变：'+b.textContent;});
-  t('首页总进度跟着变 1 / 92',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 92'?true:
+  t('首页总进度跟着变 1 / 124',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 124'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('目录里该课打了勾',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'没打勾');
   t('计入连续学习（写了 history）',()=>{const h=JSON.parse(w.localStorage.getItem('guanshan_history')||'{}');
@@ -145,9 +145,9 @@ setTimeout(()=>{
 
   console.log('\n— 体系精讲 —');
   const LEC=G('LECTURES');
-  t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===4?true:'实为'+(LEC||[]).length);
-  t('A/B/C/D 四类齐全',()=>LEC.map(x=>x.c).join('')==='ABCD'?true:LEC.map(x=>x.c).join(''));
-  t('共 65 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===65?true:'实为'+n;});
+  t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===7?true:'实为'+(LEC||[]).length);
+  t('A–G 七类齐全',()=>LEC.map(x=>x.c).join('')==='ABCDEFG'?true:LEC.map(x=>x.c).join(''));
+  t('共 97 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===97?true:'实为'+n;});
   t('每条正文都有块',()=>{const bad=LEC.flatMap(c=>c.items).filter(i=>!i.blocks||!i.blocks.length);
     return bad.length===0?true:bad.map(x=>x.t).join(',');});
   t('正文条目都带教材引文',()=>{
@@ -162,9 +162,9 @@ setTimeout(()=>{
     const bad=qs.filter(q=>!/^(初级|中级|家居|高级|第一课)/.test(q.src));
     return bad.length===0?true:'异常出处：'+bad.slice(0,3).map(q=>q.src).join('｜');});
   const lecList=d.getElementById('lecture-list');
-  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===65?true:
+  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===97?true:
     '实为'+(lecList?lecList.querySelectorAll('[data-lec]').length:0));
-  t('四类分组都在',()=>lecList.querySelectorAll('.tb-group').length===4?true:
+  t('七类分组都在',()=>lecList.querySelectorAll('.tb-group').length===7?true:
     '实为'+lecList.querySelectorAll('.tb-group').length);
   lecList.querySelector('[data-lec="A:A1"]').click();
   const lc=d.getElementById('textbook-content');
@@ -192,7 +192,7 @@ setTimeout(()=>{
   lc.querySelector('[data-lec-done]').click();
   t('精讲读完标记写盘',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return rd['lec-AA1']?true:'没写入';});
-  t('总进度含精讲（65+27=92）',()=>/\/ 92$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
+  t('总进度含精讲（97+27=124）',()=>/\/ 124$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
     const b=LEC.find(x=>x.c==='B');
@@ -218,6 +218,29 @@ setTimeout(()=>{
     return miss.length===0?true:'缺：'+miss.join(',');});
 
   const sw=fs.readFileSync(D+'sw.js','utf8');
+  t('E 类吉凶水 34 目都在（19吉＋15凶）',()=>{
+    const c=LEC.find(x=>x.c==='E'),txt=JSON.stringify(c.items);
+    const ji=['金城水','木城水','水城水','火城水','土城水','九曲水','游渚水','拱背水','暗拱水',
+      '仓板水','朝拜水','入口水','聚天心','田源水','簸箕水','金钗水','排衙水','天梯水','玉阶水'];
+    const xiong=['冲心水','射肋水','分流水','破天心','斜流水','裹头水','漏腮水','倾卸水','淋头水',
+      '牵牛水','割脚水','穿臂水','反弓水','瀑面水','直倾水'];
+    const miss=[...ji,...xiong].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺 '+miss.length+' 目：'+miss.join(',');});
+  t('F 类立向两原则都在',()=>{
+    const txt=JSON.stringify(LEC.find(x=>x.c==='F').items);
+    return /后承龙气/.test(txt)&&/前收堂气/.test(txt)?true:'缺原则';});
+  t('G 类五行五种分法都在',()=>{
+    const txt=JSON.stringify(LEC.find(x=>x.c==='G').items);
+    const miss=['干支五行','正体五行','双山五行','小玄空五行','纳音五行'].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺：'+miss.join(',');});
+  t('G 类六种阴阳分法都在',()=>{
+    const txt=JSON.stringify(LEC.find(x=>x.c==='G').items);
+    const miss=['天干阴阳','地支阴阳','先天八卦','纳甲阴阳','后天八卦','挨星阴阳'].filter(n=>!txt.includes(n));
+    return miss.length===0?true:'缺：'+miss.join(',');});
+  t('七类都无未展开条目',()=>{
+    const bad=LEC.flatMap(c=>c.items.filter(i=>/未展开|待整合/.test(i.t)).map(i=>c.c+i.t));
+    return bad.length===0?true:'仍有：'+bad.join(',');});
+
   console.log('\n— 知识点清单页 —');
   t('zhishi.html 存在',()=>fs.existsSync(D+'zhishi.html')?true:'没有');
   t('data/index.js 存在',()=>fs.existsSync(D+'data/index.js')?true:'没有');
@@ -238,7 +261,7 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v22/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v23/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
