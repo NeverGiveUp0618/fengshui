@@ -53,7 +53,7 @@ setTimeout(()=>{
     return n===6?true:'实为'+n;});
   t('27 课全部可点',()=>{const n=list.querySelectorAll('[data-tb]').length;
     return n===27?true:'实为'+n;});
-  t('总进度显示 0 / 67（精讲40＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 67'?true:
+  t('总进度显示 0 / 82（精讲55＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 82'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
 
   console.log('\n— 阅读页 —');
@@ -84,7 +84,7 @@ setTimeout(()=>{
     return rd['fs01-18']?true:'没写入：'+JSON.stringify(rd);});
   t('按钮变成已读完',()=>{const b=d.getElementById('textbook-content').querySelector('[data-tb-done]');
     return b.classList.contains('done')&&/已读完/.test(b.textContent)?true:'状态没变：'+b.textContent;});
-  t('首页总进度跟着变 1 / 67',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 67'?true:
+  t('首页总进度跟着变 1 / 82',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 82'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('目录里该课打了勾',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'没打勾');
   t('计入连续学习（写了 history）',()=>{const h=JSON.parse(w.localStorage.getItem('guanshan_history')||'{}');
@@ -145,9 +145,9 @@ setTimeout(()=>{
 
   console.log('\n— 体系精讲 —');
   const LEC=G('LECTURES');
-  t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===3?true:'实为'+(LEC||[]).length);
-  t('A/B/C 三类齐全',()=>LEC.map(x=>x.c).join('')==='ABC'?true:LEC.map(x=>x.c).join(''));
-  t('共 40 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===40?true:'实为'+n;});
+  t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===4?true:'实为'+(LEC||[]).length);
+  t('A/B/C/D 四类齐全',()=>LEC.map(x=>x.c).join('')==='ABCD'?true:LEC.map(x=>x.c).join(''));
+  t('共 55 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===55?true:'实为'+n;});
   t('每条正文都有块',()=>{const bad=LEC.flatMap(c=>c.items).filter(i=>!i.blocks||!i.blocks.length);
     return bad.length===0?true:bad.map(x=>x.t).join(',');});
   t('正文条目都带教材引文',()=>{
@@ -162,9 +162,9 @@ setTimeout(()=>{
     const bad=qs.filter(q=>!/^(初级|中级|家居|高级|第一课)/.test(q.src));
     return bad.length===0?true:'异常出处：'+bad.slice(0,3).map(q=>q.src).join('｜');});
   const lecList=d.getElementById('lecture-list');
-  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===40?true:
+  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===55?true:
     '实为'+(lecList?lecList.querySelectorAll('[data-lec]').length:0));
-  t('三类分组都在',()=>lecList.querySelectorAll('.tb-group').length===3?true:
+  t('四类分组都在',()=>lecList.querySelectorAll('.tb-group').length===4?true:
     '实为'+lecList.querySelectorAll('.tb-group').length);
   lecList.querySelector('[data-lec="A:A1"]').click();
   const lc=d.getElementById('textbook-content');
@@ -192,7 +192,7 @@ setTimeout(()=>{
   lc.querySelector('[data-lec-done]').click();
   t('精讲读完标记写盘',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return rd['lec-AA1']?true:'没写入';});
-  t('总进度含精讲（40+27=67）',()=>/\/ 67$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
+  t('总进度含精讲（55+27=82）',()=>/\/ 82$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
     const b=LEC.find(x=>x.c==='B');
