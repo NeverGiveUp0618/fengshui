@@ -149,13 +149,46 @@ const readState=()=>{try{return JSON.parse(localStorage.getItem('guanshan_read')
 const saveRead=s=>localStorage.setItem('guanshan_read',JSON.stringify(s));
 const tbKey=(b,n)=>`${b}-${n}`;
 function tbStats(){const rd=readState();let done=0,total=0;TEXTBOOKS.forEach(b=>b.lessons.forEach(l=>{total++;if(rd[tbKey(b.id,l.n)])done++}));return{done,total}}
+/* ===== 体系精讲（data/lectures.js 是 build_lectures.py 的产物）=====
+   与「原文通读」的分工：精讲按龙穴砂水向的体系走，把五本教材讲同一件事的地方
+   并到一起；原文通读是按书从头读讲稿。同一条知识在两处的角色不同，不是重复。 */
+const lecKey=(c,n)=>`lec-${c}${n}`;
+function lecStats(){const rd=readState();let d=0,t=0;if(typeof LECTURES!=='undefined')LECTURES.forEach(c=>c.items.forEach(i=>{t++;if(rd[lecKey(c.c,i.n||i.t)])d++}));return{done:d,total:t}}
+function renderLectures(){if(typeof LECTURES==='undefined'||!$('#lecture-list'))return;const rd=readState();
+  $('#lecture-list').innerHTML=`<div class="tb-book lec-book"><div class="tb-book-head"><div><b>体系精讲</b><small>五本教材按体系整合 · 已成 ${LECTURES.length} 类</small></div><em>${lecStats().done} / ${lecStats().total}</em></div>`+
+    LECTURES.map(c=>{const done=c.items.filter(i=>rd[lecKey(c.c,i.n||i.t)]).length;
+      return`<details class="tb-group"${done>0&&done<c.items.length?' open':''}><summary><b><i class="lec-code">${c.c}</i>${c.name}</b><span>${done} / ${c.items.length}</span></summary>`+
+        c.items.map(i=>`<button class="tb-item${rd[lecKey(c.c,i.n||i.t)]?' done':''}" data-lec="${c.c}:${i.n||i.t}"><i>${i.n||'—'}</i><span>${i.t}</span><em>${i.nq?i.nq+'引':''}</em></button>`).join('')+`</details>`}).join('')+`</div>`}
+function lecBlock(b){switch(b.t){
+  case'lead':return`<p class="lec-lead">${b.v}</p>`;
+  case'h':return`<h3 class="lec-h">${b.v}</h3>`;
+  case'q':return`<blockquote class="lec-q">${b.v.map(x=>`<p>${x}</p>`).join('')}${b.src?`<cite>${b.src}</cite>`:''}</blockquote>`;
+  case'note':return`<div class="lec-note ${b.k}">${b.v}</div>`;
+  case'ul':return`<ul class="lec-ul">${b.v.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  case'table':return`<div class="lec-tw"><table><thead><tr>${b.head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  case'src':return`<p class="lec-src">出处：${b.v}</p>`;
+  default:return`<p>${b.v}</p>`}}
+function openLecture(code,no){const c=(typeof LECTURES!=='undefined')&&LECTURES.find(x=>x.c===code);if(!c)return;
+  const idx=c.items.findIndex(i=>(i.n||i.t)===no);if(idx<0)return;const it=c.items[idx];
+  const k=lecKey(code,it.n||it.t),isRead=!!readState()[k];
+  const prev=c.items[idx-1],next=c.items[idx+1];
+  $('#textbook-content').innerHTML=`<p class="lesson-kicker">体系精讲 · ${c.c} ${c.name} · 第 ${idx+1} / ${c.items.length} 条</p><h2>${it.t}</h2>`+
+    `<div class="lec-doc">${it.blocks.map(lecBlock).join('')}</div>`+
+    `<div class="tb-foot"><button class="tb-done${isRead?' done':''}" data-lec-done="${code}:${it.n||it.t}">${isRead?'✓ 已读完':'标记读完'}</button>`+
+    `<div class="tb-nav">${prev?`<button data-lec="${code}:${prev.n||prev.t}">‹ ${prev.t}</button>`:'<span></span>'}${next?`<button data-lec="${code}:${next.n||next.t}">${next.t} ›</button>`:'<span></span>'}</div></div>`;
+  toggleSheet('#textbook-sheet',true);const pn=document.querySelector('#textbook-sheet .sheet-panel');if(pn)pn.scrollTop=0}
+document.body.addEventListener('click',e=>{
+  const le=e.target.closest('[data-lec]');if(le){const[c,n]=le.dataset.lec.split(':');openLecture(c,n);return}
+  const ld=e.target.closest('[data-lec-done]');if(ld){const[c,n]=ld.dataset.lecDone.split(':');const rd=readState(),k=lecKey(c,n);
+    if(rd[k])delete rd[k];else{rd[k]=1;let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(x){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));renderStreak()}
+    saveRead(rd);renderLectures();renderTextbook();openLecture(c,n)}});
 function renderTextbook(){if(typeof TEXTBOOKS==='undefined'||!$('#textbook-list'))return;const rd=readState();
   $('#textbook-list').innerHTML=TEXTBOOKS.map(b=>{const done=b.lessons.filter(l=>rd[tbKey(b.id,l.n)]).length;
-    return`<div class="tb-book"><div class="tb-book-head"><div><b>${b.name}</b><small>${b.sub}</small></div><em>${done} / ${b.lessons.length}</em></div>`+
+    return`<div class="tb-book"><div class="tb-book-head"><div><b>原文通读 · ${b.name}</b><small>${b.sub}</small></div><em>${done} / ${b.lessons.length}</em></div>`+
       b.groups.map(([g,a,z])=>{const ls=b.lessons.filter(l=>l.n>=a&&l.n<=z),gd=ls.filter(l=>rd[tbKey(b.id,l.n)]).length;
         return`<details class="tb-group"${gd<ls.length&&gd>0?' open':''}><summary><b>${g}</b><span>${gd} / ${ls.length}</span></summary>`+
           ls.map(l=>`<button class="tb-item${rd[tbKey(b.id,l.n)]?' done':''}" data-tb="${b.id}:${l.n}"><i>${l.n}</i><span>${l.t}</span><em>${l.c}字</em></button>`).join('')+`</details>`}).join('')+`</div>`}).join('');
-  const s=tbStats();$('#textbook-progress').textContent=`${s.done} / ${s.total}`}
+  const s=tbStats(),l=lecStats();$('#textbook-progress').textContent=`${s.done+l.done} / ${s.total+l.total}`}
 function openTextbook(bid,n){const b=TEXTBOOKS.find(x=>x.id===bid);if(!b)return;const l=b.lessons.find(x=>x.n===+n);if(!l)return;const rd=readState(),isRead=!!rd[tbKey(bid,l.n)];
   const grp=(b.groups.find(([,a,z])=>l.n>=a&&l.n<=z)||[''])[0];
   const body=l.p.map(p=>typeof p==='string'?`<p>${p}</p>`:`<blockquote class="verse">${p.v.map(v=>`<span>${v}</span>`).join('')}</blockquote>`).join('');
@@ -186,4 +219,4 @@ document.body.addEventListener('click',e=>{
   const tls=e.target.closest('[data-tb-lesson]');if(tls){toggleSheet('#textbook-sheet',false);openLesson(+tls.dataset.tbLesson);return}
   const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
   if(e.target.closest('[data-tb-close]')){toggleSheet('#textbook-sheet',false)}});
-render();renderLibrary();renderReport();renderField();renderImageBank();renderTextbook();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();renderLibrary();renderReport();renderField();renderImageBank();renderLectures();renderTextbook();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
