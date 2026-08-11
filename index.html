@@ -30,16 +30,15 @@
       <div id="report-content"></div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><div><p>KNOWLEDGE MAP</p><h2>风水学习思维导图</h2></div><span>点击分支学习</span></div>
-      <div class="mindmap" id="mindmap"></div>
-    </section>
-
     <section class="section fieldwork">
-      <div class="section-head"><div><p>FIELD PRACTICE</p><h2>实地勘察清单</h2></div><span id="field-progress">0 / 6</span></div>
-      <p class="section-note">看完知识马上拿去用：按顺序观察、打勾并写下现场证据。</p>
-      <div id="field-list" class="field-list"></div>
-      <textarea id="field-notes" rows="4" placeholder="现场记录：位置、朝向、距离、风速、道路与水势……"></textarea>
+      <details class="fold" id="fold-field">
+        <summary>
+          <div class="section-head"><div><p>FIELD PRACTICE</p><h2>实地勘察清单</h2></div><span id="field-progress">0 / 6</span></div>
+        </summary>
+        <p class="section-note">看完知识马上拿去用：按顺序观察、打勾并写下现场证据。</p>
+        <div id="field-list" class="field-list"></div>
+        <textarea id="field-notes" rows="4" placeholder="现场记录：位置、朝向、距离、风速、道路与水势……"></textarea>
+      </details>
     </section>
 
     <section class="section image-training">
@@ -62,9 +61,12 @@
       <div class="path compact-path" id="featured-path"></div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><div><p>QUICK REFERENCE</p><h2>识形速查</h2></div></div>
-      <div class="reference-grid">
+        <section class="section">
+      <details class="fold" id="fold-ref">
+        <summary>
+          <div class="section-head"><div><p>QUICK REFERENCE</p><h2>识形速查</h2></div><span>7 张卡</span></div>
+        </summary>
+        <div class="reference-grid">
         <button data-ref="five">五星辨形<span>木火土金水</span></button>
         <button data-ref="four">四象定位<span>前后左右</span></button>
         <button data-ref="water">水形吉凶<span>环抱与反弓</span></button>
@@ -73,6 +75,7 @@
         <button data-ref="huangquan">反复黄泉<span>坐向对应</span></button>
         <button data-ref="jiesha">劫煞对照<span>坐山取方</span></button>
       </div>
+      </details>
     </section>
 
     <footer>取材于个人课程笔记 · 学习整理使用</footer>
