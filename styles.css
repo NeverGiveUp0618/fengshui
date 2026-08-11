@@ -112,3 +112,5 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
 .lec-tw th{background:#e7e3da;color:#6b5533;font-weight:600;white-space:nowrap}
 .lec-src{margin:16px 0 0;padding-top:11px;border-top:1px solid #cec8bd;color:#8b8e88;font:11px/1.7 "PingFang SC",sans-serif}
 .lec-doc b{color:#2c3130}
+.tb-index-link{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:13px 14px;border:1px solid var(--line);border-radius:4px;background:rgba(184,154,103,.05);color:var(--gold2);text-decoration:none;font-size:13px}
+.tb-index-link i{font-style:normal;color:var(--gold)}

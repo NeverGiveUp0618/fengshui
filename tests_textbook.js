@@ -217,9 +217,28 @@ setTimeout(()=>{
     const miss=['木星结穴','火星结穴','土星结穴','金星结穴','水星结穴'].filter(n=>!txt.includes(n));
     return miss.length===0?true:'缺：'+miss.join(',');});
 
-  console.log('\n— 工程 —');
   const sw=fs.readFileSync(D+'sw.js','utf8');
-  t('sw 版本已 bump',()=>/guanshan-v21/.test(sw)?true:'还是旧版本号');
+  console.log('\n— 知识点清单页 —');
+  t('zhishi.html 存在',()=>fs.existsSync(D+'zhishi.html')?true:'没有');
+  t('data/index.js 存在',()=>fs.existsSync(D+'data/index.js')?true:'没有');
+  t('清单数据 1110 个知识点、13 类',()=>{
+    const src=fs.readFileSync(D+'data/index.js','utf8');
+    const m=src.match(/const FSINDEX=([\s\S]+);\n$/);
+    if(!m)return '解析不出 FSINDEX';
+    const D2=JSON.parse(m[1]);
+    const n=D2.cats.reduce((a,c)=>a+c.n,0);
+    return (D2.cats.length===13&&n===1110)?true:`实为 ${D2.cats.length} 类 ${n} 个`;});
+  t('清单页引了数据文件',()=>/data\/index\.js/.test(fs.readFileSync(D+'zhishi.html','utf8'))?true:'没引');
+  t('清单页有返回观山的链接',()=>/class="back" href="\.\/"/.test(fs.readFileSync(D+'zhishi.html','utf8'))?true:'没有返回入口');
+  t('首页有清单入口',()=>/zhishi\.html/.test(fs.readFileSync(D+'index.html','utf8'))?true:'首页没入口');
+  /* 277KB 的清单数据**不该**进 sw 预缓存，否则每次装 PWA 都先拖它 */
+  t('sw 预缓存了 zhishi.html',()=>/zhishi\.html/.test(sw)?true:'没有');
+  t('sw 没有预缓存 277KB 的 data/index.js（按需加载）',()=>
+    !/data\/index\.js/.test(sw)?true:'被塞进 ASSETS 了，会拖慢首次安装');
+
+  console.log('\n— 工程 —');
+
+  t('sw 版本已 bump',()=>/guanshan-v22/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
