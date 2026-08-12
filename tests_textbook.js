@@ -53,7 +53,7 @@ setTimeout(()=>{
     return n===6?true:'实为'+n;});
   t('27 课全部可点',()=>{const n=list.querySelectorAll('[data-tb]').length;
     return n===27?true:'实为'+n;});
-  t('总进度显示 0 / 229（精讲202＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 229'?true:
+  t('总进度显示 0 / 215（精讲正文188＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 215'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
 
   console.log('\n— 阅读页 —');
@@ -84,7 +84,7 @@ setTimeout(()=>{
     return rd['fs01-18']?true:'没写入：'+JSON.stringify(rd);});
   t('按钮变成已读完',()=>{const b=d.getElementById('textbook-content').querySelector('[data-tb-done]');
     return b.classList.contains('done')&&/已读完/.test(b.textContent)?true:'状态没变：'+b.textContent;});
-  t('首页总进度跟着变 1 / 229',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 229'?true:
+  t('首页总进度跟着变 1 / 215',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 215'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('目录里该课打了勾',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'没打勾');
   t('计入连续学习（写了 history）',()=>{const h=JSON.parse(w.localStorage.getItem('guanshan_history')||'{}');
@@ -192,7 +192,7 @@ setTimeout(()=>{
   lc.querySelector('[data-lec-done]').click();
   t('精讲读完标记写盘',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return rd['lec-AA1']?true:'没写入';});
-  t('总进度含精讲（202+27=229）',()=>/\/ 229$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
+  t('总进度含精讲（188+27=215）',()=>/\/ 215$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
     const b=LEC.find(x=>x.c==='B');
@@ -291,6 +291,16 @@ setTimeout(()=>{
     const bad=LEC.filter(c=>JSON.stringify(c.items).includes('以下暂未展开')).map(c=>c.c);
     return bad.length===0?true:'还挂着：'+bad.join(',');});
 
+  t('说明性小节不计进度分母',()=>{
+    const note=LEC.flatMap(c=>c.items.filter(i=>i.note));
+    if(note.length!==14)return '说明条实为'+note.length+'条';
+    const real=LEC.flatMap(c=>c.items.filter(i=>!i.note)).length;
+    return real===188?true:'正文实为'+real+'条';});
+  t('每条说明性小节都标了 note',()=>{
+    const bad=LEC.flatMap(c=>c.items).filter(i=>
+      /未收入|完成情况|归属说明|待整合/.test(i.t)&&!i.note).map(i=>i.t);
+    return bad.length===0?true:'漏标：'+bad.join(',');});
+
   t('教材版块住进「学」tab',()=>d.querySelector('#view-book #lecture-list')?true:'不在 view-book 里');
 
   console.log('\n— 知识点清单页 —');
@@ -313,7 +323,7 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v29/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v30/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');

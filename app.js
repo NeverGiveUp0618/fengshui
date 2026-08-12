@@ -153,12 +153,14 @@ function tbStats(){const rd=readState();let done=0,total=0;TEXTBOOKS.forEach(b=>
    与「原文通读」的分工：精讲按龙穴砂水向的体系走，把五本教材讲同一件事的地方
    并到一起；原文通读是按书从头读讲稿。同一条知识在两处的角色不同，不是重复。 */
 const lecKey=(c,n)=>`lec-${c}${n}`;
-function lecStats(){const rd=readState();let d=0,t=0;if(typeof LECTURES!=='undefined')LECTURES.forEach(c=>c.items.forEach(i=>{t++;if(rd[lecKey(c.c,i.n||i.t)])d++}));return{done:d,total:t}}
+/* ⚠️ 带 note 的是「本类完成情况」这类编者按，不是可学条目。
+   早先它们混进了分母，进度虚高 14 条（202 实为正文 188）。 */
+function lecStats(){const rd=readState();let d=0,t=0;if(typeof LECTURES!=='undefined')LECTURES.forEach(c=>c.items.forEach(i=>{if(i.note)return;t++;if(rd[lecKey(c.c,i.n||i.t)])d++}));return{done:d,total:t}}
 function renderLectures(){if(typeof LECTURES==='undefined'||!$('#lecture-list'))return;const rd=readState();
   $('#lecture-list').innerHTML=`<div class="tb-book lec-book"><div class="tb-book-head"><div><b>体系精讲</b><small>五本教材按体系整合 · 已成 ${LECTURES.length} 类</small></div><em>${lecStats().done} / ${lecStats().total}</em></div>`+
-    LECTURES.map(c=>{const done=c.items.filter(i=>rd[lecKey(c.c,i.n||i.t)]).length;
-      return`<details class="tb-group"${done>0&&done<c.items.length?' open':''}><summary><b><i class="lec-code">${c.c}</i>${c.name}</b><span>${done} / ${c.items.length}</span></summary>`+
-        c.items.map(i=>`<button class="tb-item${rd[lecKey(c.c,i.n||i.t)]?' done':''}" data-lec="${c.c}:${i.n||i.t}"><i>${i.n||'—'}</i><span>${i.t}</span><em>${i.nq?i.nq+'引':''}</em></button>`).join('')+`</details>`}).join('')+`</div>`}
+    LECTURES.map(c=>{const real=c.items.filter(i=>!i.note),done=real.filter(i=>rd[lecKey(c.c,i.n||i.t)]).length;
+      return`<details class="tb-group"${done>0&&done<real.length?' open':''}><summary><b><i class="lec-code">${c.c}</i>${c.name}</b><span>${done} / ${real.length}</span></summary>`+
+        c.items.map(i=>`<button class="tb-item${i.note?' note':''}${!i.note&&rd[lecKey(c.c,i.n||i.t)]?' done':''}" data-lec="${c.c}:${i.n||i.t}"><i>${i.n||'—'}</i><span>${i.t}</span><em>${i.note?'说明':(i.nq?i.nq+'引':'')}</em></button>`).join('')+`</details>`}).join('')+`</div>`}
 function lecBlock(b){switch(b.t){
   case'lead':return`<p class="lec-lead">${b.v}</p>`;
   case'h':return`<h3 class="lec-h">${b.v}</h3>`;

@@ -173,7 +173,11 @@ def main():
             it['nq'] = nq
             it['c'] = nc
             # 自检：正文条目必须有引文。收尾／说明性小节除外——它们本来就不引原文。
-            if nq == 0 and not re.search(r'未收入|进度|未展开|归属说明|完成情况|待整合', it['t']):
+            # 说明性小节（本类完成情况／归属说明等）打 note 标记：
+            # 它们是编者按，不是可学的条目，别计进进度分母。
+            if re.search(r'未收入|进度|未展开|归属说明|完成情况|待整合', it['t']):
+                it['note'] = 1
+            if nq == 0 and not it.get('note'):
                 problems.append(f'{name} {it["n"]}「{it["t"]}」没有一处教材引文')
         cats.append({'c': code, 'name': name, 'intro': intro, 'items': items})
 
@@ -192,7 +196,8 @@ def main():
 
     ni = sum(len(c['items']) for c in cats)
     nq = sum(it['nq'] for c in cats for it in c['items'])
-    print(f'✅ {len(cats)} 类 · {ni} 条 · {nq} 处引文 → data/lectures.js '
+    nnote = sum(1 for c in cats for it in c['items'] if it.get('note'))
+    print(f'✅ {len(cats)} 类 · 正文 {ni - nnote} 条（另 {nnote} 条说明不计进度）· {nq} 处引文 → data/lectures.js '
           f'（{os.path.getsize(OUT)/1024:.1f} KB）')
     for c in cats:
         print(f'   {c["c"]} {c["name"]}：{len(c["items"])} 条，'
