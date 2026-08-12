@@ -106,16 +106,25 @@ const REFS={five:['五星辨形',[['木星','高直而上，顶部圆秀'],['火
 function openRef(id){const r=REFS[id];$('#ref-content').innerHTML=`<p class="lesson-kicker">QUICK REFERENCE</p><h2>${r[0]}</h2><div class="ref-list">${r[1].map(x=>`<div class="ref-row"><b>${x[0]}</b><p>${x[1]}</p></div>`).join('')}</div>`;toggleSheet('#ref-sheet',true)}
 let libraryCat='全部',libraryQuery='';
 const CAT_INFO={基础入门:['建立观察框架','先弄清基本概念、视角和学习顺序。'],龙砂水穴:['训练形势辨认','用图形与现场证据学习龙、砂、水、穴。'],罗盘立向:['掌握测量工具','从二十四山到分金，先测准再判断。'],理气水法:['理解方位规则','明确体系、起法和适用条件，避免口诀混用。'],城市家居:['落到真实生活','把传统形法转换到楼宇、道路与室内动线。'],高级实务:['综合案例验证','把多项证据放回完整现场交叉判断。']};
-const KNOWLEDGE_GUIDE={
- 基础入门:{use:'先用这个概念建立观察顺序，再到现场寻找对应证据。基础概念负责统一口径，不直接代替综合判断。',checks:['概念的观察视角是什么？','它描述的是形、方位还是关系？','有哪些相反或容易混淆的概念？'],wrong:'只背名词，或用单一概念直接推断整个住宅。'},
- 龙砂水穴:{use:'先看整体轮廓与走势，再看局部细节；同时记录距离、方向、环抱、聚散和强弱。',checks:['主体形态是否完整、端正？','它与中心是环抱、朝拱还是反背？','换一个角度观察，结论是否仍成立？'],wrong:'只凭一张局部照片命名，忽略来龙去脉、距离与整体关系。'},
- 罗盘立向:{use:'先排除磁场干扰并记录原始度数，多点复测一致后，才进入山向、兼向和分金判断。',checks:['测量位置和取向基准是否明确？','多次读数是否稳定？','当前规则使用的是哪一层盘、哪套口径？'],wrong:'读数未稳定就套口诀，或只记山向名称而丢失原始度数。'},
- 理气水法:{use:'先确认坐向、来去水和所用体系，再按固定步骤推演；最后必须回到可见形局验证。',checks:['起法和顺逆是否正确？','来水、去水和坐向有没有标反？','形局是否支持理气结论？'],wrong:'把不同师承口诀混用，或脱离现场只凭公式下断。'},
- 城市家居:{use:'按片区、小区、楼栋、户型、室内逐层观察，优先处理安全、采光、通风、噪声和动线。',checks:['真实使用中哪里最受影响？','距离、速度和强度是否足以产生作用？','能否用可执行调整改善？'],wrong:'跳过外部环境直接摆物件，或把轻微城市高差夸大成严重形煞。'},
- 高级实务:{use:'建立现场记录表，把支持与反对证据同时列出，再用案例结果回头校验方法。',checks:['龙穴砂水向是否彼此支持？','有没有反例或替代解释？','结论的适用范围和置信度是多少？'],wrong:'只挑符合预期的证据，忽略反例、现实条件和体系适用边界。'}
-};
 function renderLibrary(){const cats=['全部',...new Set(LIBRARY.map(x=>x.cat))],items=LIBRARY.filter(x=>(libraryCat==='全部'||x.cat===libraryCat)&&(!libraryQuery||`${x.title}${x.summary}${x.source}`.includes(libraryQuery)));$('#library-tabs').innerHTML=cats.map(c=>`<button class="${c===libraryCat?'on':''}" data-lib-cat="${c}">${c}</button>`).join('');if(libraryCat==='全部'&&!libraryQuery){$('#library-list').innerHTML=`<div class="map-branches">`+cats.slice(1).map(c=>`<button data-lib-cat="${c}"><b>${c}</b><span>${CAT_INFO[c][0]}</span><small>${LIBRARY.filter(x=>x.cat===c).length} 个知识点</small></button>`).join('')+`</div>`;$('#library-count').textContent=`共 ${LIBRARY.length} 项`;return}$('#library-list').innerHTML=items.map(x=>`<button class="library-item" data-knowledge="${x.id}"><span class="li-no">${String(x.id).padStart(2,'0')}</span><span><b>${x.title}</b><small>${x.cat} · ${x.source}</small></span><i>›</i></button>`).join('')||'<div class="today-desc">没有找到相关知识点</div>';$('#library-count').textContent=`${items.length} / ${LIBRARY.length}`}
-function openKnowledge(id){const x=LIBRARY.find(v=>v.id===id);if(!x)return;const guide=(typeof KNOWLEDGE_DETAIL!=='undefined'&&KNOWLEDGE_DETAIL[id])||KNOWLEDGE_GUIDE[x.cat],related=LIBRARY.filter(v=>v.cat===x.cat&&v.id!==x.id).slice(0,4),rec=srsState()[id];$('#ref-content').innerHTML=`<p class="lesson-kicker">KNOWLEDGE ${String(x.id).padStart(2,'0')} · ${x.cat}</p><h2>${x.title}</h2><div class="knowledge-tags"><span>${x.cat}</span><span>来源：${x.source}</span>${rec?`<span>已复习 ${rec.reviews||rec.level||1} 次</span>`:''}</div><div class="knowledge-card"><h3>是什么</h3><p>${x.summary}</p></div><div class="knowledge-card"><h3>现场怎么用</h3><p>${guide.use}</p></div><div class="knowledge-card"><h3>判断顺序</h3><div class="knowledge-checks">${guide.checks.map((v,i)=>`<div><i>${i+1}</i>${v}</div>`).join('')}</div></div><div class="knowledge-card"><h3>常见误用</h3><p>${guide.wrong}</p></div><div class="knowledge-card"><h3>相关知识</h3><p>${related.map(v=>v.title).join(' · ')}</p></div><div class="auto-review"><h3>复习由系统安排</h3><p>无需判断自己的感觉。系统会根据学习次数、到期情况和错题表现，自动决定下次复习时间。</p><button data-auto-review="${id}">完成本知识并安排复习</button></div>`;toggleSheet('#ref-sheet',true)}
+/* 图鉴详情＝教材原话＋页码，外加精讲标出的要害/易错，最后给一条直达精讲的入口。
+   ⚠️ 内容由 build_knowledge.py 生成；旧版是手写的「现场怎么用/判断顺序/常见误用」，
+      无出处也从没被核对过，已废。 */
+function openKnowledge(id){const x=LIBRARY.find(v=>v.id===id);if(!x)return;
+  const g=(typeof KNOWLEDGE_DETAIL!=='undefined'&&KNOWLEDGE_DETAIL[id])||{q:[],key:[],warn:[]};
+  const related=LIBRARY.filter(v=>v.cat===x.cat&&v.id!==x.id).slice(0,4),rec=srsState()[id];
+  const quotes=(g.q||[]).map(([t,src])=>`<blockquote class="kq">${t}${src?`<cite>${src}</cite>`:''}</blockquote>`).join('');
+  const notes=[...(g.key||[]).map(v=>`<div class="knote key">${v}</div>`),
+               ...(g.warn||[]).map(v=>`<div class="knote warn">${v}</div>`)].join('');
+  $('#ref-content').innerHTML=`<p class="lesson-kicker">KNOWLEDGE ${String(x.id).padStart(2,'0')} · ${x.cat}</p><h2>${x.title}</h2>`
+    +`<div class="knowledge-tags"><span>${x.cat}</span><span>出处：${x.source}</span>${rec?`<span>已复习 ${rec.reviews||rec.level||1} 次</span>`:''}</div>`
+    +`<div class="knowledge-card"><h3>一句话</h3><p>${x.summary}</p></div>`
+    +(quotes?`<div class="knowledge-card"><h3>教材原话</h3>${quotes}</div>`:'')
+    +(notes?`<div class="knowledge-card"><h3>要害与易错</h3>${notes}</div>`:'')
+    +(x.lec?`<button class="klec" data-klec="${x.lec}">读全文 · 体系精讲 ${x.lec}<i>›</i></button>`:'')
+    +`<div class="knowledge-card"><h3>相关知识</h3><p>${related.map(v=>v.title).join(' · ')}</p></div>`
+    +`<div class="auto-review"><h3>复习由系统安排</h3><p>无需判断自己的感觉。系统会根据学习次数、到期情况和错题表现，自动决定下次复习时间。</p><button data-auto-review="${id}">完成本知识并安排复习</button></div>`;
+  toggleSheet('#ref-sheet',true)}
 function scheduleKnowledge(id){const s=srsState(),old=s[id]||{},reviews=(old.reviews??old.level??0)+1,intervals=[1,3,7,15,30],x=LIBRARY.find(v=>v.id===id),img=imageState(),recentWeak=Object.entries(img).some(([qid,r])=>{const q=IMAGE_BANK.find(v=>v.id===+qid);return q&&REL_CAT[q.type]===x.cat&&!r.correct}),interval=recentWeak?Math.max(1,Math.floor(intervals[Math.min(reviews-1,4)]/2)):intervals[Math.min(reviews-1,4)],level=Math.min(4,reviews-1);s[id]={level,reviews,due:dayNo()+interval,last:dayNo(),interval,auto:true};saveSrs(s);let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));toggleSheet('#ref-sheet',false);render();renderLibrary();renderReport()}
 document.body.addEventListener('click',e=>{const ar=e.target.closest('[data-auto-review]');if(ar){scheduleKnowledge(+ar.dataset.autoReview);return}const ia=e.target.closest('[data-image-answer]');if(ia){answerImage(ia);return}const iid=e.target.closest('[data-image-id]');if(iid){openImageQuestion(+iid.dataset.imageId);return}const ist=e.target.closest('[data-image-stage]');if(ist){nextImage(ist.dataset.imageStage);return}const im=e.target.closest('[data-image-mode]');if(im){nextImage('',im.dataset.imageMode==='wrong');return}const nx=e.target.closest('[data-image-next]');if(nx){toggleSheet('#image-sheet',false);nextImage(nx.dataset.imageNext);return}if(e.target.closest('[data-image-close]')){toggleSheet('#image-sheet',false);return}if(e.target.closest('[data-ref-close]')){toggleSheet('#ref-sheet',false);return}const lc=e.target.closest('[data-lib-cat]');if(lc){libraryCat=lc.dataset.libCat;renderLibrary();document.querySelector('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}const kn=e.target.closest('[data-knowledge]');if(kn){openKnowledge(+kn.dataset.knowledge);return}const r=e.target.closest('[data-ref]');if(r){openRef(r.dataset.ref);return}});
 document.body.addEventListener('change',e=>{if(!e.target.matches('[data-field]'))return;let f={};try{f=JSON.parse(localStorage.getItem('guanshan_field')||'{}')}catch(x){}f[e.target.dataset.field]=e.target.checked;localStorage.setItem('guanshan_field',JSON.stringify(f));renderField()});
@@ -159,6 +168,8 @@ function openLecture(code,no){const c=(typeof LECTURES!=='undefined')&&LECTURES.
     `<div class="tb-nav">${prev?`<button data-lec="${code}:${prev.n||prev.t}">‹ ${prev.t}</button>`:'<span></span>'}${next?`<button data-lec="${code}:${next.n||next.t}">${next.t} ›</button>`:'<span></span>'}</div></div>`;
   toggleSheet('#textbook-sheet',true);const pn=document.querySelector('#textbook-sheet .sheet-panel');if(pn)pn.scrollTop=0}
 document.body.addEventListener('click',e=>{
+  const kl=e.target.closest('[data-klec]');if(kl){const m=kl.dataset.klec.match(/^([A-M])(\d+)$/);
+    if(m){toggleSheet('#ref-sheet',false);showTab('book');openLecture(m[1],m[0]);}return}
   const le=e.target.closest('[data-lec]');if(le){const[c,n]=le.dataset.lec.split(':');openLecture(c,n);return}
   const ld=e.target.closest('[data-lec-done]');if(ld){const[c,n]=ld.dataset.lecDone.split(':');const rd=readState(),k=lecKey(c,n);
     if(rd[k])delete rd[k];else{rd[k]=1;let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(x){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));renderStreak()}

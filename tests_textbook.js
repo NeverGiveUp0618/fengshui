@@ -117,15 +117,21 @@ setTimeout(()=>{
       if(!LIB.some(x=>(x.title+x.summary+x.source).includes(h))&&!inLec(h))
         dead.push(`第${l.n}课:${h}`);})));
     return dead.length===0?true:'死链 '+dead.length+' 处：'+dead.slice(0,5).join(' ');});
-  t('五星山名链到了精讲（图鉴里没有这些条目）',()=>{
-    d.querySelector('[data-tb="fs01:20"]').click();   // 第20课 土星山
-    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lec]')];
-    return b.length>0?true:'土星没链到精讲';});
-  t('点精讲延伸能打开精讲条目',()=>{
-    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lec]')][0];
-    b.click();
-    return d.getElementById('textbook-sheet').classList.contains('on')?true:'没打开';});
-  d.querySelector('[data-tb-close]').click();
+  /* ⚠️ 2026-08-12：图鉴重建后自己也覆盖了五星山名，所以这里不再规定
+     必须落到哪一边——只要求每个延伸词都能落到「图鉴或精讲」之一。*/
+  t('第20课（土星山）的延伸词都有去处',()=>{
+    d.querySelector('[data-tb="fs01:20"]').click();
+    const box=d.getElementById('textbook-content');
+    const n=box.querySelectorAll('[data-tb-link],[data-tb-lec]').length;
+    const l=TB[0].lessons.find(x=>x.n===20);
+    return n>0||l.hints.length===0?true:'一个延伸都没渲染出来';});
+  t('点延伸能打开对应的层',()=>{
+    const box=d.getElementById('textbook-content');
+    const lec=box.querySelector('[data-tb-lec]'),lib=box.querySelector('[data-tb-link]');
+    if(lec){lec.click();return d.getElementById('textbook-sheet').classList.contains('on')?true:'精讲没打开';}
+    if(lib){lib.click();return d.querySelectorAll('#library-list [data-knowledge]').length>0?true:'图鉴没筛出';}
+    return '第20课没有可点的延伸';});
+  const tbc=d.querySelector('[data-tb-close]');if(tbc)tbc.click();
   d.querySelector('[data-tb="fs01:18"]').click();
   const libLink=d.getElementById('textbook-content').querySelector('[data-tb-link]');
   if(libLink)libLink.click();
@@ -315,6 +321,40 @@ setTimeout(()=>{
 
   t('教材版块住进「学」tab',()=>d.querySelector('#view-book #lecture-list')?true:'不在 view-book 里');
 
+  console.log('\n— 知识图鉴：每条都要能回查精讲 —');
+  const LIB=G('LIBRARY'),KD=G('KNOWLEDGE_DETAIL');
+  const lecByCode={};LEC.forEach(c=>c.items.forEach(i=>{if(!i.note)lecByCode[i.n]=i}));
+  t('图鉴仍是 100 条且 id 连续（id 是 SRS 进度的键，动了就废）',()=>
+    LIB.length===100&&LIB.every((x,i)=>x.id===i+1)?true:'条数或 id 变了');
+  t('每条都挂了精讲条目，且该条目真实存在',()=>{
+    const bad=LIB.filter(x=>!x.lec||!lecByCode[x.lec]).map(x=>x.id+' '+x.title);
+    return bad.length===0?true:'缺或指错：'+bad.slice(0,5).join('；');});
+  t('摘要就是精讲的「一句话」，没有另起炉灶',()=>{
+    const strip=t=>t.replace(/<[^>]+>/g,'').trim();
+    const bad=LIB.filter(x=>{const b=lecByCode[x.lec].blocks.find(b=>b.t==='lead');
+      return b&&strip(b.v)!==x.summary}).map(x=>x.id+' '+x.title);
+    return bad.length===0?true:'与精讲不一致：'+bad.slice(0,5).join('；');});
+  t('出处都带真实页码，不再是书名标签',()=>{
+    const bad=LIB.filter(x=>!/p\d+|第\d+课/.test(x.source)).map(x=>x.id+' '+x.title+'←'+x.source);
+    return bad.length===0?true:'无页码：'+bad.slice(0,5).join('；');});
+  /* ⚠️ 别拿 JSON.stringify 去比：里面的引号是转义的，多行引文的拼接符也不同。
+     照 build_knowledge.py 的同一套算法把候选原话还原出来，比集合。*/
+  t('详情里的教材原话确实出自所挂的精讲条目',()=>{
+    const strip=t=>t.replace(/<[^>]+>/g,'').trim();
+    const bad=[];
+    LIB.forEach(x=>{const d0=KD[x.id];
+      if(!d0||!d0.q.length){bad.push(x.id+' 无原话');return}
+      const pool=new Set(lecByCode[x.lec].blocks.filter(b=>b.t==='q')
+        .map(b=>strip(b.v.join('　'))));
+      d0.q.forEach(([txt])=>{
+        let ok=false;pool.forEach(v=>{if(v===txt||v.startsWith(txt.slice(0,-1)))ok=true});
+        if(!ok)bad.push(x.id+' '+txt.slice(0,14));});});
+    return bad.length===0?true:bad.length+' 处对不上：'+bad.slice(0,4).join('；');});
+  t('查无实据的旧条目已改掉',()=>{
+    const gone=['九不葬','十种证穴','五鬼闹判官','二十八宿分金','卦爻分金'];
+    const left=gone.filter(n=>LIB.some(x=>x.title===n));
+    return left.length===0?true:'还在：'+left.join(',');});
+
   console.log('\n— 知识点清单页 —');
   t('zhishi.html 存在',()=>fs.existsSync(D+'zhishi.html')?true:'没有');
   t('data/index.js 存在',()=>fs.existsSync(D+'data/index.js')?true:'没有');
@@ -335,7 +375,7 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v32/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v33/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
