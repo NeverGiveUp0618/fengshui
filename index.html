@@ -28,9 +28,10 @@
     <div class="view active" id="view-today">
       <section class="today" id="today"></section>
 
+      <!-- 接替原「精读课」：日课接到体系精讲那 188 条核对过的正文上 -->
       <section class="section">
-        <div class="section-head"><div><p>FEATURED COURSES</p><h2>精读课</h2></div><span>18 课 · 图文+判断题</span></div>
-        <div class="path compact-path" id="featured-path"></div>
+        <div class="section-head"><div><p>KEEP READING</p><h2>接着读</h2></div><span>体系精讲 A–M</span></div>
+        <div class="next-lec" id="next-lecture"></div>
       </section>
     </div>
 
@@ -104,14 +105,6 @@
     <button type="button" data-tab="find"><b>查</b><span>速查</span></button>
     <button type="button" data-tab="me"><b>我</b><span>报告</span></button>
   </nav>
-
-  <div class="sheet" id="lesson-sheet" aria-hidden="true">
-    <div class="sheet-mask" data-close></div>
-    <article class="sheet-panel">
-      <button class="sheet-close" data-close type="button">×</button>
-      <div id="lesson-content"></div>
-    </article>
-  </div>
 
   <div class="sheet" id="ref-sheet" aria-hidden="true">
     <div class="sheet-mask" data-ref-close></div>

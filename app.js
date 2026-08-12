@@ -1,24 +1,10 @@
-const LESSONS=[
- {title:'风水真正看什么',sub:'基础认知 · 藏风得水',type:'embrace',lead:'风水不是摆放吉祥物，而是观察环境中的风、水、山形与建筑如何影响人的居住。',observe:'先看图：中心位置为什么比两侧开口处更容易“聚气”？',keys:[['藏风','四周有高低适度的山或建筑环抱，使气流进入后能够停留。'],['得水','水流或道路宜曲折、环抱、停聚，不宜直冲直泄。'],['总纲','山环水抱是最直观的好环境模型。']],good:['山环水抱','背后有靠、左右有护、前方开阔且水势环抱。'],bad:['风吹水劫','四周空旷、气流直冲、水路直去，难以停聚。'],q:'图中中心位置的核心优势是什么？',a:['摆放了吉祥物','山水形成环抱','建筑越高越好'],correct:1,why:'风水首先看真实环境。山与水形成环抱，才有藏风聚气的条件。',source:'《风水第一课》1–2讲；《杨公风水初级》何为风水'},
- {title:'四象如何定位',sub:'基础认知 · 前后左右',type:'four',lead:'站在穴位或住宅向外看，后为玄武、前为朱雀、左为青龙、右为白虎。',observe:'记住观察视角：不是看地图的固定东南西北，而是以住宅坐向为中心。',keys:[['玄武','后方，主靠山与承托，宜稳厚有力。'],['朱雀','前方，主明堂与视野，宜开阔有情。'],['龙虎','左右护卫，宜高低协调、环抱而不相斗。']],good:['四象有情','后有靠、前有堂、左右环抱，整体协调。'],bad:['四象失位','背后空虚、前方逼压、龙虎反背或相斗。'],q:'面向住宅前方观察时，左手边称为什么？',a:['白虎','青龙','玄武'],correct:1,why:'以穴位或住宅向外看的视角，左青龙、右白虎。',source:'《杨公风水初级》察砂；《家居风水高级课程》四象'},
- {title:'明堂不是一块空地',sub:'察砂 · 内中外明堂',type:'hall',lead:'明堂是住宅或穴前承接、停聚气流的空间，可分内明堂、中明堂和外明堂。',observe:'观察三层空间：离住宅最近的是内明堂，远处开阔层次依次向外展开。',keys:[['内明堂','最贴近住宅，关系到日常活动与即时承接。'],['中明堂','连接内外，宜平整、聚合、不逼不散。'],['外明堂','远方大环境，决定整体格局与气势。']],good:['明堂舒展','层次分明、大小适中、开阔而不空散。'],bad:['逼压或倾泻','过窄受压，或一望无收、气势直走。'],q:'住宅门前最近的一层空间称为什么？',a:['内明堂','外明堂','水口'],correct:0,why:'紧邻住宅或穴位的承接空间称内明堂。',source:'《家居风水高级课程》城市风水察砂'},
- {title:'木星与火星',sub:'地理五星 · 先辨轮廓',type:'peaks',lead:'辨山先看整体轮廓。木星高直，火星尖锐；一个主生发挺拔，一个主炎上变化。',observe:'不要纠结局部石块，先眯眼看山体最大的外轮廓。',keys:[['木星','形体高直、顶部圆秀，像树木向上生长。'],['火星','尖峰耸起、变化强烈，常见多个尖角。'],['辨形法','先看大轮廓，再看是否清秀、端正、有情。']],good:['秀丽端正','轮廓清楚、形体完整、顾穴有情。'],bad:['破碎粗恶','尖碎杂乱、歪斜崩缺、形体无情。'],q:'山峰尖锐上耸、轮廓如火焰，更接近哪一星？',a:['木星','火星','土星'],correct:1,why:'火星的基本视觉特征是尖、锐、炎上。',source:'《杨公风水初级》地理五星'},
- {title:'土星、金星与水星',sub:'地理五星 · 圆方曲',type:'shapes',lead:'土星多方平，金星多圆润，水星多曲折。辨形关键是抓住“方、圆、曲”三个字。',observe:'比较三种轮廓，不要用山的颜色判断五行。',keys:[['土星','顶部平整、形体厚重，取方正承载之象。'],['金星','轮廓圆润饱满，取收敛完整之象。'],['水星','起伏波曲、连绵流动，取变化流行之象。']],good:['形真体正','主体轮廓鲜明，不混乱、不破碎。'],bad:['牵强取类','只看一个小角落，忽略整座山的主体。'],q:'轮廓圆润饱满的山体，首先考虑哪一星？',a:['金星','水星','火星'],correct:0,why:'金星以圆润、饱满、收敛为基本轮廓。',source:'《杨公风水初级》地理五星'},
- {title:'什么是真过峡',sub:'寻龙 · 龙的过峡',type:'pass',lead:'龙脉行走中由宽厚转为狭窄，再重新展开的连接处称为过峡，是观察龙气是否连续的重要位置。',observe:'找图中两段山体之间最细的连接处，并看两侧是否有护送。',keys:[['束气','过峡处通常收窄，像把行走的气势暂时束紧。'],['护送','两侧有山体夹护、迎送，比孤露受风更佳。'],['连续','过峡前后山势要有来有去，不能只见断裂。']],good:['蜂腰鹤膝','中间束细、前后有力、左右有护送。'],bad:['生硬断裂','完全断开、无护无送，不能见窄处就认作过峡。'],q:'判断过峡时，除了“窄”还要重点看什么？',a:['山上树木多少','前后连续与左右护送','离城市多远'],correct:1,why:'真正的过峡要观察龙脉前后连续，以及两侧是否有迎送护卫。',source:'《杨公风水初级》龙的过峡'},
- {title:'察砂先看秀与恶',sub:'察砂 · 第一标准',type:'goodbad',lead:'砂是穴场周围有作用的山体或建筑。第一眼先分清秀与粗恶，再谈方位和名称。',observe:'同样是高起的形体，左侧线条完整，右侧尖碎破损，感受完全不同。',keys:[['秀丽','轮廓清晰、表面完整、比例协调，使人感到安定。'],['粗恶','崩破、尖碎、歪斜、逼迫，视觉上躁乱不安。'],['先形后理','形体不过关，不急着套理气名词。']],good:['秀而有情','端正、圆润、朝拱、距离适中。'],bad:['粗恶无情','尖射、崩破、反背、逼压、相斗。'],q:'察砂的第一步更适合做什么？',a:['先算飞星','先分秀丽与粗恶','先看房主八字'],correct:1,why:'形法观察先从肉眼可见的形体品质入手。',source:'《杨公风水初级》察砂；《家居风水高级课程》察砂六标准'},
- {title:'玉带与反弓',sub:'观水 · 环抱和外弓',type:'water',lead:'水流或道路弯曲时，弯内侧如腰带环抱称玉带；弯外侧受弓背冲射称反弓。',observe:'同一条弯曲水路，两侧吉凶感受不同，关键看你位于内弯还是外弯。',keys:[['玉带','位于弯曲内侧，水路呈环抱、兜收之势。'],['反弓','位于弯曲外侧，弧线背向住宅，动势向外冲甩。'],['道路同看','城市道路也可按水的动势观察，但要结合车流和距离。']],good:['曲水环抱','弧线柔和、速度适中、在前方形成兜收。'],bad:['反弓冲射','位于外弯受冲，尤其车流快速时更需注意。'],q:'住宅位于道路弯曲的内侧，路形像腰带环抱，称为什么？',a:['反弓','玉带','直泄'],correct:1,why:'弯曲内侧形成环抱，是玉带形；外侧才是反弓。',source:'《风水第一课》；《杨公风水初级》观水'},
- {title:'水要聚，不要直泄',sub:'观水 · 动静与收放',type:'flow',lead:'好水不只在方向，更在形态与速度。曲折、停聚、有关栏，通常比直来直去更容易形成聚合。',observe:'观察两条水路：一条在前方回旋停聚，一条从门前笔直穿过。',keys:[['聚','水面或道路在明堂前停留、回旋、交汇。'],['关栏','去水处有收束，不是一眼直去无踪。'],['有情','来水舒缓、朝向明确，不冲不割。']],good:['水聚明堂','水势缓、曲、停，明堂有承接。'],bad:['直冲直泄','速度快、方向硬、来去无收。'],q:'以下哪种水形更符合“得水”？',a:['笔直快速穿过','在明堂前曲折停聚','从屋后陡泄'],correct:1,why:'“得水”重在水势有情、能够停聚，而不是只要看见水。',source:'《家居风水高级课程》现代城市风水如何观水'},
- {title:'龙虎环抱还是相斗',sub:'察砂 · 左右护卫',type:'dragonTiger',lead:'青龙白虎的重点不是机械比较谁高，而是看左右是否协调、环抱、护卫中心。',observe:'看两侧山体的走势：是向中心回顾，还是尖头相冲、向外反背？',keys:[['环抱','左右形体向内弯顾，形成稳定的围合感。'],['协调','高低、远近要结合整体，不以“左必高、右必低”一刀切。'],['相斗','两侧尖锐对冲、交叉逼压，形势紧张。']],good:['龙虎有情','左右护卫、内顾、不过分逼压。'],bad:['反背相斗','向外飞走，或尖锐交战、欺压失衡。'],q:'判断龙虎最重要的核心是什么？',a:['青龙永远要更高','左右是否协调有情','必须完全对称'],correct:1,why:'龙虎看的是护卫与有情，不能只用高低或绝对对称判断。',source:'《杨公风水初级》察砂'},
- {title:'靠山有力，不等于越近越高',sub:'城市选宅 · 玄武',type:'backing',lead:'住宅后方有稳定承托是“有靠”，但靠山或建筑过近过高，也可能形成逼压。',observe:'比较适度承托与贴身高墙，两者都有“东西在后面”，感受却不同。',keys:[['有靠','后方稳定、完整，距离与高度适中。'],['逼压','过近、过高、压迫采光通风，心理和环境都受影响。'],['城市借形','后楼、台地、成片建筑都可作为现代环境中的“靠”。']],good:['稳而不压','后方有承托，仍保留适当距离、光线和空气。'],bad:['高近逼压','贴身高耸、阴暗闭塞，不能因“有靠”就判吉。'],q:'后方建筑越高越近，就一定越好吗？',a:['一定更好','不一定，要看距离与逼压','只看建筑价格'],correct:1,why:'风水强调适度与协调，有靠和逼压必须区分。',source:'《家居风水高级课程》城市风水点穴'},
- {title:'城市选宅六步观察',sub:'综合应用 · 从外到内',type:'city',lead:'城市环境也能按龙、砂、水、穴的思路观察。先看大环境，再逐步缩小到楼栋和住宅。',observe:'面对一处住宅，不急着下结论，按顺序把环境层级看全。',keys:[['先外后内','先片区与道路，再小区、楼栋、户型。'],['先形后方','先看形体是否舒服，再讨论方位与理气。'],['六步','后靠、前堂、左右、道路水势、风口逼压、整体整洁。']],good:['层层筛选','大环境合格，再看局部；明显形煞先排除。'],bad:['只看一处','只凭门向、楼层或一个摆件就判断整体。'],q:'城市选宅更合理的观察顺序是什么？',a:['先户型摆件，再看城市','先大环境，再到楼栋户型','只看大门方向'],correct:1,why:'环境影响有层级，应先外后内、先大后小。',source:'《家居风水高级课程》现代城市寻龙与选宅'},
- {title:'罗盘不是法器',sub:'认识罗盘 · 破除误区',type:'compassMyth',lead:'网上流传把罗盘放角落镇宅、挂门口化煞、对月催桃花——这些都不是罗盘的用途。罗盘只是风水师用来测量方位的工具。',observe:'先看图：左边把罗盘当法器，右边把罗盘当尺子，哪一种才是专业用法？',keys:[['测量工具','罗盘用来测坐山朝向，量四周山峰、建筑与道路水流的方位。'],['不能化煞','放角落、挂门口、踩脚下都不能辟邪招财，那是误传。'],['先看后测','先用眼睛看完峦头，再用罗盘测数据、按理气分析吉凶。']],good:['当尺子用','测准方位、记录度数，为理气分析提供数据。'],bad:['当法器用','指望罗盘本身镇宅、化煞、招财、催桃花。'],q:'把罗盘平放在房间角落，能镇宅辟邪吗？',a:['能，是化煞法器','不能，它只是测量工具','要对着月亮才灵'],correct:1,why:'专业风水师眼里，罗盘只是测量方位数据的工具，不是化煞辟邪的法器。',source:'《从零开始学罗盘》第11节 罗盘真能辟邪化煞招财吗'},
- {title:'罗盘的构成',sub:'认识罗盘 · 四大部件',type:'compass',lead:'罗盘由天池、内盘、外盘和天心十道组成。看懂这四个部件，才谈得上读盘。',observe:'先看图：中间白色圆圈是天池，可转动的圆盘是内盘，方形托盘是外盘，红色十字是天心十道。',keys:[['天池','中央指南针，底部海底红线定南北，磁针永远指向南北。'],['内盘','可转动的圆盘，密布八卦、干支等各层理气内容，是学习重点。'],['外盘·天心十道','方形外盘固定内盘，两条垂直红线交于天池中心，用来读坐向分金。']],good:['磁针对线','转内盘让磁针与海底红线南北重合，再读天心十道所压的字。'],bad:['乱读盘面','磁针没和海底线重合就读数，方位必然错。'],q:'使用罗盘读数前，必须先让磁针和什么重合？',a:['天心十道线','海底红线','外盘边缘'],correct:1,why:'要转动内盘，使磁针与天池底部的海底红线南北重合，读数才准确。',source:'《从零开始学罗盘》第12节 揭开罗盘的神秘面纱'},
- {title:'三种罗盘怎么选',sub:'认识罗盘 · 三合三元综合',type:'plate',lead:'市面罗盘分三合盘、三元盘、综合盘。学什么派别，就选什么盘。',observe:'先看图：三合盘有地人天三层二十四山，三元盘多了六十四卦，综合盘两者都有。',keys:[['三合盘','有地盘、人盘、天盘三层；地盘立向、人盘消砂、天盘纳水。'],['三元盘','只有地盘，但含易经六十四卦，为蒋大鸿一派所用。'],['综合盘','兼有三盘与六十四卦；学三僚杨公风水多选综合盘或专业杨公盘。']],good:['对派选盘','跟谁学、学哪派，就买那一派的盘。'],bad:['凭感觉买','看外观差不多就买，拿回来才发现不是自己要用的。'],q:'三合盘上「人盘」主要用来做什么？',a:['立向，定坐山朝向','消砂，测山峰方位','纳水，测来去水'],correct:1,why:'三合盘口诀：地盘立向、人盘消砂、天盘纳水。人盘用来测量山峰方位。',source:'《从零开始学罗盘》第13节 市面上三种罗盘'},
- {title:'地盘二十四山',sub:'罗盘核心 · 二十四山',type:'mount24',lead:'地盘二十四山是罗盘字体最大、最核心的一层。整盘三百六十度平分为二十四份，每山十五度。',observe:'先看图：由八卦、天干、地支组成——北壬子癸、东北丑艮寅、东甲卯乙……每卦三山。',keys:[['组成','八干、十二地支、四维乾坤艮巽，共二十四字。'],['每山十五度','三百六十度÷八卦=四十五度，每卦再分三山，每山十五度。'],['主定坐向','最重要的作用是测量阳宅阴宅的坐山朝向，一般以坐山论。']],good:['按序排盘','北壬子癸、东甲卯乙、南丙午丁、西庚酉辛，四正配天干、余位装地支。'],bad:['死记硬背','不懂八卦干支来历，二十四个字记不牢也用不活。'],q:'罗盘一整圈三百六十度，二十四山每一山是多少度？',a:['十度','十五度','二十四度'],correct:1,why:'三百六十度平分为二十四份，每山正好十五度。',source:'《从零开始学罗盘》第16节 地盘二十四山'},
- {title:'二十四山劫煞',sub:'理气口诀 · 劫煞',type:'jiesha',lead:'劫煞是最常用的理气口诀之一。只看房屋坐山，找出对应劫煞方，再看那个方位有没有动象或破败突兀之象。',observe:'先看图：定出坐山，查口诀得劫煞方，观察那一方是否有喷泉、路口、破庙、高楼逼压等。',keys:[['只论坐山','子山午向只看子山，不看午向；任何房屋都只以坐山取劫煞。'],['动象','劫煞方有来去水、喷泉、十字路口、变压器等运动震动之物为犯。'],['破败突兀象','劫煞方有古树、破庙、厕所、垃圾堆、桥梁、高楼逼压等突兀之物为犯。']],good:['坐山定方再看象','先测准坐山，按口诀定劫煞方，再实地看有无动象或破败象。'],bad:['脱离峦头','只背口诀报凶，不到现场看那一方到底有没有破败突兀之物。'],q:'推算二十四山劫煞时，应该看房屋的什么？',a:['朝向','坐山','大门颜色'],correct:1,why:'劫煞只用坐山来论，不用向上论。子山午向只看子山。',source:'《从零开始学罗盘》第17节 杨公风水常用口诀劫煞'},
- {title:'天干八路黄泉',sub:'理气口诀 · 反复黄泉',type:'huangquan',lead:'天干八路黄泉又称反复黄泉：特定坐向若在黄泉方见到来水、去水或道路，主意外伤亡，为凶。',observe:'先看图：测出坐向，查黄泉方；庚向、丁向遇坤水，坤向又遇庚丁水，两者互为黄泉。',keys:[['反复黄泉','庚丁向遇坤水凶，坤向遇庚丁水也凶，互为黄泉故称反复。'],['看向定方','先看朝向是哪个字，对应的黄泉方若有来去水或道路即犯。'],['救贫黄泉','杨公另有救贫黄泉口诀，黄泉未必全凶，需分口诀体系。']],good:['按向查表','测准坐向，对照反复黄泉表定黄泉方，再看那方有无水路。'],bad:['一见黄泉就断大凶','不分救贫黄泉与反复黄泉的体系，脱离水路实况乱断。'],q:'甲山庚向的房屋，天干黄泉方在哪里？',a:['坤','乾','巽'],correct:0,why:'口诀「庚丁坤水是黄泉」：庚向的黄泉方是坤，坤方若有来去水即犯。',source:'《从零开始学罗盘》第18节 罗盘中的天干八路黄泉'}
-];
-
+/* ⚠️ 2026-08-12 撤掉「精读课」18 课（原 const LESSONS）。
+   内容是转述、无页码、从未核对；6 课出自《从零开始学罗盘》，不在杨公五本体系内；
+   第15课把「地盘立向·人盘消砂·天盘纳水」当口诀教，而 J6 明说那是民间三合派的做法、
+   杨公只用地盘。全站其余内容是逐条核对的引文，这块是唯一没溯源的。
+   三个作用都已另有着落：日课走知识图鉴 SRS；图示 visual() 图片题库还在用（保留）；
+   判断题图片题库有 75 道。今日页改由「接着读 · 体系精讲」承接。
+   ⚠️ TYPE_META/REL_CAT 不能删——scheduleKnowledge 用 REL_CAT 调 SRS 间隔。 */
 const $=s=>document.querySelector(s);const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`};
 const state=()=>{try{return JSON.parse(localStorage.getItem('guanshan_progress')||'{}')}catch(e){return{}}};
 const save=s=>localStorage.setItem('guanshan_progress',JSON.stringify(s));
@@ -28,9 +14,14 @@ const dayNo=()=>Math.floor(new Date(new Date().getFullYear(),new Date().getMonth
 const CAT_VIS={基础入门:'embrace',龙砂水穴:'peaks',罗盘立向:'compass',理气水法:'jiesha',城市家居:'city',高级实务:'pass'};
 function todayKnowledge(){const s=srsState(),now=dayNo(),due=LIBRARY.filter(x=>s[x.id]&&s[x.id].due<=now).sort((a,b)=>s[a.id].due-s[b.id].due);if(due.length)return due[0];let anchor=+localStorage.getItem('guanshan_anchor');if(!anchor){anchor=now;try{localStorage.setItem('guanshan_anchor',String(anchor))}catch(e){}}const fresh=LIBRARY.filter(x=>!s[x.id]),pool=fresh.length?fresh:LIBRARY.slice().sort((a,b)=>(s[a.id]?.due||0)-(s[b.id]?.due||0));return pool[((now-anchor)%pool.length+pool.length)%pool.length]}
 function srsStats(){const s=srsState(),now=dayNo(),vals=Object.values(s);return{learned:vals.length,mastered:vals.filter(x=>x.level>=3).length,due:vals.filter(x=>x.due<=now).length,unclear:vals.filter(x=>x.level<2).length}}
-const wrongState=()=>{try{return JSON.parse(localStorage.getItem('guanshan_wrong')||'{}')}catch(e){return{}}};
 const FIELD_ITEMS=['看后方：是否有靠、距离是否逼压','看前方：明堂是否开阔且有层次','看左右：龙虎是否环抱、协调','看道路与水：来去、弯曲、速度、聚散','看风口与形煞：直冲、尖角、强风','看现实条件：采光、噪声、安全、整洁'];
-function renderReport(){const ss=srsStats(),w=wrongState(),wrongTotal=Object.values(w).reduce((n,x)=>n+x.wrong,0),weak=Object.entries(w).sort((a,b)=>b[1].wrong-a[1].wrong)[0],bad=weak?LESSONS[+weak[0]]:null,thresholds=[8,24,48,72,100],badges=thresholds.map((n,i)=>`<span class="badge ${ss.learned>=n?'earned':''}"><i>${ss.learned>=n?'◆':'◇'}</i>${['初识山水','形法入门','罗盘进阶','融会贯通','图鉴通关'][i]}<small>${n}项</small></span>`).join('');$('#report-content').innerHTML=`<div class="report-grid"><div><b>${ss.learned}</b><span>知识已学</span></div><div><b>${ss.due}</b><span>今日待复习</span></div><div><b>${wrongTotal}</b><span>累计错题</span></div></div><div class="weak"><b>${bad?'当前薄弱：'+bad.title:'当前状态：尚无错题'}</b><span>${bad?'建议重新学习这课，重点看“为什么这样判断”。':'完成判断题后，这里会自动指出薄弱课。'}</span>${bad?`<button data-open="${weak[0]}">重学薄弱课</button>`:''}</div><div class="badges">${badges}</div>`}
+function renderReport(){const ss=srsStats(),img=imageState(),
+  wrongTotal=Object.values(img).reduce((n,x)=>n+(x.wrong||0),0),
+  /* ⚠️ 薄弱项原本挂「精读课」错题，那块已撤；改挂识形图片题库 */
+  weak=Object.entries(img).filter(([,r])=>r.wrong).sort((a,b)=>b[1].wrong-a[1].wrong)[0],
+  bad=weak?IMAGE_BANK.find(q=>q.id===+weak[0]):null,
+  badges=[8,24,48,72,100].map((n,i)=>`<span class="badge ${ss.learned>=n?'earned':''}"><i>${ss.learned>=n?'◆':'◇'}</i>${['初识山水','形法入门','罗盘进阶','融会贯通','图鉴通关'][i]}<small>${n}项</small></span>`).join('');
+  $('#report-content').innerHTML=`<div class="report-grid"><div><b>${ss.learned}</b><span>知识已学</span></div><div><b>${ss.due}</b><span>今日待复习</span></div><div><b>${wrongTotal}</b><span>累计错题</span></div></div><div class="weak"><b>${bad?'当前薄弱：'+bad.title+' · '+bad.mode:'当前状态：尚无错题'}</b><span>${bad?'这道图题错得最多，建议重看证据链。':'在「练」里做识形图片题后，这里会自动指出薄弱处。'}</span>${bad?`<button data-image-id="${weak[0]}">重做这道图题</button>`:''}</div><div class="badges">${badges}</div>`}
 function renderField(){let f={};try{f=JSON.parse(localStorage.getItem('guanshan_field')||'{}')}catch(e){}$('#field-list').innerHTML=FIELD_ITEMS.map((x,i)=>`<label><input type="checkbox" data-field="${i}" ${f[i]?'checked':''}><span>${i+1}</span><b>${x}</b></label>`).join('');$('#field-progress').textContent=`${Object.values(f).filter(Boolean).length} / 6`;$('#field-notes').value=localStorage.getItem('guanshan_field_notes')||''}
 const imageState=()=>{try{return JSON.parse(localStorage.getItem('guanshan_image_quiz')||'{}')}catch(e){return{}}};
 const STAGE_DESC={基础识形:'轮廓、四象与龙脉基础',城市实景:'道路、楼宇与空间关系',综合判断:'证据链与现场行动',罗盘识读:'天池、二十四山与理气口诀'};
@@ -38,8 +29,6 @@ function renderImageBank(){const s=imageState(),done=Object.values(s).filter(x=>
 function nextImage(stage='',wrongOnly=false){const s=imageState(),pool=IMAGE_BANK.filter(x=>(!stage||x.stage===stage)&&(!wrongOnly||s[x.id]?.wrong));const q=pool.find(x=>!s[x.id]?.done)||pool[0];if(q)openImageQuestion(q.id);else{$('#image-content').innerHTML='<h2>这组已经完成</h2><p class="lesson-lead">可以选择其他阶段，或进入错图重练。</p>';toggleSheet('#image-sheet',true)}}
 function openImageQuestion(id){const q=IMAGE_BANK.find(x=>x.id===+id);if(!q)return;$('#image-content').innerHTML=`<p class="lesson-kicker">${q.stage} · ${q.mode} · ${String(q.id).padStart(2,'0')} / ${IMAGE_BANK.length}</p><h2>${q.title}</h2><div class="image-question-visual">${q.photo?`<img src="${q.photo}" alt="${q.title}教材图例">`:visual(q.type)}</div><div class="image-prompt"><b>${q.mode}</b><p>${q.question}</p></div><div class="image-answers">${q.answers.map((a,i)=>`<button data-image-answer="${i}" data-image-question="${q.id}">${a}</button>`).join('')}</div><div class="image-explain" id="image-explain" aria-live="polite"></div><p class="source">图例依据：${q.source} · 示意图为重绘，讲解为学习性改写</p>`;toggleSheet('#image-sheet',true)}
 function answerImage(btn){if(btn.dataset.answered)return;const q=IMAGE_BANK.find(x=>x.id===+btn.dataset.imageQuestion),n=+btn.dataset.imageAnswer,buttons=[...btn.parentNode.children],ok=n===q.correct;buttons.forEach((b,i)=>{b.dataset.answered='1';b.disabled=true;const isOk=i===q.correct,isNo=i===n&&!ok;b.classList.toggle('ok',isOk);b.classList.toggle('no',isNo);if(isOk)b.textContent='✓ '+b.textContent;else if(isNo)b.textContent='✗ '+b.textContent});const s=imageState(),old=s[q.id]||{attempts:0,wrong:0};s[q.id]={done:ok,correct:ok,attempts:old.attempts+1,wrong:old.wrong+(ok?0:1),at:Date.now()};localStorage.setItem('guanshan_image_quiz',JSON.stringify(s));$('#image-explain').innerHTML=`<b>${ok?'判断正确':'需要重看证据'}</b><p>${q.why}</p><button data-image-next="${q.stage}">下一题</button>`;renderImageBank()}
-function currentIndex(){const s=state();for(let i=0;i<LESSONS.length;i++)if(!s[i])return i;return dayNo()%LESSONS.length}
-
 function visual(type,dark=false){const bg=dark?'#131719':'#e6e2d9',line=dark?'#b89a67':'#756b59',soft=dark?'#61706c':'#a69d8c',water=dark?'#647e84':'#7898a0';
  const wrap=x=>`<svg viewBox="0 0 420 220" role="img" aria-label="风水识形示意图"><rect width="420" height="220" fill="${bg}"/>${x}</svg>`;
  const ground=`<path d="M0 178 Q90 168 160 180 T420 176 V220 H0Z" fill="${soft}" opacity=".17"/>`;
@@ -66,11 +55,29 @@ function visual(type,dark=false){const bg=dark?'#131719':'#e6e2d9',line=dark?'#b
  return wrap(ground+`<rect x="150" y="120" width="120" height="65" fill="none" stroke="${line}" stroke-width="3"/><path d="M130 120Q210 40 290 120M45 185Q210 130 375 185" fill="none" stroke="${soft}" stroke-width="4"/><circle cx="210" cy="150" r="13" fill="${water}"/><text x="210" y="25" text-anchor="middle" fill="${line}">先外后内 · 逐层观察</text>`);
 }
 
-function render(){const i=currentIndex(),s=state(),daily=todayKnowledge(),ss=srsStats(),record=srsState()[daily.id];
+function render(){const daily=todayKnowledge(),ss=srsStats(),record=srsState()[daily.id];
  $('#today').innerHTML=`<div class="today-top"><span class="today-label">今日知识精修 · ${daily.cat}</span><span class="today-time">约 5–10 分钟</span></div><h2>${daily.title}</h2><p class="today-desc">${daily.summary}</p><div class="today-visual">${visual(CAT_VIS[daily.cat],true)}</div><button class="start" data-knowledge="${daily.id}">${record?'开始系统复习':'开始今日新课'}</button><div class="study-metrics"><span><b>${ss.learned}</b>已学</span><span><b>${ss.mastered}</b>已巩固</span><span><b>${ss.due}</b>待复习</span><span><b>${ss.unclear}</b>强化中</span></div>`;
- $('#featured-path').innerHTML=LESSONS.map((x,n)=>`<button class="path-item ${n===i?'active':''} ${s[n]?'done':''}" data-open="${n}"><span class="path-no">${String(n+1).padStart(2,'0')}</span><span class="path-copy"><b>${x.title}</b><span>${x.sub}</span></span><span class="path-state ${s[n]?'replay':''}">${s[n]?'重新学习':'开始 ›'}</span></button>`).join('');
+ renderNext();
  renderStreak();
 }
+/* 接着读 · 体系精讲：按 A→M 顺序找第一条未读的正文（note 是编者按，跳过）。
+   接替原「精读课」在今日页的位置——区别是它读的是核对过引文的正文。 */
+function nextLecture(){if(typeof LECTURES==='undefined')return null;const rd=readState();
+  for(const c of LECTURES)for(const i of c.items){if(i.note)continue;
+    if(!rd[lecKey(c.c,i.n||i.t)])return{c,i}}
+  return null}
+function renderNext(){const el=$('#next-lecture');if(!el||typeof LECTURES==='undefined')return;
+  const rd=readState(),st=lecStats(),nx=nextLecture(),pct=st.total?Math.round(st.done/st.total*100):0;
+  const grid=LECTURES.map(c=>{const real=c.items.filter(x=>!x.note),d=real.filter(x=>rd[lecKey(c.c,x.n||x.t)]).length;
+    return`<span class="${d===real.length?'full':d?'part':''}" title="${c.name} ${d}/${real.length}">${c.c}</span>`}).join('');
+  el.innerHTML=(nx
+    ?`<div class="nx-top"><span>接着读 · ${nx.c.name}</span><em>${st.done} / ${st.total}</em></div>`
+      +`<div class="nx-bar"><i style="width:${pct}%"></i></div>`
+      +`<button class="nx-go" data-lec="${nx.c.c}:${nx.i.n||nx.i.t}"><b>${nx.i.n}　${nx.i.t}</b><small>${nx.i.nq?nx.i.nq+' 处教材原文':''}</small><i>›</i></button>`
+    :`<div class="nx-top"><span>体系精讲</span><em>${st.done} / ${st.total}</em></div>`
+      +`<div class="nx-bar"><i style="width:100%"></i></div>`
+      +`<p class="nx-done">十三类正文已全部读完。可以去「学」里挑一类重读，或用「查」里的知识图鉴回查。</p>`)
+    +`<div class="nx-grid">${grid}</div>`}
 function renderStreak(){let hist={};try{hist=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}let n=0,d=new Date();for(let k=0;k<90;k++){const key=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;if(hist[key]){n++;d.setDate(d.getDate()-1)}else if(k===0)d.setDate(d.getDate()-1);else break}$('#streak').innerHTML=`<b>${n}</b><span>连续学习</span>`}
 // 每个 type 的作者数据集中一处：cat=关联知识库分类，why/how/bad=展开讲解三段。加新知识点只需在此登记一次。
 const TYPE_META={
@@ -93,35 +100,7 @@ const TYPE_META={
  jiesha:{cat:'理气水法',why:'劫煞只认坐山，是因为它针对的是住宅背后所承之气受到的冲扰。定出劫煞方后，真正决定吉凶的是那个方位有没有动象或破败突兀之物，所以理气必须回到峦头验证。',how:'先测准坐山，按口诀查出劫煞方，站在住宅用罗盘对准该方，观察有无来去水、路口、变压器等动象，或古树、破庙、高楼逼压等破败突兀之象。',bad:'用朝向而非坐山取劫煞；或只背口诀报凶，不到现场看劫煞方实际有没有破败突兀之物。'},
  huangquan:{cat:'理气水法',why:'黄泉针对的是特定坐向与来去水的忌讳组合，庚丁与坤互为黄泉，故称反复黄泉。它被专门刻在罗盘上，是因为犯之易有意外伤亡，属于要优先排查的凶格。',how:'测准坐向后，看朝向是哪个字，对照反复黄泉表定出黄泉方，再观察该方有没有来水、去水或道路正压在黄泉字上。',bad:'一见黄泉就断大凶，忽略杨公还有救贫黄泉；或把不同黄泉体系混用、脱离真实水路凭字面下断。'}
 };
-const EXPAND=Object.fromEntries(Object.entries(TYPE_META).map(([k,v])=>[k,[v.why,v.how,v.bad]]));
 const REL_CAT=Object.fromEntries(Object.entries(TYPE_META).map(([k,v])=>[k,v.cat]));
-function openLesson(i){
- const l=LESSONS[i],s=state(),ex=EXPAND[l.type],related=LIBRARY.filter(x=>x.cat===REL_CAT[l.type]&&!l.title.includes(x.title)).slice((i*3)%8,(i*3)%8+4);
- const real=i===2?['assets/photos/mingtang-levels.jpg','教材图解：从近到远辨内、中、外三层明堂']:i===5?['assets/photos/five-stars-pass.jpg','教材图解：观察星体轮廓与山脉收束连接']:i===13?['assets/photos/luopan-structure.jpg','教材图例：罗盘的天池、内盘、外盘与天心十道']:null;
- $('#lesson-content').innerHTML=`<p class="lesson-kicker">LESSON ${String(i+1).padStart(2,'0')} · ${l.sub}</p><h2>${l.title}</h2><p class="lesson-lead">${l.lead}</p>${real?`<figure class="real-photo"><img src="${real[0]}" alt="${real[1]}"><figcaption>${real[1]} · 点击题目前先自己指认</figcaption></figure>`:`<div class="lesson-visual">${visual(l.type)}</div>`}<div class="observe"><b>先观察</b><br>${l.observe}</div>
- <div class="lesson-section"><span>01</span><div><h3>核心知识</h3><div class="keypoints">${l.keys.map((k,n)=>`<div class="keypoint"><i>${n+1}</i><div><b>${k[0]}</b><p>${k[1]}</p></div></div>`).join('')}</div></div></div>
- <div class="lesson-section"><span>02</span><div><h3>为什么这样判断</h3><p>${ex[0]}</p></div></div>
- <div class="lesson-section"><span>03</span><div><h3>现场怎么用</h3><p>${ex[1]}</p></div></div>
- <div class="compare"><div class="good"><b>✓ ${l.good[0]}</b><p>${l.good[1]}</p></div><div class="bad"><b>× ${l.bad[0]}</b><p>${l.bad[1]}</p></div></div>
- <div class="mistake"><b>常见误判</b><p>${ex[2]}</p></div>
- <div class="quiz"><h3>判断一下</h3><p>${l.q}</p><div class="answers">${l.a.map((a,n)=>`<button type="button" data-answer="${n}" data-lesson="${i}">${a}</button>`).join('')}</div><p class="feedback" id="feedback" aria-live="polite"></p></div>
- <div class="related"><h3>相关知识</h3>${related.map(x=>`<button type="button" data-knowledge="${x.id}"><b>${x.title}</b><span>${x.summary}</span></button>`).join('')}</div>
- <button type="button" class="complete ${s[i]?'done':''}" disabled>${s[i]?'✓ 系统已确认完成':'完成判断题后自动结课'}</button><p class="source">内容依据：${l.source} · 已重新整理为学习摘要，非原文照录</p>`;
- toggleSheet('#lesson-sheet',true);
- document.querySelectorAll('#lesson-content [data-answer]').forEach(btn=>{
-   btn.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();answerQuestion(btn)},false);
-   btn.addEventListener('touchend',ev=>{ev.preventDefault();ev.stopPropagation();answerQuestion(btn)}, {passive:false});
- });
-}
-function answerQuestion(btn){
- if(btn.dataset.answered==='1')return;
- const l=LESSONS[+btn.dataset.lesson],buttons=[...btn.parentNode.querySelectorAll('[data-answer]')],n=+btn.dataset.answer;
- buttons.forEach((b,j)=>{b.dataset.answered='1';const isOk=j===l.correct,isNo=j===n&&j!==l.correct;b.classList.toggle('ok',isOk);b.classList.toggle('no',isNo);if(isOk)b.textContent='✓ '+b.textContent;else if(isNo)b.textContent='✗ '+b.textContent;b.disabled=true});
- const feedback=btn.closest('.quiz').querySelector('.feedback');
- feedback.textContent=(n===l.correct?'答对了。':'再看一眼：')+l.why;
- const w=wrongState(),id=btn.dataset.lesson;w[id]=w[id]||{attempts:0,wrong:0};w[id].attempts++;if(n!==l.correct)w[id].wrong++;localStorage.setItem('guanshan_wrong',JSON.stringify(w));renderReport();
- const progress=state();progress[id]=true;save(progress);let hist={};try{hist=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}hist[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(hist));const doneBtn=btn.closest('#lesson-content').querySelector('.complete');if(doneBtn){doneBtn.classList.add('done');doneBtn.textContent='✓ 系统已确认完成'}render();
-}
 function toggleSheet(id,on){const el=$(id);el.classList.toggle('on',on);el.setAttribute('aria-hidden',on?'false':'true');document.body.style.overflow=on?'hidden':''}
 const REFS={five:['五星辨形',[['木星','高直而上，顶部圆秀'],['火星','尖锐耸起，变化强烈'],['土星','方平厚重，形体稳定'],['金星','圆润饱满，收敛完整'],['水星','波曲连绵，流动多变']]],four:['四象定位',[['玄武','住宅后方，宜稳厚有靠'],['朱雀','住宅前方，宜明堂舒展'],['青龙','向外看左侧，宜环抱有情'],['白虎','向外看右侧，宜协调护卫']]],water:['水形吉凶',[['玉带','位于弯曲内侧，环抱兜收'],['反弓','位于弯曲外侧，动势外甩'],['聚水','曲折停聚、交汇有关栏'],['直泄','笔直快速、来去无收']]],check:['城市选宅六看',[['一看后靠','稳定完整，不可过近逼压'],['二看明堂','开阔有层次，不空散'],['三看龙虎','左右协调、环抱有情'],['四看道路','曲缓有收，避直冲反弓'],['五看风口','避天斩、穿堂、强风直灌'],['六看整体','整洁明亮，先外后内']]],mount24:['二十四山全图',[['北 · 壬子癸','坎卦，正北，子居中'],['东北 · 丑艮寅','艮卦，四维之一'],['东 · 甲卯乙','震卦，正东，卯居中'],['东南 · 辰巽巳','巽卦，四维之一'],['南 · 丙午丁','离卦，正南，午居中'],['西南 · 未坤申','坤卦，四维之一'],['西 · 庚酉辛','兑卦，正西，酉居中'],['西北 · 戌乾亥','乾卦，四维之一']]],huangquan:['反复黄泉对应表',[['甲山庚向 / 癸山丁向','黄泉方：坤'],['艮山坤向','黄泉方：庚、丁'],['乾山巽向','黄泉方：乙、丙'],['辛山乙向 / 壬山丙向','黄泉方：巽'],['巽山乾向','黄泉方：辛、壬'],['乙山辛向 / 丙山壬向','黄泉方：乾'],['庚山甲向 / 丁山癸向','黄泉方：艮'],['坤山艮向','黄泉方：甲、癸']]],jiesha:['二十四山劫煞',[['乙、壬','劫煞在申'],['酉、丁','劫煞在寅'],['子、癸','劫煞在巳'],['巳、午','劫煞在酉'],['卯、艮','劫煞在丁'],['乾','劫煞在卯'],['丙','劫煞在辛'],['甲','劫煞在丙'],['戌、辛','劫煞在丑'],['丑','劫煞在辰'],['寅、辰','劫煞在未'],['庚','劫煞在午'],['未、巽、申','劫煞在癸'],['坤、亥','劫煞在乙']]]};
 function openRef(id){const r=REFS[id];$('#ref-content').innerHTML=`<p class="lesson-kicker">QUICK REFERENCE</p><h2>${r[0]}</h2><div class="ref-list">${r[1].map(x=>`<div class="ref-row"><b>${x[0]}</b><p>${x[1]}</p></div>`).join('')}</div>`;toggleSheet('#ref-sheet',true)}
@@ -138,7 +117,7 @@ const KNOWLEDGE_GUIDE={
 function renderLibrary(){const cats=['全部',...new Set(LIBRARY.map(x=>x.cat))],items=LIBRARY.filter(x=>(libraryCat==='全部'||x.cat===libraryCat)&&(!libraryQuery||`${x.title}${x.summary}${x.source}`.includes(libraryQuery)));$('#library-tabs').innerHTML=cats.map(c=>`<button class="${c===libraryCat?'on':''}" data-lib-cat="${c}">${c}</button>`).join('');if(libraryCat==='全部'&&!libraryQuery){$('#library-list').innerHTML=`<div class="map-branches">`+cats.slice(1).map(c=>`<button data-lib-cat="${c}"><b>${c}</b><span>${CAT_INFO[c][0]}</span><small>${LIBRARY.filter(x=>x.cat===c).length} 个知识点</small></button>`).join('')+`</div>`;$('#library-count').textContent=`共 ${LIBRARY.length} 项`;return}$('#library-list').innerHTML=items.map(x=>`<button class="library-item" data-knowledge="${x.id}"><span class="li-no">${String(x.id).padStart(2,'0')}</span><span><b>${x.title}</b><small>${x.cat} · ${x.source}</small></span><i>›</i></button>`).join('')||'<div class="today-desc">没有找到相关知识点</div>';$('#library-count').textContent=`${items.length} / ${LIBRARY.length}`}
 function openKnowledge(id){const x=LIBRARY.find(v=>v.id===id);if(!x)return;const guide=(typeof KNOWLEDGE_DETAIL!=='undefined'&&KNOWLEDGE_DETAIL[id])||KNOWLEDGE_GUIDE[x.cat],related=LIBRARY.filter(v=>v.cat===x.cat&&v.id!==x.id).slice(0,4),rec=srsState()[id];$('#ref-content').innerHTML=`<p class="lesson-kicker">KNOWLEDGE ${String(x.id).padStart(2,'0')} · ${x.cat}</p><h2>${x.title}</h2><div class="knowledge-tags"><span>${x.cat}</span><span>来源：${x.source}</span>${rec?`<span>已复习 ${rec.reviews||rec.level||1} 次</span>`:''}</div><div class="knowledge-card"><h3>是什么</h3><p>${x.summary}</p></div><div class="knowledge-card"><h3>现场怎么用</h3><p>${guide.use}</p></div><div class="knowledge-card"><h3>判断顺序</h3><div class="knowledge-checks">${guide.checks.map((v,i)=>`<div><i>${i+1}</i>${v}</div>`).join('')}</div></div><div class="knowledge-card"><h3>常见误用</h3><p>${guide.wrong}</p></div><div class="knowledge-card"><h3>相关知识</h3><p>${related.map(v=>v.title).join(' · ')}</p></div><div class="auto-review"><h3>复习由系统安排</h3><p>无需判断自己的感觉。系统会根据学习次数、到期情况和错题表现，自动决定下次复习时间。</p><button data-auto-review="${id}">完成本知识并安排复习</button></div>`;toggleSheet('#ref-sheet',true)}
 function scheduleKnowledge(id){const s=srsState(),old=s[id]||{},reviews=(old.reviews??old.level??0)+1,intervals=[1,3,7,15,30],x=LIBRARY.find(v=>v.id===id),img=imageState(),recentWeak=Object.entries(img).some(([qid,r])=>{const q=IMAGE_BANK.find(v=>v.id===+qid);return q&&REL_CAT[q.type]===x.cat&&!r.correct}),interval=recentWeak?Math.max(1,Math.floor(intervals[Math.min(reviews-1,4)]/2)):intervals[Math.min(reviews-1,4)],level=Math.min(4,reviews-1);s[id]={level,reviews,due:dayNo()+interval,last:dayNo(),interval,auto:true};saveSrs(s);let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));toggleSheet('#ref-sheet',false);render();renderLibrary();renderReport()}
-document.body.addEventListener('click',e=>{const ar=e.target.closest('[data-auto-review]');if(ar){scheduleKnowledge(+ar.dataset.autoReview);return}const ia=e.target.closest('[data-image-answer]');if(ia){answerImage(ia);return}const iid=e.target.closest('[data-image-id]');if(iid){openImageQuestion(+iid.dataset.imageId);return}const ist=e.target.closest('[data-image-stage]');if(ist){nextImage(ist.dataset.imageStage);return}const im=e.target.closest('[data-image-mode]');if(im){nextImage('',im.dataset.imageMode==='wrong');return}const nx=e.target.closest('[data-image-next]');if(nx){toggleSheet('#image-sheet',false);nextImage(nx.dataset.imageNext);return}if(e.target.closest('[data-image-close]')){toggleSheet('#image-sheet',false);return}const o=e.target.closest('[data-open]');if(o){openLesson(+o.dataset.open);return}if(e.target.closest('[data-close]')){toggleSheet('#lesson-sheet',false);return}if(e.target.closest('[data-ref-close]')){toggleSheet('#ref-sheet',false);return}const lc=e.target.closest('[data-lib-cat]');if(lc){libraryCat=lc.dataset.libCat;renderLibrary();document.querySelector('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}const kn=e.target.closest('[data-knowledge]');if(kn){openKnowledge(+kn.dataset.knowledge);return}const r=e.target.closest('[data-ref]');if(r){openRef(r.dataset.ref);return}const c=e.target.closest('[data-complete]');if(c){const i=+c.dataset.complete,s=state();s[i]=!s[i];save(s);let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(x){}if(s[i])h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));c.classList.toggle('done',s[i]);c.textContent=s[i]?'✓ 已完成本课':'完成本课并打勾';render()}});
+document.body.addEventListener('click',e=>{const ar=e.target.closest('[data-auto-review]');if(ar){scheduleKnowledge(+ar.dataset.autoReview);return}const ia=e.target.closest('[data-image-answer]');if(ia){answerImage(ia);return}const iid=e.target.closest('[data-image-id]');if(iid){openImageQuestion(+iid.dataset.imageId);return}const ist=e.target.closest('[data-image-stage]');if(ist){nextImage(ist.dataset.imageStage);return}const im=e.target.closest('[data-image-mode]');if(im){nextImage('',im.dataset.imageMode==='wrong');return}const nx=e.target.closest('[data-image-next]');if(nx){toggleSheet('#image-sheet',false);nextImage(nx.dataset.imageNext);return}if(e.target.closest('[data-image-close]')){toggleSheet('#image-sheet',false);return}if(e.target.closest('[data-ref-close]')){toggleSheet('#ref-sheet',false);return}const lc=e.target.closest('[data-lib-cat]');if(lc){libraryCat=lc.dataset.libCat;renderLibrary();document.querySelector('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}const kn=e.target.closest('[data-knowledge]');if(kn){openKnowledge(+kn.dataset.knowledge);return}const r=e.target.closest('[data-ref]');if(r){openRef(r.dataset.ref);return}});
 document.body.addEventListener('change',e=>{if(!e.target.matches('[data-field]'))return;let f={};try{f=JSON.parse(localStorage.getItem('guanshan_field')||'{}')}catch(x){}f[e.target.dataset.field]=e.target.checked;localStorage.setItem('guanshan_field',JSON.stringify(f));renderField()});
 $('#field-notes').addEventListener('input',e=>localStorage.setItem('guanshan_field_notes',e.target.value));
 $('#library-search').addEventListener('input',e=>{libraryQuery=e.target.value.trim();renderLibrary()});
@@ -195,16 +174,19 @@ function openTextbook(bid,n){const b=TEXTBOOKS.find(x=>x.id===bid);if(!b)return;
   const grp=(b.groups.find(([,a,z])=>l.n>=a&&l.n<=z)||[''])[0];
   const body=l.p.map(p=>typeof p==='string'?`<p>${p}</p>`:`<blockquote class="verse">${p.v.map(v=>`<span>${v}</span>`).join('')}</blockquote>`).join('');
   const prev=b.lessons.find(x=>x.n===l.n-1),next=b.lessons.find(x=>x.n===l.n+1);
-  /* 延伸＝双源：图鉴能搜到就链图鉴，搜不到就找精读课（五星山名只有精读课有），
-     两边都没有的词直接不显示——否则点过去是「没有找到相关知识点」的死链。*/
+  /* 延伸＝双源：图鉴能搜到就链图鉴，搜不到就找**体系精讲**（五星山名这类只有精讲有）。
+     两边都没有的词直接不显示——否则点过去是「没有找到相关知识点」的死链。
+     ⚠️ 2026-08-12：原兜底源是「精读课」，那块已撤，改指精讲正文。 */
+  const lecHit=h=>{if(typeof LECTURES==='undefined')return null;
+    for(const c of LECTURES)for(const it of c.items){if(!it.note&&it.t.includes(h))return{c:c.c,n:it.n,t:it.t}}
+    for(const c of LECTURES)for(const it of c.items){if(!it.note&&JSON.stringify(it.blocks).includes(h))return{c:c.c,n:it.n,t:it.t}}
+    return null};
   const hits=l.hints.map(h=>{
     if(LIBRARY.some(x=>(x.title+x.summary+x.source).includes(h)))return{h,to:'lib'};
-    const li=LESSONS.findIndex(x=>(x.title+x.sub+x.lead).includes(h));
-    return li>=0?{h,to:'lesson',i:li}:null}).filter(Boolean);
-  /* ⚠️ 按精读课去重：木/火/土/金/水五个词只落在两门精读课上，
-     不去重就是五个按钮点进同两个地方。去重后直接显示课名，比显示词准确。*/
-  const seen={},hits2=hits.filter(x=>x.to==='lib'||!seen[x.i]&&(seen[x.i]=1));
-  const links=hits2.length?`<div class="tb-links"><h3>延伸查阅</h3><p>本课涉及的概念，可在知识图鉴或精读课里看细节：</p><div>${hits2.map(x=>x.to==='lib'?`<button data-tb-link="${x.h}">${x.h}</button>`:`<button data-tb-lesson="${x.i}" data-tb-word="${x.h}">${LESSONS[x.i].title} · 精读课</button>`).join('')}</div></div>`:'';
+    const g=lecHit(h);return g?{h,to:'lec',g}:null}).filter(Boolean);
+  /* ⚠️ 按目标条目去重：木/火/土/金/水常落在同一条精讲上，不去重就是五个按钮点进同一处。*/
+  const seen={},hits2=hits.filter(x=>x.to==='lib'||(!seen[x.g.c+x.g.n]&&(seen[x.g.c+x.g.n]=1)));
+  const links=hits2.length?`<div class="tb-links"><h3>延伸查阅</h3><p>本课涉及的概念，可在知识图鉴或体系精讲里看细节：</p><div>${hits2.map(x=>x.to==='lib'?`<button data-tb-link="${x.h}">${x.h}</button>`:`<button data-tb-lec="${x.g.c}:${x.g.n}">${x.g.c}${x.g.n} ${x.g.t}</button>`).join('')}</div></div>`:'';
   $('#textbook-content').innerHTML=`<p class="lesson-kicker">${b.name} · ${grp} · 第 ${l.n} / ${b.lessons.length} 课</p><h2>${l.t}</h2>`+
     (l.alt.length?`<p class="tb-alt">原稿另留标题：${l.alt.join(' / ')}</p>`:'')+
     `<div class="tb-doc">${body}</div>${links}`+
@@ -218,7 +200,7 @@ function markRead(bid,n){const rd=readState(),k=tbKey(bid,n);rd[k]=rd[k]?0:1;if(
 document.body.addEventListener('click',e=>{
   const tb=e.target.closest('[data-tb]');if(tb){const[b,n]=tb.dataset.tb.split(':');openTextbook(b,n);return}
   const td=e.target.closest('[data-tb-done]');if(td){const[b,n]=td.dataset.tbDone.split(':');markRead(b,+n);return}
-  const tls=e.target.closest('[data-tb-lesson]');if(tls){toggleSheet('#textbook-sheet',false);openLesson(+tls.dataset.tbLesson);return}
+  const tls=e.target.closest('[data-tb-lec]');if(tls){const[c,n]=tls.dataset.tbLec.split(':');toggleSheet('#textbook-sheet',false);showTab('book');openLecture(c,n);return}
   const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);showTab('find');$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
   if(e.target.closest('[data-tb-close]')){toggleSheet('#textbook-sheet',false)}});
 render();renderLibrary();renderReport();renderField();renderImageBank();renderLectures();renderTextbook();try{const _s=srsStats();parent.postMessage({type:'yst-progress',app:'fengshui',text:`已学 ${_s.learned} · 已巩固 ${_s.mastered} · 待复习 ${_s.due}`},'https://nevergiveup0618.github.io')}catch(e){}if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});

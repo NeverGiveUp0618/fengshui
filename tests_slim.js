@@ -4,7 +4,8 @@ const dom=new JSDOM(fs.readFileSync(D+'index.html','utf8'),{runScripts:'dangerou
 const errs=[];
 dom.virtualConsole.on('jsdomError',e=>{if(!/scrollTo|Not implemented|scrollIntoView/.test(e.message))errs.push(e.message)});
 const w=dom.window,d=w.document;
-['data/textbook.js','library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
+// ⚠️ 今日页的「接着读」要 LECTURES，不加载 data/lectures.js 就永远渲染不出来
+['data/textbook.js','data/lectures.js','library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
   const sc=d.createElement('script'); sc.textContent=fs.readFileSync(D+f,'utf8'); d.body.appendChild(sc);
 });
 setTimeout(()=>{
@@ -58,11 +59,12 @@ setTimeout(()=>{
   btns.find(b=>b.dataset.tab==='today').click();
 
   console.log('\n— 其余版块未受影响 —');
-  ['today','report-content','image-progress','featured-path'].forEach(id=>{
+  ['today','report-content','image-progress','next-lecture'].forEach(id=>{
     const el=d.getElementById(id);
     if(el) t(`#${id} 仍在`,()=>true);
   });
-  t('精读课仍列出',()=>d.querySelectorAll('[data-open]').length>0?true:'精读课没了');
+  t('今日页有「接着读」入口',()=>d.querySelectorAll('#next-lecture [data-lec]').length>0?true:'接着读没渲染');
+  t('精读课残留已清干净',()=>!d.getElementById('featured-path')&&!d.getElementById('lesson-sheet')?true:'还有残留');
 
   console.log(`\n${fail?'❌ '+fail+' 项未通过':'✅ 全部 '+pass+' 项通过'}`);
   process.exit(fail?1:0);

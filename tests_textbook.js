@@ -100,29 +100,32 @@ setTimeout(()=>{
   t('第18课列出了延伸概念',()=>links.length>0?true:'一个都没有');
   t('延伸词确实出现在本课正文里',()=>{
     const l=book.lessons.find(x=>x.n===18),txt=l.p.map(p=>typeof p==='string'?p:p.v.join('')).join('');
-    const bad=[...links].map(b=>b.dataset.tbLink||b.dataset.tbWord).filter(h=>!txt.includes(h));
+    // ⚠️ 精讲类延伸的按钮文字是条目名（不是原词），所以只校验图鉴类那支
+    const bad=[...links].filter(b=>b.dataset.tbLink).map(b=>b.dataset.tbLink).filter(h=>!txt.includes(h));
     return bad.length===0?true:'凭空出现的词：'+bad.join(',');});
-  t('精读课延伸已按课去重（五个星名只对两门课）',()=>{
-    const ls=[...links].filter(b=>b.dataset.tbLesson).map(b=>b.dataset.tbLesson);
-    return ls.length===new Set(ls).size?true:'重复指向同一课：'+ls.join(',');});
-  /* 死链是这个功能最容易坏的地方：词写成「火星山」而图鉴条目叫「五星山形」、
-     精读课叫「木星与火星」，就会点出一片「没有找到相关知识点」。逐课全查一遍。*/
-  t('全站延伸链接无死链（图鉴或精读课至少命中一个）',()=>{
-    const LIB=G('LIBRARY'),LES=G('LESSONS'),dead=[];
+  t('精讲延伸已按条目去重（五个星名常落在同一条）',()=>{
+    const ls=[...links].filter(b=>b.dataset.tbLec).map(b=>b.dataset.tbLec);
+    return ls.length===new Set(ls).size?true:'重复指向同一条：'+ls.join(',');});
+  /* 死链是这个功能最容易坏的地方：词写成「火星山」而图鉴条目叫「五星山形」，
+     就会点出一片「没有找到相关知识点」。逐课全查一遍。
+     ⚠️ 2026-08-12：兜底源由已撤的「精读课」改为体系精讲正文。*/
+  t('全站延伸链接无死链（图鉴或精讲至少命中一个）',()=>{
+    const LIB=G('LIBRARY'),L=G('LECTURES'),dead=[];
+    const inLec=h=>L.some(c=>c.items.some(i=>!i.note&&
+      (i.t.includes(h)||JSON.stringify(i.blocks).includes(h))));
     TB.forEach(b=>b.lessons.forEach(l=>l.hints.forEach(h=>{
-      const inLib=LIB.some(x=>(x.title+x.summary+x.source).includes(h));
-      const inLes=LES.some(x=>(x.title+x.sub+x.lead).includes(h));
-      if(!inLib&&!inLes)dead.push(`第${l.n}课:${h}`);})));
+      if(!LIB.some(x=>(x.title+x.summary+x.source).includes(h))&&!inLec(h))
+        dead.push(`第${l.n}课:${h}`);})));
     return dead.length===0?true:'死链 '+dead.length+' 处：'+dead.slice(0,5).join(' ');});
-  t('五星山名链到了精读课（图鉴里没有这些条目）',()=>{
+  t('五星山名链到了精讲（图鉴里没有这些条目）',()=>{
     d.querySelector('[data-tb="fs01:20"]').click();   // 第20课 土星山
-    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lesson]')];
-    return b.some(x=>/土星/.test(x.textContent))?true:'土星没链到精读课';});
-  t('点精读课延伸能打开精读课弹层',()=>{
-    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lesson]')][0];
+    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lec]')];
+    return b.length>0?true:'土星没链到精讲';});
+  t('点精讲延伸能打开精讲条目',()=>{
+    const b=[...d.getElementById('textbook-content').querySelectorAll('[data-tb-lec]')][0];
     b.click();
-    return d.getElementById('lesson-sheet').classList.contains('on')?true:'没打开精读课';});
-  d.getElementById('lesson-sheet').querySelector('[data-close]').click();
+    return d.getElementById('textbook-sheet').classList.contains('on')?true:'没打开';});
+  d.querySelector('[data-tb-close]').click();
   d.querySelector('[data-tb="fs01:18"]').click();
   const libLink=d.getElementById('textbook-content').querySelector('[data-tb-link]');
   if(libLink)libLink.click();
@@ -133,14 +136,23 @@ setTimeout(()=>{
   t('点延伸后关闭了阅读层',()=>!sheet.classList.contains('on')?true:'还开着');
 
   console.log('\n— 不与既有版块重复 —');
-  t('教材版块没有复制精读课',()=>{
-    const n=d.querySelectorAll('#textbook-list [data-open]').length;
-    return n===0?true:'教材里混进了'+n+'个精读课入口';});
+  t('精读课已全站撤除',()=>{
+    const src=fs.readFileSync(D+'app.js','utf8');
+    const left=['LESSONS.','openLesson','answerQuestion','wrongState'].filter(x=>src.includes(x));
+    return left.length===0&&!d.getElementById('lesson-sheet')&&!d.getElementById('featured-path')
+      ?true:'还剩：'+left.join(',')+(d.getElementById('featured-path')?' #featured-path':'');});
   t('教材版块没有复制图鉴',()=>{
     const n=d.querySelectorAll('#textbook-list [data-knowledge]').length;
     return n===0?true:'教材里混进了'+n+'个图鉴条目';});
-  t('精读课 18 课仍在',()=>{const n=d.querySelectorAll('#featured-path [data-open]').length;
-    return n>0?true:'精读课没了';});
+  t('今日页改成「接着读」并指向真实条目',()=>{
+    const go=d.querySelector('#next-lecture [data-lec]');
+    if(!go)return '#next-lecture 里没有可点的条目';
+    const [c,n]=go.dataset.lec.split(':');
+    const cat=G('LECTURES').find(x=>x.c===c);
+    return cat&&cat.items.some(i=>String(i.n)===n&&!i.note)?true:'指向了不存在或说明性的条目';});
+  t('接着读跳过说明性小节',()=>{
+    const grid=d.querySelectorAll('#next-lecture .nx-grid span').length;
+    return grid===13?true:'类格实为'+grid;});
   t('图鉴 100 条仍在',()=>{const L=G('LIBRARY');return L&&L.length===100?true:'实为'+((L||[]).length);});
 
   console.log('\n— 体系精讲 —');
