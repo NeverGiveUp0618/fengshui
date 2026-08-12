@@ -355,6 +355,28 @@ setTimeout(()=>{
     const left=gone.filter(n=>LIB.some(x=>x.title===n));
     return left.length===0?true:'还在：'+left.join(',');});
 
+  console.log('\n— 识形图片题库：也要能回查 —');
+  const IB=G('IMAGE_BANK'),SEED=G('IMAGE_SEEDS');
+  t('仍是 15 题种 × 5 问法 = 75 题（id 是答题记录的键）',()=>
+    SEED.length===15&&IB.length===75&&IB.every((q,i)=>q.id===i+1)?true:'题种/题数/ id 变了');
+  t('每题出处都带真实页码',()=>{
+    const bad=IB.filter(q=>!/p\d+|第\d+课/.test(q.source)).map(q=>q.id+' '+q.title);
+    return bad.length===0?true:'无页码：'+bad.slice(0,4).join('；');});
+  t('每题都挂了真实存在的精讲条目',()=>{
+    const bad=IB.filter(q=>!q.lec||!lecByCode[q.lec]).map(q=>q.id+' '+q.title);
+    return bad.length===0?true:'缺或指错：'+bad.slice(0,4).join('；');});
+  t('解析里的教材原话出自所挂条目',()=>{
+    const strip=x=>x.replace(/<[^>]+>/g,'').trim();
+    const bad=[];
+    SEED.forEach(sd=>{const cite=strip(sd.cite||'').replace(/〔[^〕]*〕$/,'');
+      if(!cite){bad.push(sd.title+' 无原话');return}
+      const pool=lecByCode[sd.lec].blocks.filter(b=>b.t==='q').map(b=>strip(b.v.join('　')));
+      if(!pool.some(v=>v.startsWith(cite)))bad.push(sd.title);});
+    return bad.length===0?true:'对不上：'+bad.join('；');});
+  t('不再引用体系外的《从零开始学罗盘》',()=>{
+    const bad=IB.filter(q=>/从零开始学罗盘/.test(q.source)).length;
+    return bad===0?true:bad+' 题仍引散册';});
+
   console.log('\n— 知识点清单页 —');
   t('zhishi.html 存在',()=>fs.existsSync(D+'zhishi.html')?true:'没有');
   t('data/index.js 存在',()=>fs.existsSync(D+'data/index.js')?true:'没有');
@@ -375,7 +397,7 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v33/.test(sw)?true:'还是旧版本号');
+  t('sw 版本已 bump',()=>/guanshan-v34/.test(sw)?true:'还是旧版本号');
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
