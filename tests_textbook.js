@@ -94,6 +94,20 @@ setTimeout(()=>{
   t('再点一次可取消已读',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return !rd['fs01-18']?true:'取消不掉';});
 
+  /* ⚠️ 2026-08-15 回归锁（用户报过：「标记读完后页面又跑到最上面」）
+     根因：markRead 里重开整篇，而 openTextbook 末尾有 pn.scrollTop=0。
+     两条一起锁：① 位置不动（用户可见的行为）② 正文节点没被重建
+     ——② 是因为「重渲染再补回滚动」也会闪一下，那不算修好。*/
+  d.querySelector('[data-tb="fs01:18"]').click();
+  const _panel=d.querySelector('#textbook-sheet .sheet-panel');
+  const _h2=d.getElementById('textbook-content').querySelector('h2');
+  _panel.scrollTop=420;
+  d.getElementById('textbook-content').querySelector('[data-tb-done]').click();
+  t('标记读完后停在原位置，不弹回顶部',()=>_panel.scrollTop===420?true:'scrollTop 被改成了 '+_panel.scrollTop);
+  t('标记读完没有重建正文（否则会闪）',()=>d.getElementById('textbook-content').querySelector('h2')===_h2?true:'正文被整篇重渲染了');
+  t('位置不动但目录进度照常更新',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'目录没跟上');
+  d.getElementById('textbook-content').querySelector('[data-tb-done]').click();
+
   console.log('\n— 与图鉴互链（教材不复制图鉴内容）—');
   d.querySelector('[data-tb="fs01:18"]').click();
   const links=d.getElementById('textbook-content').querySelectorAll('[data-tb-link],[data-tb-lesson]');
@@ -210,6 +224,15 @@ setTimeout(()=>{
   lc.querySelector('[data-lec-done]').click();
   t('精讲读完标记写盘',()=>{const rd=JSON.parse(w.localStorage.getItem('guanshan_read')||'{}');
     return rd['lec-AA1']?true:'没写入';});
+  /* 精讲侧同一个坑（openLecture 末尾也有 pn.scrollTop=0），一并锁住 */
+  d.querySelector('[data-lec="A:A1"]').click();
+  const _lp=d.querySelector('#textbook-sheet .sheet-panel');
+  const _lh2=d.getElementById('textbook-content').querySelector('h2');
+  _lp.scrollTop=360;
+  d.getElementById('textbook-content').querySelector('[data-lec-done]').click();
+  t('精讲标记读完也停在原位置',()=>_lp.scrollTop===360?true:'scrollTop 被改成了 '+_lp.scrollTop);
+  t('精讲标记读完没有重建正文',()=>d.getElementById('textbook-content').querySelector('h2')===_lh2?true:'正文被整篇重渲染了');
+  d.getElementById('textbook-content').querySelector('[data-lec-done]').click();
   t('总进度含精讲（188+27=215）',()=>/\/ 215$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
@@ -397,7 +420,13 @@ setTimeout(()=>{
 
   console.log('\n— 工程 —');
 
-  t('sw 版本已 bump',()=>/guanshan-v34/.test(sw)?true:'还是旧版本号');
+  /* ⚠️ 别把版本号写死（这条原来是 /guanshan-v34/，每 bump 一次就得回来改测试，
+     改法还是再写死一遍——治标不治本）。改成【递增基线】：
+     忘了 bump 会红，bump 了永远绿。以后只在需要抬底线时改这个数。*/
+  const SW_MIN=35;
+  t('sw 版本已 bump（≥v'+SW_MIN+'）',()=>{const m=sw.match(/guanshan-v(\d+)/);
+    if(!m)return'sw 里找不到 guanshan-vN 版本号';
+    return +m[1]>=SW_MIN?true:'还是 v'+m[1]+'，没 bump（基线 v'+SW_MIN+'）';});
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');

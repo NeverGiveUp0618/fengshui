@@ -173,7 +173,7 @@ document.body.addEventListener('click',e=>{
   const le=e.target.closest('[data-lec]');if(le){const[c,n]=le.dataset.lec.split(':');openLecture(c,n);return}
   const ld=e.target.closest('[data-lec-done]');if(ld){const[c,n]=ld.dataset.lecDone.split(':');const rd=readState(),k=lecKey(c,n);
     if(rd[k])delete rd[k];else{rd[k]=1;let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(x){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));renderStreak()}
-    saveRead(rd);renderLectures();renderTextbook();openLecture(c,n)}});
+    saveRead(rd);renderLectures();renderTextbook();syncDone(ld,rd[k])}});
 function renderTextbook(){if(typeof TEXTBOOKS==='undefined'||!$('#textbook-list'))return;const rd=readState();
   $('#textbook-list').innerHTML=TEXTBOOKS.map(b=>{const done=b.lessons.filter(l=>rd[tbKey(b.id,l.n)]).length;
     return`<div class="tb-book"><div class="tb-book-head"><div><b>原文通读 · ${b.name}</b><small>${b.sub}</small></div><em>${done} / ${b.lessons.length}</em></div>`+
@@ -205,12 +205,17 @@ function openTextbook(bid,n){const b=TEXTBOOKS.find(x=>x.id===bid);if(!b)return;
     `<div class="tb-nav">${prev?`<button data-tb="${bid}:${prev.n}">‹ 上一课</button>`:'<span></span>'}${next?`<button data-tb="${bid}:${next.n}">下一课 ›</button>`:'<span></span>'}</div></div>`+
     `<p class="source">出处：${b.source} · 讲稿整理，未改动原意</p>`;
   toggleSheet('#textbook-sheet',true);const pn=document.querySelector('#textbook-sheet .sheet-panel');if(pn)pn.scrollTop=0}
-function markRead(bid,n){const rd=readState(),k=tbKey(bid,n);rd[k]=rd[k]?0:1;if(!rd[k])delete rd[k];saveRead(rd);
+/* ⚠️ 标记读完【只就地改按钮】，别重渲染整篇（2026-08-15 用户报「又跑到最上面」）：
+   openTextbook/openLecture 末尾有 `pn.scrollTop=0` —— 打开新一课时回顶部是对的，
+   但按钮在文末 .tb-foot，读完顺手一点又重开一遍，人就被弹回最上面了。
+   目录（#textbook-list / 精讲列表）是另一个容器，照常重渲染不影响 sheet 位置。 */
+function syncDone(btn,on){if(!btn)return;btn.classList.toggle('done',!!on);btn.textContent=on?'✓ 已读完':'标记读完'}
+function markRead(bid,n,btn){const rd=readState(),k=tbKey(bid,n);rd[k]=rd[k]?0:1;if(!rd[k])delete rd[k];saveRead(rd);
   if(rd[k]){let h={};try{h=JSON.parse(localStorage.getItem('guanshan_history')||'{}')}catch(e){}h[todayKey()]=true;localStorage.setItem('guanshan_history',JSON.stringify(h));renderStreak()}
-  renderTextbook();openTextbook(bid,n)}
+  renderTextbook();syncDone(btn,rd[k])}
 document.body.addEventListener('click',e=>{
   const tb=e.target.closest('[data-tb]');if(tb){const[b,n]=tb.dataset.tb.split(':');openTextbook(b,n);return}
-  const td=e.target.closest('[data-tb-done]');if(td){const[b,n]=td.dataset.tbDone.split(':');markRead(b,+n);return}
+  const td=e.target.closest('[data-tb-done]');if(td){const[b,n]=td.dataset.tbDone.split(':');markRead(b,+n,td);return}
   const tls=e.target.closest('[data-tb-lec]');if(tls){const[c,n]=tls.dataset.tbLec.split(':');toggleSheet('#textbook-sheet',false);showTab('book');openLecture(c,n);return}
   const tl=e.target.closest('[data-tb-link]');if(tl){libraryQuery=tl.dataset.tbLink;libraryCat='全部';$('#library-search').value=libraryQuery;renderLibrary();toggleSheet('#textbook-sheet',false);showTab('find');$('#library-list').scrollIntoView({behavior:'smooth',block:'start'});return}
   if(e.target.closest('[data-tb-close]')){toggleSheet('#textbook-sheet',false)}});
