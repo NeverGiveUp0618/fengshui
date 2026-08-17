@@ -156,6 +156,7 @@ function lecBlock(b){switch(b.t){
   case'note':return`<div class="lec-note ${b.k}">${b.v}</div>`;
   case'ul':return`<ul class="lec-ul">${b.v.map(x=>`<li>${x}</li>`).join('')}</ul>`;
   case'table':return`<div class="lec-tw"><table><thead><tr>${b.head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${b.rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  case'img':return`<figure class="lec-fig"><img src="assets/lecimg/${b.f}" alt="${b.cap}" loading="lazy" decoding="async"><figcaption>${b.cap}<cite>${b.src}</cite></figcaption></figure>`;
   case'src':return`<p class="lec-src">出处：${b.v}</p>`;
   default:return`<p>${b.v}</p>`}}
 function openLecture(code,no){const c=(typeof LECTURES!=='undefined')&&LECTURES.find(x=>x.c===code);if(!c)return;

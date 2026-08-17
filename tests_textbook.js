@@ -418,12 +418,73 @@ setTimeout(()=>{
   t('sw 没有预缓存 277KB 的 data/index.js（按需加载）',()=>
     !/data\/index\.js/.test(sw)?true:'被塞进 ASSETS 了，会拖慢首次安装');
 
+  console.log('\n— 精讲配图（2026-08-17 D 类试点）—');
+  const Dcat=LEC.find(c=>c.c==='D');
+  const allImgs=[];LEC.forEach(c=>c.items.forEach(i=>i.blocks.forEach(b=>{if(b.t==='img')allImgs.push([c.c,i.n,b])})));
+
+  t('D 类有配图',()=>allImgs.filter(x=>x[0]==='D').length>=50?true:'只有 '+allImgs.filter(x=>x[0]==='D').length+' 张');
+  t('配图文件都真实存在',()=>{const miss=allImgs.filter(x=>!fs.existsSync(D+'assets/lecimg/'+x[2].f));
+    return miss.length?miss.length+' 张缺失，如 '+miss[0][2].f:true;});
+  t('每张图都有说明与出处',()=>{const bad=allImgs.filter(x=>!x[2].cap||!/^(初级|中级|高级|家居|第一课)\s*p\d+/.test(x[2].src||''));
+    return bad.length?bad.length+' 张缺 cap/src，如 '+(bad[0][2].f):true;});
+  /* ⚠️ 图片文件名必须纯 ASCII：中文名要 percent-encode 才能取，
+     GitHub Pages 扛得住，但手机端（尤其微信 X5 内核）容易在编码上出岔子。
+     第一版就是中文名，上线前改的——别改回去。*/
+  t('图片文件名是纯 ASCII',()=>{const bad=allImgs.filter(x=>!/^[\x21-\x7e]+$/.test(x[2].f));
+    return bad.length?bad.length+' 张是非 ASCII 名，如 '+bad[0][2].f:true;});
+  t('图名与出处对得上（防映射表改了文件名没改页码）',()=>{
+    const SLUG={chuji:'初级',zhongji:'中级',gaoji:'高级',jiaju:'家居',diyike:'第一课'};
+    const bad=allImgs.filter(x=>{const m=x[2].f.match(/^([a-z]+)-p(\d+)-x/);
+      return !m||x[2].src!==SLUG[m[1]]+' p'+m[2]});
+    return bad.length?bad.length+' 张对不上，如 '+bad[0][2].f:true;});
+
+  /* ⭐ 这套东西的价值在「图跟着讲解走」，不是堆在文末。
+     ⚠️ 别断言「紧跟同页引文」——落点有三种都是对的：精确同页、就近±3页、
+     以及**插在引文之前**（引子图、页码比引文小的图）。真正要防的退化是
+     图掉进条目末尾兜底位置，那才是「没配上」。*/
+  t('没有图掉到条目末尾兜底',()=>{
+    const bad=allImgs.filter(x=>x[2].how==='tail').map(x=>x[1]+'「'+x[2].cap+'」('+x[2].src+')');
+    return bad.length?bad.length+' 张掉到末尾：'+bad.join('、'):true;});
+  t('落点方式都是已知的四种',()=>{const ok=['exact','near','anchor','tail'];
+    const bad=allImgs.filter(x=>!ok.includes(x[2].how));
+    return bad.length?'有图的 how 字段异常：'+bad[0][2].f:true;});
+  t('多数图精确落在同页引文（≥60%）',()=>{const n=allImgs.filter(x=>x[2].how==='exact').length;
+    return n/allImgs.length>=0.6?true:`只有 ${n}/${allImgs.length} 张精确落位，页码对齐可能坏了`;});
+
+  t('带小节锚点的图落在指定小节里',()=>{
+    const want={'山峰端正':'二、端正与歪斜','砂的顺与逆':'五、顺砂与逆砂',
+                '山的高低与逼压':'三、高低与逼压','建筑逼压实例':'三、高低与逼压',
+                '山的秀丽与粗恶':'一、秀丽与粗恶','山的端正与歪斜':'二、端正与歪斜'};
+    const it=Dcat.items.find(i=>i.n==='D6');let sec='',bad=[];
+    it.blocks.forEach(b=>{if(b.t==='h')sec=b.v.replace(/<[^>]+>/g,'');
+      if(b.t==='img'&&want[b.cap]&&sec!==want[b.cap])bad.push(`${b.cap} 落在「${sec||'开头'}」应在「${want[b.cap]}」`)});
+    return bad.length?bad.join('；'):true;});
+
+  t('图真渲染进 DOM（含 lazy）',()=>{w.eval('openLecture("D","D12")');
+    const figs=d.querySelectorAll('#textbook-content .lec-fig img');
+    if(!figs.length)return'D12 正文里一张图都没渲染出来';
+    if(![...figs].every(i=>i.getAttribute('loading')==='lazy'))return'有图没带 loading=lazy（53 张一次全载会拖垮手机）';
+    if(![...figs].every(i=>/^assets\/lecimg\//.test(i.getAttribute('src'))))return'图片路径不对';
+    return true;});
+  t('图注带出处标签',()=>{const c=d.querySelector('#textbook-content .lec-fig figcaption cite');
+    return c&&/p\d+/.test(c.textContent)?true:'图注里没有页码出处';});
+
+  /* ⚠️ 同 data/index.js 那条：预缓存会让每次装 PWA 都先拖 3MB 图。
+     sw 是网络优先＋缓存回退，看过的自然有离线副本。*/
+  /* ⚠️ 这条原先写作 /lecimg/.test(sw)，被缓存名 'guanshan-v36-lecimg' 里的
+     同名字串误伤成红。要查的是 ASSETS 里的**路径**，不是全文出现过这四个字母。*/
+  t('配图没有进 sw 预缓存',()=>/assets\/lecimg/.test(sw)?'lecimg 被写进 ASSETS 了，装 PWA 会先拖 3MB':true);
+  t('加图没有改变进度分母',()=>{const n=LEC.reduce((s,c)=>s+c.items.filter(i=>!i.note).length,0);
+    return n===188?true:'正文条数变成 '+n+'（应为 188，图不该计进条目数）';});
+  t('图不计入字数（img 块没有 v 键）',()=>Dcat.items.every(i=>typeof i.c==='number'&&i.c>0)?true:'字数统计坏了');
+  t('build_images.py 与映射表都在',()=>fs.existsSync(D+'build_images.py')&&fs.existsSync(D+'_map_lecimg.py')?true:'缺脚本或映射表');
+
   console.log('\n— 工程 —');
 
   /* ⚠️ 别把版本号写死（这条原来是 /guanshan-v34/，每 bump 一次就得回来改测试，
      改法还是再写死一遍——治标不治本）。改成【递增基线】：
      忘了 bump 会红，bump 了永远绿。以后只在需要抬底线时改这个数。*/
-  const SW_MIN=35;
+  const SW_MIN=36;
   t('sw 版本已 bump（≥v'+SW_MIN+'）',()=>{const m=sw.match(/guanshan-v(\d+)/);
     if(!m)return'sw 里找不到 guanshan-vN 版本号';
     return +m[1]>=SW_MIN?true:'还是 v'+m[1]+'，没 bump（基线 v'+SW_MIN+'）';});

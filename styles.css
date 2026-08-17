@@ -115,6 +115,10 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
 .lec-note.warn{background:#f0e4e1;border-left:3px solid #a5736b;color:#5c433e}
 .lec-note.key{background:#e6ece6;border-left:3px solid #6f8c78;color:#3d4f43}
 .lec-note.ref{background:#e7e7e2;border-left:3px solid #9a9a90;color:#55574f;font-size:12px}
+.lec-fig{margin:0 0 15px;padding:0;background:#e7e3da;border-radius:3px;overflow:hidden}
+.lec-fig img{display:block;width:100%;height:auto;background:#ded9cd}
+.lec-fig figcaption{padding:7px 11px 8px;font:12.5px/1.7 "PingFang SC",sans-serif;color:#5d5443}
+.lec-fig cite{display:block;margin-top:3px;font-style:normal;text-align:right;color:#8f7348;font:10.5px/1 "PingFang SC",sans-serif}
 .lec-ul{margin:0 0 13px;padding-left:19px}
 .lec-ul li{margin-bottom:6px;font:13.5px/1.8 "PingFang SC",sans-serif;color:#3d4340}
 .lec-tw{overflow-x:auto;margin:0 0 15px}
