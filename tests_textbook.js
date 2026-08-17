@@ -418,11 +418,13 @@ setTimeout(()=>{
   t('sw 没有预缓存 277KB 的 data/index.js（按需加载）',()=>
     !/data\/index\.js/.test(sw)?true:'被塞进 ASSETS 了，会拖慢首次安装');
 
-  console.log('\n— 精讲配图（2026-08-17 D 类试点）—');
+  console.log('\n— 精讲配图（A·C·D·E·F 五类）—');
   const Dcat=LEC.find(c=>c.c==='D');
   const allImgs=[];LEC.forEach(c=>c.items.forEach(i=>i.blocks.forEach(b=>{if(b.t==='img')allImgs.push([c.c,i.n,b])})));
 
-  t('D 类有配图',()=>allImgs.filter(x=>x[0]==='D').length>=50?true:'只有 '+allImgs.filter(x=>x[0]==='D').length+' 张');
+  t('A/C/D/E/F 五类都有配图',()=>{const by={};allImgs.forEach(x=>by[x[0]]=(by[x[0]]||0)+1);
+    const miss=['A','C','D','E','F'].filter(c=>!(by[c]>=8));
+    return miss.length?'这些类配图过少或没有：'+miss.join('')+' 实际 '+JSON.stringify(by):true;});
   t('配图文件都真实存在',()=>{const miss=allImgs.filter(x=>!fs.existsSync(D+'assets/lecimg/'+x[2].f));
     return miss.length?miss.length+' 张缺失，如 '+miss[0][2].f:true;});
   t('每张图都有说明与出处',()=>{const bad=allImgs.filter(x=>!x[2].cap||!/^(初级|中级|高级|家居|第一课)\s*p\d+/.test(x[2].src||''));
@@ -442,14 +444,27 @@ setTimeout(()=>{
      ⚠️ 别断言「紧跟同页引文」——落点有三种都是对的：精确同页、就近±3页、
      以及**插在引文之前**（引子图、页码比引文小的图）。真正要防的退化是
      图掉进条目末尾兜底位置，那才是「没配上」。*/
-  t('没有图掉到条目末尾兜底',()=>{
+  /* tail_ok＝映射表里写了 '末尾'、人工确认过的；tail＝没人管它、掉队了。只报后者。*/
+  t('没有图意外掉到条目末尾',()=>{
     const bad=allImgs.filter(x=>x[2].how==='tail').map(x=>x[1]+'「'+x[2].cap+'」('+x[2].src+')');
     return bad.length?bad.length+' 张掉到末尾：'+bad.join('、'):true;});
-  t('落点方式都是已知的四种',()=>{const ok=['exact','near','anchor','tail'];
+  t('落点方式都是已知的五种',()=>{const ok=['exact','near','anchor','tail','tail_ok'];
     const bad=allImgs.filter(x=>!ok.includes(x[2].how));
     return bad.length?'有图的 how 字段异常：'+bad[0][2].f:true;});
   t('多数图精确落在同页引文（≥60%）',()=>{const n=allImgs.filter(x=>x[2].how==='exact').length;
     return n/allImgs.length>=0.6?true:`只有 ${n}/${allImgs.length} 张精确落位，页码对齐可能坏了`;});
+
+  /* ⭐ 教材里成套的图表（九星／二十四凶穴／五城水／吉水凶水／吉凶砂）是这套配图最大的价值，
+     少一张就是残的。张数写死在这里，掉图会立刻红。*/
+  t('成套图表没有缺张',()=>{
+    const n=(c,no)=>{const it=LEC.find(x=>x.c===c).items.find(i=>i.n===no);
+      return it?it.blocks.filter(b=>b.t==='img').length:-1};
+    const want=[['C','C11',9,'穴上九星'],['C','C19',23,'二十四凶穴'],
+                ['E','E5',5,'五城水'],['E','E6',14,'吉水'],['E','E7',15,'凶水'],
+                ['D','D16',8,'吉凶砂五十七图']];
+    const bad=want.filter(([c,no,k])=>n(c,no)!==k)
+                  .map(([c,no,k,name])=>`${no} ${name} 应 ${k} 张、实为 ${n(c,no)}`);
+    return bad.length?bad.join('；'):true;});
 
   t('带小节锚点的图落在指定小节里',()=>{
     const want={'山峰端正':'二、端正与歪斜','砂的顺与逆':'五、顺砂与逆砂',
@@ -484,7 +499,7 @@ setTimeout(()=>{
   /* ⚠️ 别把版本号写死（这条原来是 /guanshan-v34/，每 bump 一次就得回来改测试，
      改法还是再写死一遍——治标不治本）。改成【递增基线】：
      忘了 bump 会红，bump 了永远绿。以后只在需要抬底线时改这个数。*/
-  const SW_MIN=36;
+  const SW_MIN=37;
   t('sw 版本已 bump（≥v'+SW_MIN+'）',()=>{const m=sw.match(/guanshan-v(\d+)/);
     if(!m)return'sw 里找不到 guanshan-vN 版本号';
     return +m[1]>=SW_MIN?true:'还是 v'+m[1]+'，没 bump（基线 v'+SW_MIN+'）';});

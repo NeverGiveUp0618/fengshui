@@ -41,6 +41,7 @@ FILES = [
 ]
 
 problems_img = []      # place_images 里发现的映射表问题，main 统一报
+TAIL_OK = '末尾'      # 映射表第5项写它＝人工确认「就放条目末尾」
 NEAR_PAGES = 3        # 图页与引文页最多差几页还算「就近」，超出就退到条目末尾
 CITE = re.compile(r'〔([^〕]+)〕\s*$')
 NOTE = re.compile(r'^(⚠️|⭐|📎)\s*')
@@ -160,6 +161,11 @@ def place_images(no, blocks):
     for x in imgs:
         book, page = x[0], x[1]
         anchor = x[4] if len(x) > 4 else ''
+        if anchor == TAIL_OK:
+            # 人工确认过：该条目没有小节、页码也只出现在出处汇总行里，
+            # 图放正文末尾是它能有的最好位置。与「意外掉队」区分开，测试才查得准。
+            plan.setdefault((tail, 0), []).append((x, 'tail_ok'))
+            continue
         if anchor:
             # 显式锚点：落到该小节里的第一处引文之后；小节内没有引文就紧跟小标题
             hi = next((i for i in hs
@@ -194,7 +200,8 @@ def place_images(no, blocks):
 
 
 def img_block(x, how='exact'):
-    """how 记落点是怎么定的：exact 同页引文／near 就近／anchor 小节锚点／tail 兜底。
+    """how 记落点是怎么定的：exact 同页引文／near 就近／anchor 小节锚点／
+    tail_ok 人工确认放末尾／tail 意外掉队（测试会报）。
     留在产物里是为了让测试能分清「锚点正好落在最后一节」和「真的掉到末尾」——
     这两种在块序列上长得一模一样。"""
     book, page, xref, cap = x[:4]
