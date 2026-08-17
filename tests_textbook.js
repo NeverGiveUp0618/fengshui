@@ -418,13 +418,17 @@ setTimeout(()=>{
   t('sw 没有预缓存 277KB 的 data/index.js（按需加载）',()=>
     !/data\/index\.js/.test(sw)?true:'被塞进 ASSETS 了，会拖慢首次安装');
 
-  console.log('\n— 精讲配图（A–F 六类全）—');
+  console.log('\n— 精讲配图（A–M 全库）—');
   const Dcat=LEC.find(c=>c.c==='D');
   const allImgs=[];LEC.forEach(c=>c.items.forEach(i=>i.blocks.forEach(b=>{if(b.t==='img')allImgs.push([c.c,i.n,b])})));
 
-  t('A–F 六类都有配图',()=>{const by={};allImgs.forEach(x=>by[x[0]]=(by[x[0]]||0)+1);
-    const miss=['A','B','C','D','E','F'].filter(c=>!(by[c]>=8));
-    return miss.length?'这些类配图过少或没有：'+miss.join('')+' 实际 '+JSON.stringify(by):true;});
+  /* ⚠️ L/M 门槛只设 1 张：教材本身就没配图（候选各 2 张与 9 张，多数还是别类的重复），
+     不是漏做。G/K 反而很多——理气基础全是图表、家居全是实例。*/
+  t('A–G·K 八类都有足量配图，L/M 至少各一张',()=>{const by={};allImgs.forEach(x=>by[x[0]]=(by[x[0]]||0)+1);
+    const miss=['A','B','C','D','E','F','G','K'].filter(c=>!(by[c]>=8));
+    const thin=['L','M'].filter(c=>!(by[c]>=1));
+    if(miss.length)return '这些类配图过少：'+miss.join('')+' 实际 '+JSON.stringify(by);
+    return thin.length?'L/M 一张都没有：'+thin.join(''):true;});
   t('配图文件都真实存在',()=>{const miss=allImgs.filter(x=>!fs.existsSync(D+'assets/lecimg/'+x[2].f));
     return miss.length?miss.length+' 张缺失，如 '+miss[0][2].f:true;});
   t('每张图都有说明与出处',()=>{const bad=allImgs.filter(x=>!x[2].cap||!/^(初级|中级|高级|家居|第一课)\s*p\d+/.test(x[2].src||''));
@@ -461,6 +465,7 @@ setTimeout(()=>{
       return it?it.blocks.filter(b=>b.t==='img').length:-1};
     const want=[['C','C11',9,'穴上九星'],['C','C19',23,'二十四凶穴'],
                 ['B','B12',11,'九星与贪狼十二形'],['B','B19',7,'破军与他星合名'],
+                ['G','G3',3,'先后天八卦与洛书九宫'],['K','K2',13,'入户门与门尺'],
                 ['E','E5',5,'五城水'],['E','E6',14,'吉水'],['E','E7',15,'凶水'],
                 ['D','D16',8,'吉凶砂五十七图']];
     const bad=want.filter(([c,no,k])=>n(c,no)!==k)
@@ -500,7 +505,7 @@ setTimeout(()=>{
   /* ⚠️ 别把版本号写死（这条原来是 /guanshan-v34/，每 bump 一次就得回来改测试，
      改法还是再写死一遍——治标不治本）。改成【递增基线】：
      忘了 bump 会红，bump 了永远绿。以后只在需要抬底线时改这个数。*/
-  const SW_MIN=38;
+  const SW_MIN=39;
   t('sw 版本已 bump（≥v'+SW_MIN+'）',()=>{const m=sw.match(/guanshan-v(\d+)/);
     if(!m)return'sw 里找不到 guanshan-vN 版本号';
     return +m[1]>=SW_MIN?true:'还是 v'+m[1]+'，没 bump（基线 v'+SW_MIN+'）';});
