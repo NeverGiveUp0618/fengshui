@@ -12,7 +12,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _map_lecimg import LEC_IMG, PDF_FILES, PDF_DIR, BOOK_SLUG  # noqa: E402
+from _map_lecimg import (LEC_IMG, PDF_FILES, PDF_DIR, BOOK_SLUG,  # noqa: E402
+                         ROTATE)
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', 'lecimg')
 MAX_W = 900          # 移动端够看，再大只是浪费流量
@@ -56,11 +57,14 @@ def main():
                 problems.append(f'{no}：{book} p{page} 上没有 xref={xref} 这张图')
                 continue
             out = os.path.join(OUT_DIR, name)
-            if not os.path.exists(out):
+            # 需要转正的那几张总是重提：否则改了 ROTATE 也不会生效（文件已存在）
+            if not os.path.exists(out) or name in ROTATE:
                 px = fitz.Pixmap(d, xref)
                 if px.n > 4:
                     px = fitz.Pixmap(fitz.csRGB, px)
                 im = Image.open(io.BytesIO(px.tobytes('png'))).convert('RGB')
+                if name in ROTATE:            # 源页扫歪了，转正再存
+                    im = im.rotate(ROTATE[name], expand=True)
                 im.thumbnail((MAX_W, MAX_W))
                 im.save(out, 'JPEG', quality=QUALITY, optimize=True)
                 made += 1

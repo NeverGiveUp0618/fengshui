@@ -156,6 +156,11 @@ def place_images(no, blocks):
     tail = next((i for i, b in enumerate(blocks) if b['t'] == 'src'), len(blocks))
 
     hs = [i for i, b in enumerate(blocks) if b['t'] == 'h']
+    # ⭐ 精讲稿的子标题有两种写法：`### 小节`，和**整行粗体**（B11 的「木星与火星」、
+    #    A3 的「阳风一类」都是后者）。锚点先在 ### 里找，找不到再退到粗体行——
+    #    既能定位到粗体子标题，又完全不动既有 ### 锚点的落点。
+    subs = [i for i, b in enumerate(blocks)
+            if b['t'] == 'p' and re.fullmatch(r'<b>[^<>]+</b>', (b.get('v') or '').strip())]
 
     plan = {}                        # (块序号, 0=之前/1=之后) -> [图]
     for x in imgs:
@@ -168,14 +173,26 @@ def place_images(no, blocks):
             continue
         if anchor:
             # 显式锚点：落到该小节里的第一处引文之后；小节内没有引文就紧跟小标题
-            hi = next((i for i in hs
-                       if anchor in re.sub(r'<[^>]+>', '', blocks[i]['v'])), None)
-            if hi is not None:
-                end = next((i for i in hs if i > hi), len(blocks))
-                q = next((j for j in range(hi + 1, end) if blocks[j]['t'] == 'q'), None)
+            for pool in (hs, subs):
+                hi = next((i for i in pool
+                           if anchor in re.sub(r'<[^>]+>', '', blocks[i]['v'])), None)
+                if hi is None:
+                    continue
+                end = next((i for i in pool if i > hi), len(blocks))
+                # ⭐ 先在小节范围内按页码精确落点（C19「破头」这类：整条目里 p57 出现四次，
+                #    锚点把范围缩小后才能落到讲破头的那句上）；范围内没有同页引文，
+                #    才退回小节的第一处引文——这正是多数锚点的用法（页码本来就对不上）。
+                q = next((j for j, bk, pg in qinfo
+                          if hi < j < end and bk == book and page in pg), None)
+                if q is None:
+                    q = next((j for j in range(hi + 1, end)
+                              if blocks[j]['t'] == 'q'), None)
                 plan.setdefault((q if q is not None else hi, 1), []).append((x, 'anchor'))
+                break
+            else:
+                problems_img.append(f'{no}：找不到小节「{anchor}」')
+            if hi is not None:
                 continue
-            problems_img.append(f'{no}：找不到小节「{anchor}」')
         exact = [i for i, bk, pg in qinfo if bk == book and page in pg]
         if exact:
             plan.setdefault((exact[0], 1), []).append((x, 'exact'))
