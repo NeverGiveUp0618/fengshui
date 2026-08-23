@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """精讲稿 markdown → data/lectures.js
 
-源：Obsidian/MyNotes/学习/风水教材/0N-精讲-X-*.md（跨教材整合稿）
+源：content/0N-精讲-X-*.md（跨教材整合稿）
 产物：data/lectures.js（勿手改）
 
 精讲稿与《风水第一课》那种通读原文不同，它是**结构化**的：一句话结论、
@@ -18,8 +18,7 @@ try:
 except ImportError:
     LEC_IMG, BOOK_SLUG = {}, {}
 
-SRC_DIR = os.path.expanduser(
-    '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MyNotes/学习/风水教材')
+SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'content')
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'lectures.js')
 IMG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', 'lecimg')
 
@@ -312,7 +311,7 @@ def main():
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     js = ('/* 本文件由 build_lectures.py 生成，勿手改。'
-          '源：Obsidian/MyNotes/学习/风水教材/0N-精讲-*.md */\n'
+          '源：content/0N-精讲-*.md */\n'
           'const LECTURES=' + json.dumps(cats, ensure_ascii=False, separators=(',', ':')) + ';\n'
           'if(typeof module!=="undefined")module.exports={LECTURES};\n')
     open(OUT, 'w', encoding='utf8').write(js)

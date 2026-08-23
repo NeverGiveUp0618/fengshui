@@ -9,8 +9,7 @@
 """
 import re, os, sys, json
 
-SRC_DIR = os.path.expanduser(
-    '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MyNotes/学习/风水教材')
+SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'content')
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'textbook.js')
 
 # 已收录的教材：(文件名, 册名, 副标题, 分组定义)
@@ -122,7 +121,7 @@ def main():
         sys.exit(1)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    parts = ['/* 本文件由 build.py 生成，勿手改。源：Obsidian/MyNotes/学习/风水教材/ */\n',
+    parts = ['/* 本文件由 build.py 生成，勿手改。源：content/ */\n',
              'const TEXTBOOKS=[\n']
     for b in books_out:
         parts.append('{id:\'%s\',name:\'%s\',sub:\'%s\',source:\'%s\','
