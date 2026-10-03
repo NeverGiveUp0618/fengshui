@@ -54,8 +54,9 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
 
 /* ⭐ 宽屏拉开（2026-08-11 修正）：布局不变，只放开容器宽度。
    ⚠️ 这站容器用的是 width:min(100%,520px) 而不是 max-width，要改 width。
-   ⚠️ 初版做成了 .section 重排多列，用户反馈「整体布局都变了」，已撤销。 */
-@media(min-width:900px){
+   ⚠️ 初版做成了 .section 重排多列，用户反馈「整体布局都变了」，已撤销。
+   ⚠️ 2026-10-03 阈值 900→521：平板竖屏(768~834)原先没触发、两边留空。 */
+@media(min-width:521px){
   main.app{width:min(100%,1600px)}
   /* ⚠️ 底栏得跟着容器一起放开，否则宽屏上它还缩在中间 520px 里。 */
   .tabbar{width:min(100%,1600px)}
