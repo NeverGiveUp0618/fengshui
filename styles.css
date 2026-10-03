@@ -60,6 +60,8 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
   main.app{width:min(100%,1600px)}
   /* ⚠️ 底栏得跟着容器一起放开，否则宽屏上它还缩在中间 520px 里。 */
   .tabbar{width:min(100%,1600px)}
+  /* ⚠️ 2026-10-03 弹出阅读面板原先 560px，平板上也两边留空，一起放开。 */
+  .sheet-panel{width:min(100%,1600px)}
 }
 
 /* ---- 教材精读：首页目录（暗）+ sheet 内长文阅读（浅）---- */
