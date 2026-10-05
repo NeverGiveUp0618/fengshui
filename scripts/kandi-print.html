@@ -1,100 +1,236 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>勘地本</title>
+<!-- 勘地本 PDF 模板：?p=1 自查题册｜2 实操十三步｜3 参数表·山地｜4 参数表·城市｜5 教材案例练习册
+     导出：Chrome --headless=new --no-pdf-header-footer --print-to-pdf=... "http://localhost:8765/scripts/kandi-print.html?p=N" -->
 <style>
-@page{size:A4;margin:14mm 14mm 16mm}
-:root{--ink:#1f2d38;--ink2:#4a5c69;--mute:#7f919e;--line:#bcd2e2;--dai:#2f6690;--qing:#5f8574;--zhu:#a9442f;--jin:#9c7a45;--paper:#e6f0f7;--sky:#7fb3d5}
+@page{size:A4;margin:13mm 13mm 15mm}
+:root{--ink:#1f2d38;--ink2:#4a5c69;--mute:#7f919e;--line:#bcd2e2;--line2:#dbe8f1;--dai:#2f6690;--sky:#7fb3d5;--qing:#4f8a74;--zhu:#a9442f;--jin:#9c7a45;--paper:#e9f2f8}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);font:10.5pt/1.65 "Songti SC","STSong",serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.cover{height:250mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.18),transparent 30%),linear-gradient(160deg,#2f6690,#4f90c0 60%,#9cc7e4);color:#fff;border-radius:6px;page-break-after:always}
-.cover .seal{background:var(--zhu);color:#fff;width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px}
+.sans{font-family:"PingFang SC",sans-serif}
+.cover{height:262mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(circle at 82% 14%,rgba(255,255,255,.2),transparent 28%),radial-gradient(circle at 12% 88%,rgba(255,255,255,.12),transparent 30%),linear-gradient(160deg,#2f6690,#4f90c0 60%,#9cc7e4);color:#fff;border-radius:6px;page-break-after:always}
+.cover .seal{background:var(--zhu);color:#fff;width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .cover h1{font-size:34pt;letter-spacing:.35em;margin:0 0 0 .35em;font-weight:600}
-.cover h2{font-size:15pt;letter-spacing:.2em;color:#fff;font-weight:500;margin:14px 0 30px}
-.cover p{color:rgba(255,255,255,.88);font-size:10pt;max-width:120mm;margin:4px 0}
-h2.t{font-size:15pt;letter-spacing:.15em;border-bottom:1.5px solid var(--dai);padding-bottom:4px;margin:0 0 8px;color:var(--dai)}
-h3.c{color:var(--dai);font-size:12pt;margin:14px 0 4px;letter-spacing:.08em;display:flex;align-items:center;gap:8px;page-break-after:avoid}
+.cover h2{font-size:16pt;letter-spacing:.2em;font-weight:500;margin:14px 0 26px}
+.cover p{color:rgba(255,255,255,.9);font-size:10pt;max-width:130mm;margin:4px 0;font-family:"PingFang SC",sans-serif}
+.cover .no{margin-top:30px;font-size:9pt;letter-spacing:.3em;opacity:.8}
+h2.t{font-size:15pt;letter-spacing:.15em;border-bottom:1.5px solid var(--dai);padding-bottom:4px;margin:0 0 8px;color:var(--dai);page-break-after:avoid}
+h3.c{color:var(--dai);font-size:12pt;margin:12px 0 4px;letter-spacing:.08em;display:flex;align-items:center;gap:8px;page-break-after:avoid}
 h3.c span{display:inline-grid;place-items:center;width:20px;height:20px;background:linear-gradient(135deg,var(--dai),var(--sky));color:#fff;border-radius:4px;font-size:10pt}
-.q{display:grid;grid-template-columns:18px 1fr 64px;gap:4px;padding:4px 0;border-bottom:.5px dashed var(--line);page-break-inside:avoid}
-.q .n{color:var(--mute);font-size:8.5pt;padding-top:2px}
-.q b{font-weight:600}.q .a{display:block;font-size:9pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;margin-top:1px}
-.src{color:var(--jin);font-size:8pt;white-space:nowrap;margin-left:4px;font-family:"PingFang SC",sans-serif}
-.box{font-size:8.5pt;color:var(--mute);font-family:"PingFang SC",sans-serif;text-align:right}
 .note{font-size:9.5pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;margin:0 0 8px}
+.src{color:var(--jin);font-size:8pt;white-space:nowrap;margin-left:4px;font-family:"PingFang SC",sans-serif}
+.pb{page-break-before:always}
+/* 题册 */
+.q{display:grid;grid-template-columns:24px 1fr 62px;gap:4px;padding:3px 0;border-bottom:.5px dashed var(--line);page-break-inside:avoid;font-size:10.3pt}
+.q .n{color:var(--dai);font-size:8.5pt;padding-top:2px;font-family:"PingFang SC",sans-serif}
+.box{font-size:8.5pt;color:var(--mute);font-family:"PingFang SC",sans-serif;text-align:right;padding-top:2px}
+.ans{display:grid;grid-template-columns:24px 1fr;gap:4px;font-size:9pt;font-family:"PingFang SC",sans-serif;padding:2px 0;border-bottom:.5px dotted var(--line2);page-break-inside:avoid}
+.ans .n{color:var(--dai)}
+.poem{font-size:12pt;line-height:2.2;letter-spacing:.06em;margin:4px 0 10px;padding:6px 12px;background:#f5f9fc;border-left:3px solid var(--sky);page-break-inside:avoid}
+.poem b{font-size:9pt;color:var(--mute);font-family:"PingFang SC",sans-serif;display:block;letter-spacing:0;line-height:1.4}
+.blank{display:inline-block;width:1.3em;border-bottom:1px solid var(--ink2);margin:0 1px}
+table{border-collapse:collapse;width:100%;font-size:9pt;font-family:"PingFang SC",sans-serif;page-break-inside:avoid}
+th,td{border:.6px solid var(--line);padding:1px 4px;text-align:center}th{background:var(--paper);font-weight:600;color:var(--dai)}
+td.l{text-align:left}
+/* 步骤 */
 .step{border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:6px;background:#f7fbfe;padding:7px 10px 6px;margin:8px 0;page-break-inside:avoid}
-.step h3{margin:0;font-size:12.5pt;display:flex;align-items:center;gap:8px}
+.step h3{margin:0;font-size:12.5pt;display:flex;align-items:center;gap:8px;color:var(--dai)}
 .step h3 i{font-style:normal;width:22px;height:22px;background:linear-gradient(135deg,var(--dai),var(--sky));border-radius:50%;display:inline-grid;place-items:center;font-size:10pt;color:#fff}
-.step h3{color:var(--dai)}
 .step .one{color:var(--ink2);margin:1px 0 4px 30px;font-size:10pt}
 .blk{display:grid;grid-template-columns:52px 1fr;gap:4px;font-size:9.5pt;font-family:"PingFang SC",sans-serif;margin:2px 0}
 .blk .l{font-size:8.5pt;border-radius:3px;text-align:center;height:16px;line-height:16px;margin-top:2px}
-.l.do{background:#e3e8ea;color:var(--dai)}.l.ru{background:#e2ebe4;color:var(--qing)}.l.wa{background:#f4e3dc;color:var(--zhu)}
+.l.do{background:#dceaf5;color:var(--dai)}.l.ru{background:#e2efe8;color:var(--qing)}.l.wa{background:#f4e3dc;color:var(--zhu)}.l.out{background:#f3ead8;color:var(--jin)}
 .blk ul{margin:0;padding-left:14px}.blk li{margin:0}
 .ck li{list-style:none;margin-left:-14px}.ck li:before{content:"☐ ";color:var(--dai)}
-.pb{page-break-before:always}
-.form h3{font-size:11pt;margin:7px 0 3px;background:var(--paper);padding:3px 8px;border-left:3px solid var(--dai);page-break-after:avoid}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 22px;margin:10px 0}
+.flow .g{grid-column:1/-1;font-size:10pt;color:#fff;background:linear-gradient(90deg,var(--dai),var(--sky));border-radius:4px;padding:2px 10px;letter-spacing:.15em}
+.flow div.b{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#f7fbfe;position:relative;min-height:62px}
+.flow div.b i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--dai);color:#fff;font-size:9pt;margin-right:5px}
+.flow div.b b{font-size:11pt;color:var(--dai)}
+.flow div.b p{margin:2px 0 0;font-size:8.6pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;line-height:1.45}
+.flow div.b:after{content:"→";position:absolute;right:-17px;top:20px;color:var(--sky);font-size:14pt}
+.flow div.b.e:after{display:none}
+/* 表单 */
+.form h3{font-size:11pt;margin:7px 0 3px;background:var(--paper);padding:3px 8px;border-left:3px solid var(--dai);color:var(--dai);page-break-after:avoid}
 .fl{display:flex;gap:10px;font-size:9.3pt;font-family:"PingFang SC",sans-serif;margin:3px 0;align-items:flex-end}
 .fl .f{flex:1;display:flex;gap:4px;align-items:flex-end}.fl .f span{white-space:nowrap}.fl .f u{flex:1;border-bottom:.7px solid var(--ink2);height:16px}
 .lines div{border-bottom:.7px solid var(--line);height:20px}
-.opts{font-size:9pt;font-family:"PingFang SC",sans-serif;margin:2px 0;line-height:1.75}.opts b{font-weight:600;margin-right:4px}
+.opts{font-size:9pt;font-family:"PingFang SC",sans-serif;margin:2px 0;line-height:1.75}.opts b{font-weight:600;margin-right:4px;color:var(--dai)}
 .opts span{margin-right:9px;white-space:nowrap}.opts span:before{content:"☐";margin-right:2px;color:var(--dai)}
-table{border-collapse:collapse;width:100%;font-size:9pt;font-family:"PingFang SC",sans-serif}
-th,td{border:.6px solid var(--line);padding:1px 4px;text-align:center}th{background:var(--paper);font-weight:600}
-td.l{text-align:left}
-.sec{page-break-inside:avoid}
-.foot{font-size:8pt;color:var(--mute);margin-top:8px;font-family:"PingFang SC",sans-serif}
+.compass{display:flex;gap:14px;align-items:center;page-break-inside:avoid}
+.compass .leg{font-size:9pt;font-family:"PingFang SC",sans-serif;color:var(--ink2);line-height:1.8}
+.qk table{font-size:8.3pt}.qk h3.c{margin:7px 0 2px;font-size:11pt}.qk td,.qk th{padding:0 4px}
+/* 练习册 */
+.case{border:1px solid var(--line);border-radius:6px;padding:7px 11px;margin:9px 0;page-break-inside:avoid}
+.case h4{margin:0 0 3px;font-size:12pt;color:var(--dai);display:flex;gap:8px;align-items:center}
+.case h4 i{font-style:normal;font-size:8.5pt;background:#dceaf5;color:var(--dai);border-radius:3px;padding:0 6px;font-family:"PingFang SC",sans-serif}
+.case h4 em{font-style:normal;color:#fff;background:var(--dai);border-radius:50%;width:20px;height:20px;display:inline-grid;place-items:center;font-size:9pt}
+.case .sit{font-size:10pt;margin:2px 0 4px}
+.case ol{margin:0;padding-left:18px;font-size:9.6pt;font-family:"PingFang SC",sans-serif}
+.case ol li{margin:2px 0}
+.case ol li:after{content:"";display:block;border-bottom:.7px solid var(--line);height:17px}
+.key{font-size:9.4pt;font-family:"PingFang SC",sans-serif;padding:4px 0;border-bottom:.5px dashed var(--line);page-break-inside:avoid}
+.key b{color:var(--dai);font-family:"Songti SC",serif;font-size:10.5pt}
 </style></head><body><div id="out"></div>
 <script src="../data/kandi.js"></script>
 <script>
-const part=new URLSearchParams(location.search).get('p')||'1';const E=s=>String(s).replace(/</g,'&lt;');
-const cover=(t,sub,lines)=>`<div class="cover"><div class="seal">观山</div><h1>${t}</h1><h2>${sub}</h2>${lines.map(l=>`<p>${l}</p>`).join('')}</div>`;
+const part=new URLSearchParams(location.search).get('p')||'1';const E=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const BOOKS='出处缩写：初＝杨公风水初级｜中＝中级｜家＝家居风水高级｜高＝高级｜一课＝风水第一课';
+const cover=(n,t,sub,lines)=>`<div class="cover"><div class="seal">观山</div><h1>${t}</h1><h2>${sub}</h2>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="no">之 ${n}</div></div>`;
+const S=KD_S24;const xi=z=>S[(S.indexOf(z)+12)%24];
+const B='<span class="blank"></span>';
 let h='';
+
+/* ---------- 1 自查题册 ---------- */
 if(part==='1'){
-  h+=cover('勘地本','知识自查清单',[`共 ${KD_CHECK.length} 题，分 13 类（A–M）`,'先遮住小字自己答，答得出勾「会」，似懂非懂勾「糊」','要点只取教材原话，金色是出处：初＝杨公初级｜中＝中级｜家＝家居高级｜高＝高级｜一课＝风水第一课']);
-  h+='<h2 class="t">知识自查清单</h2>';let n=0;
-  KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="q"><span class="n">${n}</span><div><b>${E(x[1])}</b><span class="a">${E(x[2])}<span class="src">〔${E(x[3])}〕</span></span></div><div class="box">☐会 ☐糊</div></div>`})});
+  h+=cover('一','勘地本','知识自查题册',[`问答 ${KD_CHECK.length} 题＋口诀默写＋查表题`,'先答完一类，再翻到后面答案页对照，对的勾「对」、错的勾「错」','错题就是下一轮要回精讲重读的地方',BOOKS]);
+  h+='<h2 class="t">一、问答自查</h2><p class="note">先自己说出或写下要点，再翻答案页对照。答案只取教材原话。</p>';let n=0;
+  KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="q"><span class="n">${n}</span><div>${E(x[1])}</div><div class="box">☐对 ☐错</div></div>`})});
+  // 默写
+  h+=`<div class="pb"><h2 class="t">二、口诀默写</h2><p class="note">在横线上填字。答案见答案页第二部分。</p>
+  <div class="poem"><b>① 五星〔一课 第18课｜初 p27〕</b>地理先须辨五星，木${B}火${B}土星${B}，金${B}水${B}多成像，千变万化此中生。</div>
+  <div class="poem"><b>② 八煞〔中 p195〕</b>坎${B}坤${B}震山${B}，巽${B}乾${B}兑${B}头，艮${B}离${B}为曜煞，宅墓逢之一齐休。</div>
+  <div class="poem"><b>③ 贵人峰〔中 p257〕</b>甲戊庚${B}${B}，乙己${B}${B}乡，丙丁${B}${B}位，壬癸${B}${B}藏，六辛逢${B}${B}，此是贵人方。</div>
+  <div class="poem"><b>④ 反复黄泉〔中 p186〕</b>庚丁${B}上是黄泉，${B}上庚丁切莫言。乙丙须防${B}水先，${B}向忌行乙丙上，甲癸向上休见${B}，${B}逢甲癸祸连连，辛壬水路怕当${B}，${B}向辛壬祸亦然。</div>
+  <div class="poem"><b>⑤ 五不葬〔初 p373〕</b>${B}${B}${B}${B}${B}</div>
+  <div class="poem"><b>⑥ 证穴五法〔初 p145〕</b>${B}${B}证穴、${B}${B}证穴、${B}${B}证穴、${B}${B}证穴、${B}${B}证穴</div>
+  <div class="poem"><b>⑦ 双龙双水断：写出断语〔中 p174,175〕</b>壬子${B}${B}　癸丑${B}${B}　艮寅${B}${B}${B}${B}　乙辰${B}${B}　辰巽${B}${B}　巳丙${B}${B}　坤申${B}${B}${B}${B}　申庚${B}${B}　戌乾${B}${B}${B}</div></div>`;
+  // 查表
+  h+=`<div class="pb"><h2 class="t">三、查表题</h2><p class="note">不看书填出来。这几张表就是现场下罗盘后最常查的。</p>
+  <h3 class="c"><span>1</span>一卦三山　〔中 p199 以一卦三山分组〕</h3><table><tr>${['坎','艮','震','巽','离','坤','兑','乾'].map(g=>`<th>${g}</th>`).join('')}</tr><tr>${'<td style="height:24px"></td>'.repeat(8)}</tr></table>
+  <h3 class="c"><span>2</span>二十四山劫煞（以坐山论）　〔中 p198〕</h3><table><tr><th>坐山</th>${S.slice(0,12).map(z=>`<th>${z}</th>`).join('')}</tr><tr><td>劫在</td>${'<td style="height:24px"></td>'.repeat(12)}</tr><tr><th>坐山</th>${S.slice(12).map(z=>`<th>${z}</th>`).join('')}</tr><tr><td>劫在</td>${'<td style="height:24px"></td>'.repeat(12)}</tr></table>
+  <h3 class="c"><span>3</span>隔壁口：写出向上前后一字　〔中 p200〕</h3><table><tr>${['子','卯','午','酉','甲','丙','乾','艮'].map(x=>`<th>${x}向</th>`).join('')}</tr><tr>${'<td style="height:24px"></td>'.repeat(8)}</tr></table>
+  <h3 class="c"><span>4</span>九星对五行与吉凶　〔初 p48,401〕</h3><table><tr><th></th>${KD_QUICK.star9.map(x=>`<th>${x[0]}</th>`).join('')}</tr><tr><td>五行</td>${'<td style="height:22px"></td>'.repeat(9)}</tr><tr><td>吉凶</td>${'<td style="height:22px"></td>'.repeat(9)}</tr></table>
+  <h3 class="c"><span>5</span>穴上九星对杨公九星　〔中 p9,19〕</h3><table><tr><th></th>${KD_QUICK.xue9.map(x=>`<th>${x[0]}</th>`).join('')}</tr><tr><td>杨公九星</td>${'<td style="height:22px"></td>'.repeat(9)}</tr></table>
+  <h3 class="c"><span>6</span>判一判：下列情况犯什么？</h3><table><tr><th style="width:40%">情况</th><th>答案</th></tr>${[['子山午向，辰方来水'],['乾山巽向，卯方有垃圾桶'],['未山丑向，去癸水'],['酉山卯向，入首龙坤'],['坤山艮向，来寅水'],['申龙入首，辛山乙向，走寅水'],['甲山庚向，见辛峰'],['甲山庚向，见丑峰']].map(r=>`<tr><td class="l">${r[0]}</td><td style="height:24px"></td></tr>`).join('')}</table></div>`;
+  // 答案
+  h+='<div class="pb"><h2 class="t">答案 · 一、问答</h2>';n=0;
+  KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="ans"><span class="n">${n}</span><div>${E(x[2])}<span class="src">〔${E(x[3])}〕</span></div></div>`})});
+  h+='</div>';
+  const t6=[['子山午向，辰方来水','坐山八煞（坎龙），水克山祸速〔中 p195,196〕'],['乾山巽向，卯方有垃圾桶','劫煞（乾山劫在卯）〔中 p198,200〕'],['未山丑向，去癸水','隔壁口（丑向前后癸、艮）〔中 p200〕'],['酉山卯向，入首龙坤','龙上八煞（坤兔，向来克龙）〔中 p195〕'],['坤山艮向，来寅水','向上八煞，煞带廉贞血满怀〔中 p196〕'],['申龙入首，辛山乙向，走寅水','串珠理（龙冲口），合交媾〔中 p210〕'],['甲山庚向，见辛峰','河图金局（庚向见辛），辛为4生数主丁〔中 p223–225〕'],['甲山庚向，见丑峰','贵人峰（甲戊庚牛羊）〔中 p257〕']];
+  h+=`<div class="pb"><h2 class="t">答案 · 二、默写　三、查表</h2>
+  <table><tr><th style="width:24%">题</th><th>答案</th></tr>
+  <tr><td>① 五星</td><td class="l">木<b>直</b>火<b>尖</b>土星<b>横</b>，金<b>圆</b>水<b>曲</b>（初级首句作"辨五行"）</td></tr>
+  <tr><td>② 八煞</td><td class="l">坎<b>龙</b>坤<b>兔</b>震山<b>猴</b>，巽<b>鸡</b>乾<b>马</b>兑<b>蛇</b>头，艮<b>虎</b>离<b>猪</b>为曜煞</td></tr>
+  <tr><td>③ 贵人峰</td><td class="l">甲戊庚<b>牛羊</b>，乙己<b>鼠猴</b>乡，丙丁<b>猪鸡</b>位，壬癸<b>兔蛇</b>藏，六辛逢<b>马虎</b>（民间另一版"庚辛逢马虎"）</td></tr>
+  <tr><td>④ 反复黄泉</td><td class="l">庚丁<b>坤</b>上…<b>坤</b>上庚丁…乙丙须防<b>巽</b>水先，<b>巽</b>向忌行乙丙上，甲癸向上休见<b>艮</b>，<b>艮</b>逢甲癸…辛壬水路怕当<b>乾</b>，<b>乾</b>向辛壬…</td></tr>
+  <tr><td>⑤ 五不葬</td><td class="l">童、石、独、过、断</td></tr>
+  <tr><td>⑥ 证穴五法</td><td class="l">朝山、明堂、水势、乐山、鬼山（后两种专用于横龙结穴）</td></tr>
+  <tr><td>⑦ 双龙双水</td><td class="l">壬子水厄｜癸丑双生｜艮寅虎咬并瞎眼｜乙辰自缢｜辰巽聋哑｜巳丙火灾｜坤申双朝寡母缢｜申庚盗贼｜戌乾鼓盆凶</td></tr>
+  <tr><td>1 一卦三山</td><td class="l">${['坎','艮','震','巽','离','坤','兑','乾'].map(g=>g+'＝'+S.filter(z=>KD_GUA[z]===g).sort((a,b)=>((S.indexOf(a)+1)%24)-((S.indexOf(b)+1)%24)).join('')).join('　')}</td></tr>
+  <tr><td>2 劫煞</td><td class="l">${S.map(z=>z+'→'+KD_JIE[z]).join('　')}</td></tr>
+  <tr><td>3 隔壁口</td><td class="l">${['子','卯','午','酉','甲','丙','乾','艮'].map(x=>{const i=S.indexOf(x);return x+'向：'+S[(i+23)%24]+'、'+S[(i+1)%24]}).join('　')}</td></tr>
+  <tr><td>4 九星</td><td class="l">${KD_QUICK.star9.map(x=>x[0]+' '+x[1]+'·'+x[2]).join('　')}</td></tr>
+  <tr><td>5 穴上九星</td><td class="l">${KD_QUICK.xue9.map(x=>x[0]+'＝'+x[2]).join('　')}</td></tr>
+  ${t6.map(r=>`<tr><td class="l" style="font-size:8.5pt">6 ${r[0]}</td><td class="l">${r[1]}</td></tr>`).join('')}
+  </table></div>`;
 }
+
+/* ---------- 2 实操十三步 ---------- */
 if(part==='2'){
-  h+=cover('勘地本','出门看风水 · 实操十三步',['先峦头后理气　先外后内　先后龙后堂局','每步三栏：做什么（打勾）／判据·口诀／易错','跑通一个案例，以后每次照这个走']);
-  h+='<h2 class="t">实操十三步</h2>';
+  h+=cover('二','勘地本','出门看风水 · 实操十三步',['先峦头后理气　先外后内　先后龙后堂局','每步：做什么（打勾）／判据·口诀／易错','末尾附「城市楼房怎么走」',BOOKS]);
+  const grp=[['峦头 · 用眼睛看',[0,1,2,3,4,5,6,7]],['罗盘与理气 · 用罗盘测',[8,9]],['收尾 · 判断与做法',[10,11,12]]];
+  h+='<h2 class="t">流程总图</h2><p class="note">一张图记住顺序：没看清龙，不格龙；没格准龙，不立向；峦头没看完，不上理气。</p><div class="flow">';
+  grp.forEach(([g,ids])=>{h+=`<div class="g">${g}</div>`;ids.forEach((i,k)=>{const s=KD_STEPS[i];h+=`<div class="b ${(k%3===2||k===ids.length-1)?'e':''}"><i>${i}</i><b>${E(s.t)}</b><p>${E(s.one)}</p></div>`})});
+  h+='</div><p class="note" style="margin-top:12px">三条贯穿全程的话：<b>富贵龙身出</b>（龙为第一）〔初 p8,335〕；<b>有地没地全看下臂</b>（水口一票否决）〔初 p147〕；<b>理气无峦头不准，峦头无理气不灵</b>〔初 p11〕。</p>';
+  h+='<div class="pb"><h2 class="t">实操十三步</h2>';
   KD_STEPS.forEach((s,i)=>{h+=`<div class="step"><h3><i>${i}</i>${E(s.t)}</h3><p class="one">${E(s.one)}</p>
   <div class="blk"><span class="l do">做什么</span><ul class="ck">${s.acts.map(a=>`<li>${E(a)}</li>`).join('')}</ul></div>
   <div class="blk"><span class="l ru">判据</span><ul>${s.rules.map(a=>`<li>${E(a)}</li>`).join('')}</ul></div>
   <div class="blk"><span class="l wa">易错</span><ul>${s.warn.map(a=>`<li>${E(a)}</li>`).join('')}</ul></div>
   <div style="text-align:right"><span class="src">〔${E(s.src)}〕</span></div></div>`});
+  h+='</div><div class="pb"><h2 class="t">城市楼房怎么走</h2><p class="note">十三步同一套顺序，城市里换成下面的看法。参数表请用「城市楼房版」。</p><table><tr><th style="width:16%">步骤</th><th>城市里怎么看</th><th style="width:20%">出处</th></tr>'+KD_CITY.map(r=>`<tr><td>${r[0]}</td><td class="l">${E(r[1])}</td><td>${r[2]}</td></tr>`).join('')+'</table></div>';
+}
+
+/* ---------- 3 / 4 参数表 ---------- */
+const F=(...a)=>`<div class="fl">${a.map(x=>`<div class="f"><span>${x}</span><u></u></div>`).join('')}</div>`;
+const O=(t,arr)=>`<div class="opts"><b>${t}</b>${arr.map(x=>`<span>${x}</span>`).join('')}</div>`;
+const LN=k=>`<div class="lines">${'<div></div>'.repeat(k)}</div>`;
+function compass(){
+  const R=[44,64,92,128],cx=135,cy=135;let g='';
+  const P=(r,a)=>[cx+r*Math.sin(a*Math.PI/180),cy-r*Math.cos(a*Math.PI/180)];
+  R.forEach(r=>g+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#7fb3d5" stroke-width="${r===92?1.2:.8}"/>`);
+  for(let i=0;i<24;i++){const a=180+i*15-7.5;const[x1,y1]=P(R[1],a),[x2,y2]=P(R[3],a);g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#bcd2e2" stroke-width=".7"/>`;
+    const[tx,ty]=P(78,180+i*15);const gz=['子','卯','午','酉'].includes(S[i]);g+=`<text x="${tx}" y="${ty+4.5}" font-size="13" text-anchor="middle" fill="${gz?'#a9442f':'#1f2d38'}" font-family="Songti SC">${S[i]}</text>`}
+  const gua=[['坎',180],['艮',225],['震',270],['巽',315],['离',0],['坤',45],['兑',90],['乾',135]];
+  for(let i=0;i<8;i++){const a=180+i*45-22.5;const[x1,y1]=P(R[0],a),[x2,y2]=P(R[1],a);g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#bcd2e2" stroke-width=".7"/>`}
+  gua.forEach(([n,a])=>{const[tx,ty]=P(54,a);g+=`<text x="${tx}" y="${ty+4}" font-size="11" text-anchor="middle" fill="#2f6690" font-family="Songti SC">${n}</text>`});
+  g+=`<line x1="${cx-6}" y1="${cy}" x2="${cx+6}" y2="${cy}" stroke="#a9442f"/><line x1="${cx}" y1="${cy-6}" x2="${cx}" y2="${cy+6}" stroke="#a9442f"/>`;
+  return `<svg width="270" height="270" viewBox="0 0 270 270">${g}</svg>`;
+}
+const COMPASS=`<div class="compass">${compass()}<div class="leg"><b style="color:var(--dai)">现场标图</b><br>上南下北、左东右西（罗盘习惯）<br>最外圈空白处画：<br>　来水 →（箭头指向穴）<br>　去水 ←（箭头指向外）<br>　山峰 ▲　高楼 ■　路 ═<br>　动象/破败物 ✕<br>坐山涂实，向上画箭头<br>命中八煞、劫煞的字圈红</div></div>`;
+const LIQI=`<h3>9 理气核算（对照末页速查表）</h3>
+  <table><tr><th style="width:96px">口诀</th><th style="width:150px">看什么</th><th style="width:66px">结果</th><th>说明</th></tr>
+  ${[['坐山八煞','来去水、峰对坐山'],['龙上八煞','入首龙对向'],['劫煞','水、动象、破败对坐山'],['隔壁口','向上前后一字有水'],['反复黄泉','向上；看救贫四句'],['双龙双水','骑线的龙、水、峰'],['隔八相生','向上隔两字'],['夫妇交媾','龙与坐、向与水'],['串珠','入首龙对出水口'],['贫单绝','入首龙对向局墓库'],['先后天水','坐山对来去水'],['河图／归元','天干向／纳甲'],['辅星山法','坐山对宫起贪翻峰'],['三吉六秀','只对峰'],['贵人峰','以坐山论'],['五鬼运财','廉贞向巨门水'],['十二长生','水口定局推房份'],['分金三针','合局正针，否则中缝针']].map(r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td><td>☐吉 ☐凶</td><td></td></tr>`).join('')}</table>`;
+const TAIL=`<h3>11 综合论断</h3>${['丁','财','贵','寿'].map(x=>`<div class="opts"><b>${x}</b><span>旺</span><span>平</span><span>弱</span> 依据：______________________________________________</div>`).join('')}${F('房份（青龙长房／白虎小房／中间二房）')}${F('主要问题')}${F('说给东家的话（留余地，说眼前事）')}${LN(1)}
+  <h3>12 做法与验证</h3>${F('做法建议')}${LN(1)}${F('东家反馈／应验')}${F('复盘：哪步没把握')}`;
+function quickPages(){
+  let q=`<div class="pb"><h2 class="t">二十四山口诀速查表</h2><p class="note" style="font-size:9pt">按坐山查。八煞按一卦三山；劫煞、贵人峰以坐山论；隔壁口、反复黄泉、河图以向上论。命中只是对照：合局应吉、不合局应凶，最后回到整体观。</p>
+  <table><tr><th>坐山</th><th>向</th><th>卦</th><th>坐山八煞<br><small>〔中p195〕</small></th><th>劫煞<br><small>〔中p198〕</small></th><th>隔壁口<br><small>向前后字〔中p200〕</small></th><th>反复黄泉<br><small>向上见〔中p186〕</small></th><th>归元水<br><small>〔中p241〕</small></th><th>河图<br><small>向见〔中p224〕</small></th><th>贵人峰<br><small>〔中p257〕</small></th></tr>
+  ${S.map(z=>{const x=xi(z),g=KD_GUA[z],i=S.indexOf(x);return `<tr><td><b>${z}</b></td><td>${x}</td><td>${g}</td><td>${g==='艮'?'（不存在）':KD_BASHA[g]}</td><td>${KD_JIE[z]}</td><td>${S[(i+23)%24]}、${S[(i+1)%24]}</td><td>${(KD_HUANGQUAN[x]||['—']).join('、')}</td><td>${KD_GUIYUAN[z]||'—'}</td><td>${KD_HETU[x]||'—'}</td><td>${(KD_GUIREN[z]||['—']).join('、')}</td></tr>`}).join('')}</table>
+  <p class="note" style="margin-top:6px">龙上八煞＝入首龙所属卦的八煞落在向上（例：酉山卯向坤龙）；向上八煞只有坤山艮向来寅水；串珠＝入首龙与出水口在罗盘一条直线上（对宫字）。</p>
+  <h3 class="c"><span>双</span>双龙双水断（只论骑线，超过 3° 不算）〔中 p174–180〕</h3>
+  <table>${[0,6,12,18].map(a=>`<tr>${Object.entries(KD_SHUANG).slice(a,a+6).map(([k,v])=>`<td style="width:16.6%"><b>${k}</b> ${v}</td>`).join('')}</tr>`).join('')}</table>
+  <p class="note">最凶六个：艮寅、巽巳、庚申、卯乙、辛酉、壬亥。</p></div>`;
+  q+=`<div class="pb qk"><h2 class="t">峦头速查</h2>
+  <h3 class="c"><span>九</span>九星吉凶〔初 p48,401〕</h3><table><tr><th>星</th><th>五行</th><th>吉凶</th><th>关键</th></tr>${KD_QUICK.star9.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="l">${r[3]}</td></tr>`).join('')}</table>
+  <h3 class="c"><span>穴</span>穴上九星（廖家）〔中 p9–19〕</h3><table><tr><th>穴星</th><th>五行</th><th>即杨公</th><th>形</th></tr>${KD_QUICK.xue9.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="l">${r[3]}</td></tr>`).join('')}</table>
+  <h3 class="c"><span>水</span>五城水〔中 p71–75〕</h3><table><tr><th>名</th><th>形</th><th>要点</th></tr>${KD_QUICK.wucheng.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td class="l">${r[2]}</td></tr>`).join('')}</table>
+  <h3 class="c"><span>风</span>二十四山凹风断（凹风吹在哪字应哪字）〔中 p136,137〕</h3><table>${[0,5,10].map(a=>`<tr>${KD_QUICK.feng24.slice(a,a+5).map(r=>`<td class="l" style="width:20%"><b>${r[0]}</b> ${r[1]}</td>`).join('')}</tr>`).join('')}</table>
+  <h3 class="c"><span>尺</span>现场尺度</h3><table>
+  <tr><td class="l" style="width:34%"><b>高不过眉，低不过膝</b></td><td class="l">站大门/阳台不抬头能看到对面楼顶；前方山在膝盖之上〔初 p145｜家 p182〕</td></tr>
+  <tr><td class="l"><b>九尺内堂</b></td><td class="l">阴宅从碑算留 3 米；阳宅兜唇按建筑大小成比例〔初 p165｜家 p170〕</td></tr>
+  <tr><td class="l"><b>水塘</b></td><td class="l">房子多宽水塘多宽；门前半月池不算驻水局；大湖太近血盆照镜〔中 p76,77〕</td></tr>
+  <tr><td class="l"><b>余坪</b></td><td class="l">一般不超过房屋深度；太长龙气未停〔家 p125,465〕</td></tr>
+  <tr><td class="l"><b>地漏</b></td><td class="l">阴宅前 1–2 米算地漏，与地大小有关〔初 p178〕</td></tr>
+  <tr><td class="l"><b>城市楼层</b></td><td class="l">二楼以上露风、越高越露胎；临江买四至七楼，太高看到割脚水〔中 p40,97〕</td></tr>
+  <tr><td class="l"><b>平原葬深</b></td><td class="l">一米左右；陕北黄土高坡要挖三米以上见五色土〔初 p450〕</td></tr></table></div>`;
+  return q;
 }
 if(part==='3'){
-  const F=(...a)=>`<div class="fl">${a.map(x=>`<div class="f"><span>${x}</span><u></u></div>`).join('')}</div>`;
-  const O=(t,arr)=>`<div class="opts"><b>${t}</b>${arr.map(x=>`<span>${x}</span>`).join('')}</div>`;
-  const LN=k=>`<div class="lines">${'<div></div>'.repeat(k)}</div>`;
-  h+=cover('勘地本','案例参数表',['一张表跑一个案例，按十三步顺序填','方位一律写罗盘地盘上压的字；压在两字之间写两个字（骑线）','末页附「二十四山口诀速查表」，现场直接查']);
-  h+=`<div class="form"><h2 class="t">案例参数表</h2>
-  <h3>0 出门前</h3>${F('案例名','日期')}${F('地点','类型')}${O('类型',['乡村阳宅','城市楼房','别墅','商铺','工厂','阴宅','祠堂'])}${F('东家与房份（兄弟几人／为谁看／谁撑家族）')}${F('东家诉求')}${O('罗盘已校',['海底线压0°/180°','针两头平'])}
-  <h3>1 入山观水口</h3>${O('地形',['高山','丘陵','平原','城市'])}${F('大水往哪流')}${F('总出水口在哪')}
-  <h3>2 寻龙</h3>${F('祖宗山 → 少祖山 → 父母山 → 穴星山')}${LN(1)}${O('穴星山九星',['贪狼','巨门','禄存','文曲','廉贞','武曲','破军','左辅','右弼','木火体'])}${O('过峡',['有护卫','有迎有送','蜂腰鹤膝'])}${O('开帐',['两脚长拖','帐不断','帐不低','帐角关水'])}${O('龙的品格',['贵','富','平','贱'])}${O('否决排查（犯了打勾）',['枪头鼠尾','童','石','独','过','断','无龙脉','城市后龙未开面'])}
+  h+=cover('三','勘地本','案例参数表 · 山地乡村版',['一张表跑一个案例，按十三步顺序填','方位一律写罗盘地盘上压的字；压在两字之间写两个字（骑线）','附：罗盘标图圆盘、二十四山口诀速查、峦头速查',BOOKS]);
+  h+=`<div class="form"><h2 class="t">案例参数表 · 山地乡村</h2>
+  <h3>0 出门前</h3>${F('案例名','日期')}${F('地点','类型')}${O('类型',['乡村阳宅','别墅','阴宅','祠堂','工厂'])}${F('东家与房份（兄弟几人／为谁看／谁撑家族）')}${F('东家诉求')}${O('罗盘已校',['海底线压0°/180°','针两头平'])}
+  <h3>1 入山观水口</h3>${O('地形',['高山','丘陵','平原'])}${F('大水往哪流')}${F('总出水口在哪')}
+  <h3>2 寻龙</h3>${F('祖宗山 → 少祖山 → 父母山 → 穴星山')}${LN(1)}${O('穴星山九星',['贪狼','巨门','禄存','文曲','廉贞','武曲','破军','左辅','右弼','木火体'])}${O('过峡',['有护卫','有迎有送','蜂腰鹤膝'])}${O('开帐',['两脚长拖','帐不断','帐不低','帐角关水'])}${O('龙的品格',['贵','富','平','贱'])}${O('否决排查（犯了打勾）',['枪头鼠尾','童','石','独','过','断','无龙脉（虚花假穴）'])}
   <h3>3 格龙</h3>${F('入首龙（站过峡最低点）','格龙位置')}
   <h3>4 点穴</h3>${O('',['开面如扇·宜阳宅','落脉如线·宜阴宅'])}${O('结穴',['顺','闪','横','逆'])}${O('穴星',['太阳','太阴','金水','天财','紫气','天罡','孤曜','燥火','扫荡'])}${O('证穴通过',['朝山','明堂','水势','乐山','鬼山'])}${O('凶穴（犯了打勾）',KD_XIONGXUE)}${F('余坪／兜唇','定点说明')}
   </div><div class="form pb">
-  <h3>5 察砂（站穴位／阳台／大门）</h3>
+  <h3>5 察砂（站穴位／大门）</h3>
   <table><tr><th style="width:84px">四象</th><th>形·星体·距离·方位</th><th style="width:210px">勾选</th></tr>${['青龙（左）','白虎（右）','朱雀·案山','朱雀·朝山','玄武·穴星山'].map(x=>`<tr><td>${x}</td><td></td><td class="l" style="font-size:7.6pt;line-height:1.35">☐秀 ☐粗 ☐正 ☐斜 ☐抱 ☐背<br>☐适中 ☐逼压 ☐太低 ☐顺水 ☐逆水 ☐凹风</td></tr>`).join('')}</table>
-  ${F('内明堂','中明堂','外明堂')}${O('水口砂',['狮象','龟蛇','华表','捍门','其他关栏','无关栏'])}${O('特殊砂',['左单提','右单提','左执笏','右执笏','三台','天马','笔架','库柜','眠弓案','一字案','探头','尖角直射','天白凹风','当头一棒'])}
+  ${F('内明堂','中明堂','外明堂')}${O('水口砂',['狮象','龟蛇','华表','捍门','其他关栏','无关栏'])}${O('特殊砂',['左单提','右单提','左执笏','右执笏','三台','天马','笔架','库柜','眠弓案','一字案','探头','尖角','天白凹风'])}
   <h3>6 观水</h3>${O('吉水形',['玉带','一字','九曲之玄','方塘','驻水','朝拜','暗拱','拱背','仓板田源','聚天心'])}${O('凶水形',['反弓','冲心','射肋','阳水盖面','牵牛','倾卸','漏腮','分流','破天心','斜飞','穿臂','裹头','割脚','淋头','火城尖角'])}${O('水聚明堂',['聚','半聚','不聚'])}${O('站大门看出水口',['有关栏','弱','无'])}${F('四看：色','声','味')}
   <h3>7 峦头立向</h3>${O('自检',['靠落脉正中','不斜坐','朝向居中对称','没为仙命改向'])}${F('理由')}
-  <h3>8 下罗盘</h3>${O('位置',['滴水处','门楼中心','阳台','大门','碑前','烧香方向'])}${F('坐山','向','兼','分金／度数')}
-  <table><tr><th style="width:60px">类别</th><th style="width:64px">方位字</th><th>形／说明（水形、远近、星体、秀丽粗恶）</th></tr>${['来水','来水','来水','去水','去水','山峰','山峰','路·门·井·破败物'].map(x=>`<tr><td>${x}</td><td></td><td style="height:19px"></td></tr>`).join('')}</table>
+  <h3>8 下罗盘</h3>${O('位置',['滴水处','门楼中心','大门','碑前','烧香方向（无碑坟）'])}${F('坐山','向','兼','分金／度数')}
+  <table><tr><th style="width:60px">类别</th><th style="width:64px">方位字</th><th>形／说明（水形、远近、星体、秀丽粗恶）</th></tr>${['来水','来水','来水','去水','去水','山峰','山峰','山峰','路·门·井·破败物'].map(x=>`<tr><td>${x}</td><td></td><td style="height:19px"></td></tr>`).join('')}</table>
+  </div><div class="form pb">${COMPASS}${LIQI}</div><div class="form pb">
+  <h3>10 室内（阳宅）</h3>${F('立极点','气口（窗/门）')}${F('入户门','灶位／灶向')}${O('问题',['真穿堂','灶后有窗','劫煞方有门窗/垃圾桶','卫生间不通风','异味'])}
+  ${TAIL}</div>`+quickPages();
+}
+if(part==='4'){
+  h+=cover('四','勘地本','案例参数表 · 城市楼房版',['买房、租房、看商铺用这一版','站阳台（没有阳台站窗边，别墅站大门）看外山外水','高处为山，低处为水；路按水论',BOOKS]);
+  h+=`<div class="form"><h2 class="t">案例参数表 · 城市楼房</h2>
+  <h3>0 基本信息</h3>${F('案例名','日期')}${F('小区／楼盘','楼栋·单元·户')}${F('楼层 ／ 总层数','户型')}${O('用途',['自住','出租','商铺','写字楼','工厂'])}${F('家里人口（几个孩子／谁在撑家）')}${F('诉求')}
+  <h3>1 大势：水往哪去</h3>${F('城市最低处／大江在哪')}${F('门前街道往哪边低（去水方向）')}${O('区域',['大干龙（都市中心）','枝龙（住宅片区）','说不清'])}
+  <h3>2 小区与楼栋：后龙</h3>${O('后龙',['后有高楼/山靠','开面（坐得稳）','后面空/低（坐空朝满）','后面有河（看是否拱背）'])}${O('余坪',['合适','太短（出门就是坑/路）','太长（气还在走）'])}${F('楼栋在小区里的位置（中间／边上／路口）')}
+  <h3>3 选户：楼层与内外局</h3>${O('露胎',['低层藏风','二楼以上露风','高层越高越露胎'])}${O('无实',['外局好内局也好','外局好内局不好（无实）'])}${O('临水',['不临水','临水·楼层适中','楼太高看到割脚水','后排看不见（暗拱）'])}
+  <h3>4 察砂（站阳台）</h3>
+  <table><tr><th style="width:84px">四象</th><th>楼／山·高度·距离·方位</th><th style="width:210px">勾选</th></tr>${['青龙（左）','白虎（右）','朱雀·近（案）','朱雀·远（朝）','玄武（后）'].map(x=>`<tr><td>${x}</td><td></td><td class="l" style="font-size:7.6pt;line-height:1.35">☐秀 ☐粗恶破败 ☐正 ☐歪斜 ☐抱 ☐背<br>☐适中 ☐逼压 ☐太低空旷 ☐缝隙/天斩</td></tr>`).join('')}</table>
+  ${O('城市察砂六标准（合格打勾）',['四砂秀丽','端正不歪','龙虎环抱','高度适中','无尖角直射','罗城周密'])}${O('形煞',['天斩煞','尖角直射','当头一棒','高架过顶','在建工地','电线杆/塔','反背楼'])}${F('明堂：内（楼下）','中（路）','外（远楼远山）')}
   </div><div class="form pb">
-  <h3>9 理气核算（对照末页速查表）</h3>
-  <table><tr><th style="width:110px">口诀</th><th style="width:150px">看什么</th><th style="width:70px">结果</th><th>说明</th></tr>
-  ${[['坐山八煞','来去水、峰对坐山'],['龙上八煞','入首龙对向'],['劫煞','水、动象、破败对坐山'],['隔壁口','向上前后一字有水'],['反复黄泉','向上；看救贫四句'],['双龙双水','骑线的龙、水、峰'],['隔八相生','向上隔两字'],['夫妇交媾','龙与坐、向与水'],['串珠','入首龙对出水口'],['贫单绝','入首龙对向局墓库'],['先后天水','坐山对来去水'],['河图／归元','天干向／纳甲'],['辅星山法','坐山对宫起贪翻峰'],['三吉六秀','只对峰'],['贵人峰','以坐山论'],['五鬼运财','廉贞向巨门水'],['十二长生','水口定局推房份'],['分金三针','合局正针，否则中缝针']].map(r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td><td>☐吉 ☐凶</td><td></td></tr>`).join('')}</table>
-  <h3>10 室内（阳宅）</h3>${F('立极点','气口（窗/阳台）')}${F('入户门','灶位／灶向')}${O('问题',['真穿堂','灶后有窗','劫煞方有门窗鱼缸垃圾桶','卫生间不通风','异味甲醛'])}
-  <h3>11 综合论断</h3>${['丁','财','贵','寿'].map(x=>`<div class="opts"><b>${x}</b><span>旺</span><span>平</span><span>弱</span> 依据：________________________________________</div>`).join('')}${F('房份（青龙长房／白虎小房／中间二房）')}${F('主要问题')}${F('说给东家的话')}${LN(1)}
-  <h3>12 做法与验证</h3>${F('做法建议')}${LN(1)}${F('东家反馈／应验')}${F('复盘：哪步没把握')}
-  </div>`;
-  // 速查表
-  const S=KD_S24;const xi=z=>S[(S.indexOf(z)+12)%24];
-  h+=`<div class="pb"><h2 class="t">二十四山口诀速查表</h2><p class="note" style="font-size:9pt">按坐山查。八煞按一卦三山（坎龙坤兔震山猴，巽鸡乾马兑蛇头，艮虎离猪为曜煞）；劫煞、贵人峰以坐山论；隔壁口、反复黄泉、河图以向上论。命中只是对照，合局应吉、不合局应凶，最后回到整体观。</p>
-  <table><tr><th>坐山</th><th>向</th><th>卦</th><th>坐山八煞<br><small>〔中p195〕</small></th><th>劫煞<br><small>〔中p198〕</small></th><th>隔壁口<br><small>向前后字〔中p200〕</small></th><th>反复黄泉<br><small>向上见〔中p186〕</small></th><th>归元水<br><small>〔中p241〕</small></th><th>河图<br><small>向见〔中p224〕</small></th><th>贵人峰<br><small>〔中p257〕</small></th></tr>
-  ${S.map(z=>{const x=xi(z),g=KD_GUA[z],i=S.indexOf(x);return `<tr><td><b>${z}</b></td><td>${x}</td><td>${g}</td><td>${g==='艮'?'（不存在）':KD_BASHA[g]}</td><td>${KD_JIE[z]}</td><td>${S[(i+23)%24]}、${S[(i+1)%24]}</td><td>${(KD_HUANGQUAN[x]||['—']).join('、')}</td><td>${KD_GUIYUAN[z]||'—'}</td><td>${KD_HETU[x]||'—'}</td><td>${(KD_GUIREN[z]||['—']).join('、')}</td></tr>`}).join('')}</table>
-  <p class="note" style="margin-top:6px">另：龙上八煞＝入首龙所属卦的八煞落在向上（例：酉山卯向坤龙）；向上八煞只有坤山艮向来寅水；串珠＝入首龙与出水口在罗盘一条直线上（对宫字）。</p>
-  <h3 class="c" style="margin-top:10px">双龙双水断（只论骑线）〔中 p174–180〕</h3>
-  <table>${[0,6,12,18].map(a=>`<tr>${Object.entries(KD_SHUANG).slice(a,a+6).map(([k,v])=>`<td style="width:16.6%"><b>${k}</b> ${v}</td>`).join('')}</tr>`).join('')}</table>
-  <p class="note">最凶六个：艮寅、巽巳、庚申、卯乙、辛酉、壬亥。超过 3° 不算骑线。</p></div>`;
+  <h3>5 观水（路按水论）</h3>${O('门前',['一字水（直街）','玉带（路环抱）','反弓','十字路口（两来两去）','丁字路冲','高架'])}${F('来水方向（高的一边）','去水方向（低的一边）')}${O('去水方远处有高楼关栏',['有（捍门华表）','弱','无，越走越宽'])}${O('河湖',['无','在前','在侧（青龙/白虎）','在后'])}
+  <h3>6 立向与门</h3>${O('',['阳台正对明堂','门开中间','十字路口用了吞法'])}${F('阳台朝向说明')}
+  <h3>7 下罗盘</h3>${O('位置',['阳台（当门楼）','入户门（定室内）','单元公共区（分八宫）'])}${F('坐山','向','兼','度数')}
+  <table><tr><th style="width:72px">类别</th><th style="width:64px">方位字</th><th>说明（路高低、楼高矮、远近、秀丽粗恶）</th></tr>${['来水(路)','来水(路)','去水(路)','去水(路)','河/湖','高楼(峰)','高楼(峰)','高楼(峰)','尖角/塔','电梯/门'].map(x=>`<tr><td>${x}</td><td></td><td style="height:19px"></td></tr>`).join('')}</table>
+  </div><div class="form pb">${COMPASS}${LIQI}</div><div class="form pb">
+  <h3>10 室内</h3>${F('立极点（电梯公共区／主屋门厅）','气口（窗/阳台）方位')}${F('入户门方位','灶位／灶向')}${O('穿堂',['无','假穿堂（入户门对窗）','真穿堂（客厅窗对饭厅窗）'])}${O('问题',['灶后有窗','厨房门对阳台','卫生间对阳台窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味甲醛'])}
+  ${TAIL}</div>`+quickPages();
+}
+
+/* ---------- 5 教材案例练习册 ---------- */
+if(part==='5'){
+  h+=cover('五','勘地本','教材案例练习册',[`${KD_PRACTICE.length} 个教材真实案例`,'只给教材写明的参数——先自己判，写在横线上','再翻到后面答案页对照教材原话',BOOKS]);
+  h+='<h2 class="t">练习</h2><p class="note">做法：读情况 → 翻参数表或速查表 → 写答案。理气题可以对照「案例参数表」末页速查表。</p>';
+  KD_PRACTICE.forEach((c,i)=>{h+=`<div class="case"><h4><em>${i+1}</em>${E(c[0])}<i>${E(c[1])}</i></h4><div class="sit">${E(c[2])}</div><ol>${c[3].map(q=>`<li>${E(q)}</li>`).join('')}</ol></div>`});
+  h+='<div class="pb"><h2 class="t">答案</h2>'+KD_PRACTICE.map((c,i)=>`<div class="key"><b>${i+1}　${E(c[0])}</b><br>${E(c[4])}<span class="src">〔${E(c[5])}〕</span></div>`).join('')+'</div>';
 }
 document.getElementById('out').innerHTML=h;
 </script></body></html>
