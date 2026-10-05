@@ -1,25 +1,26 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>勘地本</title>
 <style>
 @page{size:A4;margin:14mm 14mm 16mm}
-:root{--ink:#2b2924;--ink2:#5a554b;--mute:#8f8878;--line:#cfc4ad;--dai:#3f5764;--qing:#5f8574;--zhu:#a9442f;--jin:#9c7a45;--paper:#f6f1e6}
+:root{--ink:#1f2d38;--ink2:#4a5c69;--mute:#7f919e;--line:#bcd2e2;--dai:#2f6690;--qing:#5f8574;--zhu:#a9442f;--jin:#9c7a45;--paper:#e6f0f7;--sky:#7fb3d5}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);font:10.5pt/1.65 "Songti SC","STSong",serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.cover{height:250mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:var(--paper);border:1px solid var(--line);page-break-after:always}
-.cover .seal{border:2px solid var(--zhu);color:var(--zhu);width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px}
+.cover{height:250mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(circle at 80% 15%,rgba(255,255,255,.18),transparent 30%),linear-gradient(160deg,#2f6690,#4f90c0 60%,#9cc7e4);color:#fff;border-radius:6px;page-break-after:always}
+.cover .seal{background:var(--zhu);color:#fff;width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px}
 .cover h1{font-size:34pt;letter-spacing:.35em;margin:0 0 0 .35em;font-weight:600}
-.cover h2{font-size:15pt;letter-spacing:.2em;color:var(--dai);font-weight:500;margin:14px 0 30px}
-.cover p{color:var(--ink2);font-size:10pt;max-width:120mm;margin:4px 0}
+.cover h2{font-size:15pt;letter-spacing:.2em;color:#fff;font-weight:500;margin:14px 0 30px}
+.cover p{color:rgba(255,255,255,.88);font-size:10pt;max-width:120mm;margin:4px 0}
 h2.t{font-size:15pt;letter-spacing:.15em;border-bottom:1.5px solid var(--dai);padding-bottom:4px;margin:0 0 8px;color:var(--dai)}
-h3.c{font-size:12pt;margin:14px 0 4px;letter-spacing:.08em;display:flex;align-items:center;gap:8px;page-break-after:avoid}
-h3.c span{display:inline-grid;place-items:center;width:20px;height:20px;background:var(--dai);color:#fff;border-radius:4px;font-size:10pt}
+h3.c{color:var(--dai);font-size:12pt;margin:14px 0 4px;letter-spacing:.08em;display:flex;align-items:center;gap:8px;page-break-after:avoid}
+h3.c span{display:inline-grid;place-items:center;width:20px;height:20px;background:linear-gradient(135deg,var(--dai),var(--sky));color:#fff;border-radius:4px;font-size:10pt}
 .q{display:grid;grid-template-columns:18px 1fr 64px;gap:4px;padding:4px 0;border-bottom:.5px dashed var(--line);page-break-inside:avoid}
 .q .n{color:var(--mute);font-size:8.5pt;padding-top:2px}
 .q b{font-weight:600}.q .a{display:block;font-size:9pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;margin-top:1px}
 .src{color:var(--jin);font-size:8pt;white-space:nowrap;margin-left:4px;font-family:"PingFang SC",sans-serif}
 .box{font-size:8.5pt;color:var(--mute);font-family:"PingFang SC",sans-serif;text-align:right}
 .note{font-size:9.5pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;margin:0 0 8px}
-.step{border:1px solid var(--line);border-radius:6px;padding:7px 10px 6px;margin:8px 0;page-break-inside:avoid}
+.step{border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:6px;background:#f7fbfe;padding:7px 10px 6px;margin:8px 0;page-break-inside:avoid}
 .step h3{margin:0;font-size:12.5pt;display:flex;align-items:center;gap:8px}
-.step h3 i{font-style:normal;width:22px;height:22px;border:1.5px solid var(--dai);border-radius:50%;display:inline-grid;place-items:center;font-size:10pt;color:var(--dai)}
+.step h3 i{font-style:normal;width:22px;height:22px;background:linear-gradient(135deg,var(--dai),var(--sky));border-radius:50%;display:inline-grid;place-items:center;font-size:10pt;color:#fff}
+.step h3{color:var(--dai)}
 .step .one{color:var(--ink2);margin:1px 0 4px 30px;font-size:10pt}
 .blk{display:grid;grid-template-columns:52px 1fr;gap:4px;font-size:9.5pt;font-family:"PingFang SC",sans-serif;margin:2px 0}
 .blk .l{font-size:8.5pt;border-radius:3px;text-align:center;height:16px;line-height:16px;margin-top:2px}
