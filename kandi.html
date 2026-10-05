@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3eee3">
+<title>勘地本 · 观山</title>
+<style>
+:root{
+  --paper:#f3eee3; --paper2:#ebe3d2; --card:#fbf8f1; --ink:#2b2924; --ink2:#5a554b; --mute:#8f8878;
+  --line:#ddd2bd; --line2:#e9e1cf;
+  --dai:#3f5764; --dai-soft:#e3e8ea;
+  --qing:#5f8574; --qing-soft:#e2ebe4;
+  --zhu:#a9442f; --zhu-soft:#f4e3dc;
+  --jin:#9c7a45; --jin-soft:#f1e8d6;
+  --serif:"Songti SC","STSong","Source Han Serif SC","Noto Serif SC","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.7 var(--sans);-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% 8%,rgba(156,122,69,.06),transparent 40%),radial-gradient(circle at 90% 60%,rgba(95,133,116,.06),transparent 45%)}
+.app{max-width:560px;margin:0 auto;padding:0 16px calc(84px + env(safe-area-inset-bottom))}
+header.mast{position:sticky;top:0;z-index:5;background:rgba(243,238,227,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  margin:0 -16px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.seal{width:34px;height:34px;flex:none;border:1.5px solid var(--zhu);color:var(--zhu);border-radius:4px;display:grid;place-items:center;
+  font:700 13px/1 var(--serif);letter-spacing:0;writing-mode:vertical-rl;padding:2px}
+.mast h1{margin:0;font:600 19px/1.2 var(--serif);letter-spacing:.12em}
+.mast p{margin:2px 0 0;font-size:12px;color:var(--mute);letter-spacing:.04em}
+.mast .back{margin-left:auto;font-size:12px;color:var(--dai);text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:3px 10px}
+.view{display:none;padding-top:14px}.view.on{display:block}
+h2.sec{font:600 17px/1.3 var(--serif);letter-spacing:.1em;margin:18px 0 6px;display:flex;align-items:baseline;gap:8px}
+h2.sec small{font:12px var(--sans);color:var(--mute);letter-spacing:0}
+.note{font-size:13px;color:var(--ink2);margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:16px 0}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--dai);background:var(--dai);color:#fff;border-radius:18px;padding:7px 16px;font-size:14px}
+.btn.ghost{background:transparent;color:var(--dai)}
+.btn.zhu{border-color:var(--zhu);background:var(--zhu)}
+.btn.sm{padding:4px 11px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* 总进度 */
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}
+.stat div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center}
+.stat b{display:block;font:600 20px/1.2 var(--serif)}
+.stat span{font-size:12px;color:var(--mute)}
+.stat .ok b{color:var(--qing)}.stat .mid b{color:var(--jin)}.stat .no b{color:var(--zhu)}
+.filters{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:14px;padding:3px 11px;font-size:13px}
+.chip.on{background:var(--dai);border-color:var(--dai);color:#fff}
+/* 清单 */
+.cat{margin:14px 0 4px;display:flex;align-items:center;gap:10px}
+.cat .k{width:26px;height:26px;border-radius:6px;background:var(--dai-soft);color:var(--dai);display:grid;place-items:center;font:600 14px var(--serif)}
+.cat h3{margin:0;font:600 15px var(--serif);letter-spacing:.08em}
+.cat .bar{flex:1;height:4px;background:var(--line2);border-radius:2px;overflow:hidden}
+.cat .bar i{display:block;height:100%;background:var(--qing)}
+.cat em{font-style:normal;font-size:12px;color:var(--mute)}
+.q{background:var(--card);border:1px solid var(--line2);border-radius:9px;margin:6px 0;padding:9px 12px}
+.q .qt{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.q .dot{flex:none;width:9px;height:9px;border-radius:50%;margin-top:8px;border:1.5px solid var(--mute)}
+.q[data-s="1"] .dot{background:var(--jin);border-color:var(--jin)}
+.q[data-s="2"] .dot{background:var(--qing);border-color:var(--qing)}
+.q .qt b{font-weight:500;flex:1}
+.q .ans{display:none;margin:8px 0 2px 17px;padding-top:8px;border-top:1px dashed var(--line);font-size:14px;color:var(--ink2)}
+.q.open .ans{display:block}
+.src{display:inline-block;font-size:11.5px;color:var(--jin);background:var(--jin-soft);border-radius:4px;padding:0 6px;margin-left:4px;white-space:nowrap}
+.q .acts{display:flex;gap:6px;margin-top:8px}
+.q .acts button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:2px 12px;font-size:13px;color:var(--ink2)}
+.q[data-s="1"] .acts .b1{background:var(--jin);border-color:var(--jin);color:#fff}
+.q[data-s="2"] .acts .b2{background:var(--qing);border-color:var(--qing);color:#fff}
+/* 步骤 */
+.step{position:relative;padding-left:44px;margin:12px 0}
+.step:before{content:"";position:absolute;left:15px;top:34px;bottom:-14px;width:1px;background:var(--line)}
+.step:last-child:before{display:none}
+.step .no{position:absolute;left:0;top:2px;width:31px;height:31px;border-radius:50%;border:1.5px solid var(--dai);color:var(--dai);display:grid;place-items:center;font:600 14px var(--serif);background:var(--paper)}
+.step h3{margin:0;font:600 16px var(--serif);letter-spacing:.06em;padding-top:5px}
+.step .one{margin:2px 0 6px;color:var(--ink2);font-size:14px}
+.blk{font-size:14px;margin:6px 0}
+.blk .lab{display:inline-block;font-size:12px;border-radius:4px;padding:0 6px;margin-bottom:3px}
+.lab.do{background:var(--dai-soft);color:var(--dai)}.lab.rule{background:var(--qing-soft);color:var(--qing)}.lab.warn{background:var(--zhu-soft);color:var(--zhu)}
+.blk ul{margin:2px 0;padding-left:18px}.blk li{margin:2px 0}
+details.guide{background:var(--paper2);border-radius:8px;padding:6px 10px;margin:8px 0 12px}
+details.guide summary{cursor:pointer;font-size:13px;color:var(--dai);list-style:none}
+details.guide summary::-webkit-details-marker{display:none}
+details.guide summary:before{content:"▸ ";}
+details.guide[open] summary:before{content:"▾ ";}
+/* 案例 */
+.case-item{display:flex;align-items:center;gap:10px;cursor:pointer}
+.case-item .t{flex:1}.case-item b{font:600 15px var(--serif)}.case-item p{margin:0;font-size:12px;color:var(--mute)}
+.ring{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:var(--dai);background:conic-gradient(var(--qing) calc(var(--p)*1%),var(--line2) 0)}
+.ring span{width:30px;height:30px;border-radius:50%;background:var(--card);display:grid;place-items:center}
+.stepbar{display:flex;gap:5px;overflow-x:auto;margin:8px -16px 2px;padding:4px 16px 8px;scrollbar-width:none;position:sticky;top:58px;background:var(--paper);z-index:4}
+.stepbar::-webkit-scrollbar{display:none}
+.stepbar button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:3px 10px;font-size:12.5px;color:var(--ink2);position:relative}
+.stepbar button.done:after{content:"";position:absolute;right:3px;top:3px;width:5px;height:5px;border-radius:50%;background:var(--qing)}
+.stepbar button.on{background:var(--dai);border-color:var(--dai);color:#fff}
+.f{margin:10px 0}
+.f > label{display:block;font-size:13px;color:var(--ink2);margin-bottom:4px}
+.f > label i{font-style:normal;color:var(--mute);font-size:12px}
+input[type=text],input[type=date],select,textarea{width:100%;font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 9px;outline:none}
+textarea{min-height:64px;resize:vertical;line-height:1.6}
+input:focus,select:focus,textarea:focus{border-color:var(--dai)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags label{border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;font-size:13px;color:var(--ink2);cursor:pointer;user-select:none}
+.tags input{display:none}
+.tags label.on{background:var(--qing);border-color:var(--qing);color:#fff}
+.tags.bad label.on{background:var(--zhu);border-color:var(--zhu)}
+.sha{border:1px solid var(--line2);border-radius:8px;padding:8px 10px;margin:8px 0;background:#fffdf8}
+.sha h4{margin:0 0 4px;font:600 14px var(--serif);color:var(--dai)}
+.list-row{display:grid;grid-template-columns:96px 1fr 30px;gap:6px;margin:6px 0;align-items:center}
+.list-row.w4{grid-template-columns:96px 1fr 1fr 30px}
+.list-row button{border:none;background:none;color:var(--mute);font-size:18px}
+.add{border:1px dashed var(--line);background:transparent;color:var(--dai);border-radius:7px;padding:5px 10px;font-size:13px;width:100%}
+.xiang{font:600 16px var(--serif);color:var(--dai);padding:7px 0}
+.hit{border-left:3px solid var(--mute);background:#fff;border-radius:0 8px 8px 0;padding:7px 10px;margin:7px 0;font-size:14px}
+.hit b{font-family:var(--serif)}
+.hit .lv{font-size:11.5px;border-radius:4px;padding:0 6px;margin-right:6px;color:#fff;background:var(--mute)}
+.hit.凶{border-color:var(--zhu)}.hit.凶 .lv{background:var(--zhu)}
+.hit.注意,.hit.参半{border-color:var(--jin)}.hit.注意 .lv,.hit.参半 .lv{background:var(--jin)}
+.hit.吉{border-color:var(--qing)}.hit.吉 .lv{background:var(--qing)}
+.manual{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:start;font-size:13.5px;margin:6px 0;padding:6px 0;border-bottom:1px dashed var(--line2)}
+.manual select{width:auto;font-size:13px;padding:2px 4px}
+.nav2{display:flex;justify-content:space-between;margin:18px 0 6px}
+.empty{color:var(--mute);font-size:13px;text-align:center;padding:16px}
+/* 底栏：色块+字 */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:9;background:rgba(251,248,241,.97);border-top:1px solid var(--line);padding:6px 0 calc(6px + env(safe-area-inset-bottom))}
+.tabbar nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.tabbar button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--mute);font-size:11.5px}
+.tabbar button i{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font:600 15px/1 var(--serif);font-style:normal;background:var(--paper2);color:var(--ink2)}
+.tabbar button.on{color:var(--dai)}
+.tabbar button.on i{background:var(--dai);color:#fff}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:6px 14px;border-radius:16px;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.on{opacity:.9}
+@media (min-width:561px){.app,.tabbar nav{max-width:none}.app{padding-left:max(16px,calc(50% - 360px));padding-right:max(16px,calc(50% - 360px))}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="mast">
+    <div class="seal">观山</div>
+    <div><h1>勘地本</h1><p id="sub">知识自查 · 出门实操 · 案例参数</p></div>
+    <a class="back" href="./">回观山</a>
+  </header>
+
+  <!-- 清：知识自查 -->
+  <section class="view on" id="v-check">
+    <h2 class="sec">知识自查清单 <small id="ck-total"></small></h2>
+    <p class="note">先自己答，再点开对照要点。答得出点「会」，似懂非懂点「模糊」。所有要点只取教材原话，金色标签是出处，可回观山「体系精讲」查原文。</p>
+    <div class="stat"><div class="ok"><b id="n2">0</b><span>会</span></div><div class="mid"><b id="n1">0</b><span>模糊</span></div><div class="no"><b id="n0">0</b><span>没查</span></div></div>
+    <div class="filters" id="ck-filter"></div>
+    <div id="ck-list"></div>
+  </section>
+
+  <!-- 行：出门实操 -->
+  <section class="view" id="v-steps">
+    <h2 class="sec">出门看风水 · 十三步</h2>
+    <p class="note">按教材的次第排：先峦头后理气、先外后内、先后龙后堂局。每一步都有「做什么／判据／易错」。跑通一个案例，后面每次照这个走。</p>
+    <div class="row" style="margin-bottom:6px"><button class="btn" id="go-new">照这个流程开一个案例</button></div>
+    <div id="steps-list"></div>
+  </section>
+
+  <!-- 案：案例本 -->
+  <section class="view" id="v-case">
+    <div id="case-home">
+      <h2 class="sec">案例本</h2>
+      <p class="note">一个案例按十三步填参数。入首龙、坐山、来去水、山峰填好后，第 9 步会自动查出对应的口诀条文——<b>只做对照、不下结论</b>，最后由你按整体观判断。数据只存在本机。</p>
+      <div class="row"><button class="btn" id="new-case">＋ 新建案例</button><button class="btn ghost" id="demo-case">载入教材示范</button></div>
+      <div id="case-list"></div>
+    </div>
+    <div id="case-edit" hidden>
+      <div class="row" style="margin-top:4px"><button class="btn ghost sm" id="case-back">‹ 案例列表</button><b id="ce-name" style="font-family:var(--serif);font-size:16px;flex:1;text-align:center"></b><button class="btn ghost sm" id="case-copy">复制</button></div>
+      <div class="stepbar" id="stepbar"></div>
+      <div id="step-body"></div>
+      <div class="nav2"><button class="btn ghost sm" id="prev">‹ 上一步</button><button class="btn sm" id="next">下一步 ›</button></div>
+      <div class="row" style="justify-content:center;margin:20px 0"><button class="btn ghost sm" id="case-del" style="border-color:var(--zhu);color:var(--zhu)">删除这个案例</button></div>
+    </div>
+  </section>
+</div>
+
+<div class="tabbar"><nav>
+  <button data-tab="check" class="on"><i>清</i>知识清单</button>
+  <button data-tab="steps"><i>行</i>出门实操</button>
+  <button data-tab="case"><i>案</i>案例本</button>
+</nav></div>
+<div class="toast" id="toast"></div>
+
+<script src="data/kandi.js"></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1600)}
+const CATN=Object.fromEntries(KD_CATS);
+
+/* ========== 清：知识自查 ========== */
+let ck=load('guanshan_kd_check',{}), ckFilter='all';
+const qid=(x,i)=>x[0]+i;
+function renderCheck(){
+  const items=KD_CHECK.map((x,i)=>({x,id:qid(x,i),s:ck[qid(x,i)]||0}));
+  const cnt=[0,0,0];items.forEach(o=>cnt[o.s]++);
+  $('#n0').textContent=cnt[0];$('#n1').textContent=cnt[1];$('#n2').textContent=cnt[2];
+  $('#ck-total').textContent=`共 ${items.length} 题`;
+  const fs=[['all','全部'],['todo','没掌握'],...KD_CATS.map(c=>[c[0],c[0]+' '+c[1]])];
+  $('#ck-filter').innerHTML=fs.map(f=>`<button class="chip ${ckFilter===f[0]?'on':''}" data-f="${f[0]}">${f[1]}</button>`).join('');
+  let html='';
+  KD_CATS.forEach(([c,name])=>{
+    if(ckFilter!=='all'&&ckFilter!=='todo'&&ckFilter!==c) return;
+    let its=items.filter(o=>o.x[0]===c); const done=its.filter(o=>o.s===2).length, tot=its.length;
+    if(ckFilter==='todo') its=its.filter(o=>o.s<2);
+    if(!its.length) return;
+    html+=`<div class="cat"><span class="k">${c}</span><h3>${name}</h3><span class="bar"><i style="width:${tot?done/tot*100:0}%"></i></span><em>${done}/${tot}</em></div>`;
+    html+=its.map(o=>`<div class="q" data-id="${o.id}" data-s="${o.s}"><div class="qt"><span class="dot"></span><b>${esc(o.x[1])}</b></div><div class="ans">${esc(o.x[2])}<span class="src">${esc(o.x[3])}</span><div class="acts"><button class="b2" data-set="2">会</button><button class="b1" data-set="1">模糊</button><button data-set="0">重置</button></div></div></div>`).join('');
+  });
+  $('#ck-list').innerHTML=html||'<p class="empty">这一类都会了。</p>';
+}
+$('#ck-filter').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;ckFilter=b.dataset.f;renderCheck()});
+$('#ck-list').addEventListener('click',e=>{
+  const q=e.target.closest('.q');if(!q)return;
+  const b=e.target.closest('[data-set]');
+  if(b){const v=+b.dataset.set;if(v)ck[q.dataset.id]=v;else delete ck[q.dataset.id];save('guanshan_kd_check',ck);
+    q.dataset.s=v;const open=q.classList.contains('open');renderCheck();const n=$(`.q[data-id="${q.dataset.id}"]`);if(n&&open)n.classList.add('open');return}
+  if(e.target.closest('.qt')) q.classList.toggle('open');
+});
+
+/* ========== 行：步骤 ========== */
+function stepGuide(s){
+  return `<div class="blk"><span class="lab do">做什么</span><ul>${s.acts.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>
+  <div class="blk"><span class="lab rule">判据·口诀</span><ul>${s.rules.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>
+  <div class="blk"><span class="lab warn">易错</span><ul>${s.warn.map(a=>`<li>${esc(a)}</li>`).join('')}</ul></div>
+  <div class="blk"><span class="src" style="margin:0">${esc(s.src)}</span></div>`;
+}
+function renderSteps(){
+  $('#steps-list').innerHTML=KD_STEPS.map((s,i)=>`<div class="step"><span class="no">${i}</span><h3>${esc(s.t)}</h3><p class="one">${esc(s.one)}</p>${stepGuide(s)}</div>`).join('');
+}
+
+/* ========== 案：案例本 ========== */
+let cases=load('guanshan_kd_cases',[]), cur=null, curStep=0;
+const saveCases=()=>save('guanshan_kd_cases',cases);
+const OPTS24=()=>{let o='<option value="">未测</option><optgroup label="单字">'+KD_S24.map(s=>`<option>${s}</option>`).join('')+'</optgroup><optgroup label="骑线（两字之间）">';
+  for(let i=0;i<24;i++){const p=KD_S24[(i+23)%24]+KD_S24[i];o+=`<option value="${p}">${p}（骑线）</option>`}return o+'</optgroup>'};
+const SHAN24=()=>'<option value="">未测</option>'+KD_S24.map(s=>`<option>${s}</option>`).join('');
+const STAR9=['','贪狼（木）','巨门（土）','禄存（土·破体）','文曲（水）','廉贞（火）','武曲（金）','破军（碎）','左辅（金）','右弼（无定形）','木火体（分不清）'];
+const XUE9=['','太阳（金）','太阴（土金）','金水','天财（土）','紫气（木）','天罡（金火）','孤曜（金木）','燥火（火）','扫荡（水）'];
+const SHA=[['qinglong','青龙（左）'],['baihu','白虎（右）'],['an','朱雀·案山（近）'],['chao','朱雀·朝山（远）'],['xuanwu','玄武·穴星山（后）']];
+const SHA_TAGS=['秀丽','粗恶','端正','歪斜','环抱','反背','高低适中','逼压','太低空旷','顺水','逆水','有缺口/凹风'];
+
+// 每一步的字段定义：[type, key, label, extra]
+const FIELDS={
+  s0:[['text','name','案例名'],['date','date','日期'],['text','place','地点'],['sel','kind','类型',['','乡村阳宅','城市楼房','别墅','商铺/写字楼','工厂','阴宅','祠堂']],['area','family','东家与房份','兄弟几人、为谁看（做谁的坟）、谁在撑家族'],['area','ask','东家诉求']],
+  s1:[['sel','terrain','地形',['','高山','丘陵','平原','城市']],['area','flow','大水往哪流','河流/江的流向，路边水往哪走'],['area','outlet','总出水口在哪','城市：最低处、大江方向']],
+  s2:[['area','dragon','龙脉层次','祖宗山→少祖山→父母山→穴星山，各像什么'],['sel','star','穴星山星体（九星）',STAR9],['tags','guoxia','过峡三点',['有护卫','有迎有送','蜂腰鹤膝']],['tags','zhang','开帐四要点',['两脚长拖','帐不断','帐不低','帐角关水']],['sel','grade','龙的品格',['','贵（星势奇特异藏）','富（肥）','平','贱（蠢懒穷散/斜/瘦）']],['tagsbad','veto','一票否决排查（勾上的就是犯了）',['枪头鼠尾','童山','石山（粗恶）','独山','过山（脉未停）','断山','后面没有龙脉（虚花假穴）','城市：后龙没开面']],['area','dnote','备注']],
+  s3:[['dir','long','入首龙（站过峡最低点格）'],['text','longwhere','格龙位置说明']],
+  s4:[['sel','yang','阳宅扇 / 阴宅线',['','后龙开面如扇（宜阳宅）','落脉如线（宜阴宅）','都不明显']],['sel','jie','结穴方式',['','顺结','闪结','横结','逆结（回龙顾祖）']],['sel','xuestar','穴星（廖家穴上九星）',XUE9],['tags','zheng','证穴五法（验证通过的打勾）',['朝山证穴','明堂证穴','水势证穴','乐山证穴','鬼山证穴']],['tagsbad','xiong','二十四凶穴排查（犯了的打勾）',KD_XIONGXUE],['text','yuping','余坪／兜唇'],['area','xnote','穴位定点说明（竹竿回看等）']],
+  s5:[['sha','sha','四象逐个看'],['area','mingtang','明堂三层','内明堂／中明堂／外明堂各是什么'],['sel','shuikou','水口砂',['','狮象把水口','龟蛇把水口','华表','捍门','有关栏（其他）','无关栏']],['tags','teshu','特殊砂',['左单提','右单提','左执笏','右执笏','三台','天马','笔架','库柜','眠弓案','一字文星案','探头砂','尖角直射','天白凹风','逼压（当头一棒）']]],
+  s6:[['tags','shuixing','水形（吉）',['玉带（金城）','一字（木城）','九曲之玄','方塘（土城）','驻水/游渚','朝拜水','暗拱水','拱背水','仓板/田源','聚天心']],['tagsbad','shuixiong','水形（凶）',['反弓','冲心','射肋','阳水盖面','牵牛','倾卸','漏腮','分流','破天心','斜流/斜飞','穿臂','裹头','割脚','淋头','火城尖角']],['sel','juju','水聚明堂？',['','聚','半聚','不聚']],['sel','guanlan','站大门看出水口有关栏？',['','有关栏','关栏弱','没有关栏']],['area','sikan','四看：色、声、味','例：清、无声、无异味']],
+  s7:[['tags','lixiang','峦头立向自检',['靠穴星山落脉正中','不斜坐','朝向居中、左右对称','没有为仙命改向']],['area','whyxiang','立这个向的理由']],
+  s8:[['sel','luopos','下罗盘位置',['','屋檐滴水处','门楼中心','城市阳台','大门口','碑前','烧香方向（无碑坟）']],['zuo','zuo','坐山'],['text','fenjin','分金／度数'],['list','lai','来水（对准最远端）'],['list','qu','去水／出水口'],['feng','feng','山峰（对准峰尖）'],['dong','dong','路、门楼、井、喷泉、枯树、垃圾桶、电线杆…']],
+  s9:[['auto'],['manual','manual','需要人工核的口诀'],['area','linote','理气小结']],
+  s10:[['text','liji','立极点位置'],['text','qikou','气口（窗户/阳台）方位'],['text','door','入户门方位'],['text','zao','灶位／灶向'],['tagsbad','neibad','室内问题',['真穿堂','灶后有窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味/甲醛']],['area','innote','备注']],
+  s11:[['four','dcgs','丁 · 财 · 贵 · 寿'],['area','fangfen','房份','青龙长房、白虎小房、中间二房'],['area','problem','主要问题'],['area','duanyu','说给东家的话（留余地，说眼前事）']],
+  s12:[['area','zuofa','做法建议','消砂纳水、开水池、照壁、补峰、改门、放水…'],['area','feedback','东家反馈／应验'],['area','fupan','复盘：哪一步我没把握']]
+};
+const stepFilled=(c,s)=>(FIELDS[s.k]||[]).some(f=>{const v=c.p[f[1]];return Array.isArray(v)?v.some(x=>x&&(x.d||x===true||typeof x==='string')):(v&&typeof v==='object'?Object.values(v).some(Boolean):!!v)});
+const caseProg=c=>Math.round(KD_STEPS.filter(s=>stepFilled(c,s)).length/KD_STEPS.length*100);
+
+function renderCaseList(){
+  $('#case-list').innerHTML=cases.length?cases.map((c,i)=>`<div class="card case-item" data-i="${i}"><span class="ring" style="--p:${caseProg(c)}"><span>${caseProg(c)}%</span></span><div class="t"><b>${esc(c.p.name||'未命名案例')}</b><p>${esc([c.p.date,c.p.place,c.p.kind,c.p.zuo?c.p.zuo+'山'+kdXiang(c.p.zuo)+'向':''].filter(Boolean).join(' · '))}</p></div><span style="color:var(--mute)">›</span></div>`).join(''):'<p class="empty">还没有案例。新建一个，或先载入教材示范看看怎么填。</p>';
+}
+function newCase(p){const c={id:Date.now(),p:Object.assign({date:new Date().toISOString().slice(0,10)},p||{})};cases.unshift(c);saveCases();openCase(0)}
+function openCase(i){cur=cases[i];curStep=0;$('#case-home').hidden=true;$('#case-edit').hidden=false;renderEditor();scrollTo(0,0)}
+function closeCase(){cur=null;$('#case-home').hidden=false;$('#case-edit').hidden=true;renderCaseList()}
+
+function fieldHTML(f){
+  const [type,key,label,extra]=f, v=cur.p[key];
+  const L=label?`<label>${esc(label)}${type==='area'&&extra?` <i>${esc(extra)}</i>`:''}</label>`:'';
+  if(type==='text') return `<div class="f">${L}<input type="text" data-k="${key}" value="${esc(v)}"></div>`;
+  if(type==='date') return `<div class="f">${L}<input type="date" data-k="${key}" value="${esc(v)}"></div>`;
+  if(type==='area') return `<div class="f">${L}<textarea data-k="${key}">${esc(v)}</textarea></div>`;
+  if(type==='sel') return `<div class="f">${L}<select data-k="${key}">${extra.map(o=>`<option ${o===v?'selected':''} value="${esc(o)}">${o?esc(o):'—'}</option>`).join('')}</select></div>`;
+  if(type==='dir') return `<div class="f">${L}<select data-k="${key}">${OPTS24().replace(`value="${v}"`,`value="${v}" selected`).replace(`<option>${v}</option>`,`<option selected>${v}</option>`)}</select></div>`;
+  if(type==='zuo'){const j=cur.p.jian||'';return `<div class="f">${L}<div class="row"><select data-k="zuo" style="flex:1">${SHAN24().replace(`<option>${v}</option>`,`<option selected>${v}</option>`)}</select><select data-k="jian" style="flex:1"><option value="">正（不兼）</option><option value="L" ${j==='L'?'selected':''}>兼逆时针一字</option><option value="R" ${j==='R'?'selected':''}>兼顺时针一字</option></select></div><div class="xiang" id="xiang">${xiangText()}</div></div>`}
+  if(type==='tags'||type==='tagsbad'){const arr=v||[];return `<div class="f">${L}<div class="tags ${type==='tagsbad'?'bad':''}">${extra.map(o=>`<label class="${arr.includes(o)?'on':''}"><input type="checkbox" data-tag="${key}" value="${esc(o)}" ${arr.includes(o)?'checked':''}>${esc(o)}</label>`).join('')}</div></div>`}
+  if(type==='sha'){const o=v||{};return `<div class="f">${L}${SHA.map(([k,n])=>{const s=o[k]||{};return `<div class="sha"><h4>${n}</h4><input type="text" data-sha="${k}" data-f="d" placeholder="像什么星体/楼、距离、方位" value="${esc(s.d)}"><div class="tags" style="margin-top:6px">${SHA_TAGS.map(t=>`<label class="${(s.t||[]).includes(t)?'on':''}"><input type="checkbox" data-sha="${k}" data-f="t" value="${t}" ${(s.t||[]).includes(t)?'checked':''}>${t}</label>`).join('')}</div></div>`}).join('')}</div>`}
+  if(type==='list'||type==='feng'||type==='dong'){const arr=v||[];
+    const row=(x,i)=>type==='feng'?`<div class="list-row w4"><select data-list="${key}" data-i="${i}" data-f="d">${OPTS24().replace(`value="${x.d}"`,`value="${x.d}" selected`).replace(`<option>${x.d}</option>`,`<option selected>${x.d}</option>`)}</select><input type="text" data-list="${key}" data-i="${i}" data-f="n" placeholder="形/星体" value="${esc(x.n)}"><select data-list="${key}" data-i="${i}" data-f="bad"><option value="">秀丽</option><option value="1" ${x.bad?'selected':''}>粗恶破碎</option></select><button data-del="${key}" data-i="${i}">×</button></div>`
+      :type==='dong'?`<div class="list-row w4"><select data-list="${key}" data-i="${i}" data-f="d">${OPTS24().replace(`value="${x.d}"`,`value="${x.d}" selected`).replace(`<option>${x.d}</option>`,`<option selected>${x.d}</option>`)}</select><select data-list="${key}" data-i="${i}" data-f="type">${['路','门楼','门/窗','井','喷泉/水池','枯树/垃圾桶','电线杆/塔','其他'].map(t=>`<option ${x.type===t?'selected':''}>${t}</option>`).join('')}</select><input type="text" data-list="${key}" data-i="${i}" data-f="n" placeholder="说明" value="${esc(x.n)}"><button data-del="${key}" data-i="${i}">×</button></div>`
+      :`<div class="list-row"><select data-list="${key}" data-i="${i}" data-f="d">${OPTS24().replace(`value="${x.d}"`,`value="${x.d}" selected`).replace(`<option>${x.d}</option>`,`<option selected>${x.d}</option>`)}</select><input type="text" data-list="${key}" data-i="${i}" data-f="n" placeholder="水形、远近、看不看得见" value="${esc(x.n)}"><button data-del="${key}" data-i="${i}">×</button></div>`;
+    return `<div class="f">${L}${arr.map(row).join('')}<button class="add" data-add="${key}">＋ 加一条</button></div>`}
+  if(type==='four'){const o=v||{};return `<div class="f">${L}${[['ding','丁'],['cai','财'],['gui','贵'],['shou','寿']].map(([k,n])=>`<div class="row" style="margin:6px 0;flex-wrap:nowrap"><b style="font-family:var(--serif);width:22px">${n}</b><select data-four="${k}" data-f="v" style="width:90px;flex:none">${['','旺','平','弱'].map(t=>`<option ${(o[k]||{}).v===t?'selected':''} value="${t}">${t||'未判'}</option>`).join('')}</select><input type="text" data-four="${k}" data-f="n" placeholder="依据" value="${esc((o[k]||{}).n)}"></div>`).join('')}</div>`}
+  if(type==='auto') return `<div class="f"><label>口诀自动对照 <i>（按第 3、8 步填的字查表）</i></label><div id="auto">${autoHTML()}</div></div>`;
+  if(type==='manual'){const o=v||{};return `<div class="f">${L}${KD_MANUAL.map((m,i)=>`<div class="manual"><select data-man="${i}"><option value="">未核</option>${['合局','不合局','不适用'].map(t=>`<option ${o[i]===t?'selected':''}>${t}</option>`).join('')}</select><div><b>${esc(m[0])}</b>：${esc(m[1])}<span class="src">${esc(m[2])}</span></div></div>`).join('')}</div>`}
+  return '';
+}
+function xiangText(){const z=cur.p.zuo;if(!z)return '向：先选坐山';const x=kdXiang(z),i=KD_S24.indexOf(z),j=cur.p.jian;
+  let t=`${z}山${x}向`;if(j){const a=j==='L'?KD_S24[(i+23)%24]:KD_S24[(i+1)%24],b=j==='L'?KD_S24[(i+11)%24]:KD_S24[(i+13)%24];t+=`兼${a}${b}`}return t}
+function autoHTML(){
+  const p=cur.p;if(!p.zuo&&!p.long)return '<p class="empty">先在第 3 步填入首龙、第 8 步填坐山和来去水、山峰。</p>';
+  const h=kdCheck(p);
+  const head=`<p class="note" style="margin:4px 0">${p.zuo?xiangText():'坐山未填'}　入首龙：${p.long||'未填'}　命中 ${h.filter(x=>x.lv!=='提示').length} 条</p>`;
+  return head+(h.length?h.map(x=>`<div class="hit ${x.lv}"><span class="lv">${x.lv}</span><b>${esc(x.name)}</b>　${esc(x.msg)}<span class="src">${esc(x.src)}</span></div>`).join(''):'<p class="empty">没有命中可自动对照的条文。</p>')
+    +'<p class="note" style="font-size:12px;margin-top:8px">⚠️ 命中≠定案：合局应吉、不合局应凶，还要回到整体观；八煞以一卦三山对照，骑线的字两边都查。</p>';
+}
+function renderEditor(){
+  $('#ce-name').textContent=cur.p.name||'未命名案例';
+  $('#stepbar').innerHTML=KD_STEPS.map((s,i)=>`<button class="${i===curStep?'on':''} ${stepFilled(cur,s)?'done':''}" data-step="${i}">${i} ${s.t.replace(/（.*?）/,'')}</button>`).join('');
+  const s=KD_STEPS[curStep];
+  $('#step-body').innerHTML=`<div class="step" style="padding-left:44px"><span class="no">${curStep}</span><h3>${esc(s.t)}</h3><p class="one">${esc(s.one)}</p></div>
+    <details class="guide"><summary>本步怎么做（做什么／判据／易错）</summary>${stepGuide(s)}</details>`+(FIELDS[s.k]||[]).map(fieldHTML).join('');
+  $('#prev').style.visibility=curStep?'visible':'hidden';$('#next').textContent=curStep<KD_STEPS.length-1?'下一步 ›':'完成 ✓';
+  const on=$('#stepbar .on');if(on)on.scrollIntoView({inline:'center',block:'nearest'});
+}
+function touch(){saveCases();const sb=$$('#stepbar button');KD_STEPS.forEach((s,i)=>sb[i]&&sb[i].classList.toggle('done',stepFilled(cur,s)));}
+$('#step-body').addEventListener('input',e=>{
+  const t=e.target,p=cur.p;
+  if(t.dataset.k){p[t.dataset.k]=t.value;if(t.dataset.k==='name')$('#ce-name').textContent=t.value||'未命名案例';if(t.dataset.k==='zuo'||t.dataset.k==='jian'){const x=$('#xiang');if(x)x.textContent=xiangText()}}
+  else if(t.dataset.tag){const a=p[t.dataset.tag]||(p[t.dataset.tag]=[]);if(t.checked){if(!a.includes(t.value))a.push(t.value)}else p[t.dataset.tag]=a.filter(x=>x!==t.value);t.parentNode.classList.toggle('on',t.checked)}
+  else if(t.dataset.sha){const o=p.sha||(p.sha={}),s=o[t.dataset.sha]||(o[t.dataset.sha]={});if(t.dataset.f==='d')s.d=t.value;else{s.t=s.t||[];if(t.checked){if(!s.t.includes(t.value))s.t.push(t.value)}else s.t=s.t.filter(x=>x!==t.value);t.parentNode.classList.toggle('on',t.checked)}}
+  else if(t.dataset.list){const a=p[t.dataset.list];const x=a[+t.dataset.i];x[t.dataset.f]=t.dataset.f==='bad'?!!t.value:t.value}
+  else if(t.dataset.four){const o=p.dcgs||(p.dcgs={}),s=o[t.dataset.four]||(o[t.dataset.four]={});s[t.dataset.f]=t.value}
+  else if(t.dataset.man){const o=p.manual||(p.manual={});if(t.value)o[t.dataset.man]=t.value;else delete o[t.dataset.man]}
+  touch();
+});
+$('#step-body').addEventListener('change',e=>{if(e.target.matches('select'))e.target.dispatchEvent(new Event('input',{bubbles:true}))},true);
+$('#step-body').addEventListener('click',e=>{
+  const a=e.target.closest('[data-add]'),d=e.target.closest('[data-del]');
+  if(a){const k=a.dataset.add;(cur.p[k]||(cur.p[k]=[])).push(k==='dong'?{d:'',type:'路',n:''}:{d:'',n:''});touch();renderEditor()}
+  if(d){cur.p[d.dataset.del].splice(+d.dataset.i,1);touch();renderEditor()}
+});
+$('#stepbar').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(!b)return;curStep=+b.dataset.step;renderEditor();scrollTo(0,0)});
+$('#prev').onclick=()=>{if(curStep>0){curStep--;renderEditor();scrollTo(0,0)}};
+$('#next').onclick=()=>{if(curStep<KD_STEPS.length-1){curStep++;renderEditor();scrollTo(0,0)}else closeCase()};
+$('#case-back').onclick=closeCase;
+$('#case-del').onclick=()=>{if(!confirm('删除「'+(cur.p.name||'未命名案例')+'」？删除后无法恢复。'))return;cases=cases.filter(c=>c!==cur);saveCases();closeCase()};
+$('#case-list').addEventListener('click',e=>{const it=e.target.closest('[data-i]');if(it)openCase(+it.dataset.i)});
+$('#new-case').onclick=()=>newCase();
+$('#go-new').onclick=()=>{switchTab('case');newCase()};
+$('#demo-case').onclick=()=>{newCase({name:'示范·三僚曾氏总祠',place:'江西赣州三僚',kind:'祠堂',date:'',
+  family:'教材只给了理气参数，峦头细节没讲——没讲的就空着，不编。',ask:'看懂"串珠理"怎么在一个真实祠堂上成立。',
+  long:'申',zuo:'辛',qu:[{d:'寅',n:'走寅水（出水口）'}],
+  linote:'教材：申龙入首，辛山乙向，走寅水；合阴阳夫妇交媾，申与寅一条线为串珠理，曾家人丁过万与此相关。教材又说此宗祠"也犯到了劫煞"，但没说是哪个方位的水或物，所以这里查不出——不补。',
+  manual:{1:'合局'}});curStep=9;renderEditor();toast('已载入：直接看第 9 步')};
+$('#case-copy').onclick=()=>{
+  const p=cur.p,L=[];L.push('【'+(p.name||'未命名案例')+'】'+[p.date,p.place,p.kind].filter(Boolean).join(' · '));
+  if(p.zuo)L.push('坐向：'+xiangText()+(p.fenjin?'　分金：'+p.fenjin:''));if(p.long)L.push('入首龙：'+p.long);
+  const ls=(k,n)=>{const a=(p[k]||[]).filter(x=>x.d);if(a.length)L.push(n+'：'+a.map(x=>x.d+(x.type?'('+x.type+')':'')+(x.n?' '+x.n:'')).join('；'))};
+  ls('lai','来水');ls('qu','去水');ls('feng','山峰');ls('dong','动象');
+  kdCheck(p).forEach(h=>L.push(`[${h.lv}] ${h.name}：${h.msg}〔${h.src}〕`));
+  ['problem','duanyu','zuofa','feedback'].forEach(k=>p[k]&&L.push({problem:'问题',duanyu:'断语',zuofa:'做法',feedback:'反馈'}[k]+'：'+p[k]));
+  const txt=L.join('\n');
+  const done=()=>toast('已复制案例文字');
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(done,()=>fallback());else fallback();
+  function fallback(){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){alert(txt)}ta.remove()}
+};
+// 第 9 步之外改参数后，回到第 9 步时 autoHTML 会重算（renderEditor 时生成）
+
+/* ========== 底栏 ========== */
+const SUBS={check:'知识自查 · 先自答再对照',steps:'出门实操 · 十三步',case:'案例本 · 按步填参数'};
+function switchTab(t){$$('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+t));$('#sub').textContent=SUBS[t];try{sessionStorage.setItem('kd_tab',t)}catch(e){}scrollTo(0,0)}
+$$('.tabbar button').forEach(b=>b.onclick=()=>{switchTab(b.dataset.tab);if(b.dataset.tab==='case'&&cur)renderEditor()});
+renderCheck();renderSteps();renderCaseList();
+try{const t=sessionStorage.getItem('kd_tab');if(t)switchTab(t)}catch(e){}
+</script>
+</body>
+</html>
