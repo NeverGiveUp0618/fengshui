@@ -107,12 +107,13 @@ if(part==='1'){
   <h3 class="c"><span>3</span>隔壁口：写出向上前后一字　〔中 p200〕</h3><table><tr>${['子','卯','午','酉','甲','丙','乾','艮'].map(x=>`<th>${x}向</th>`).join('')}</tr><tr>${'<td style="height:24px"></td>'.repeat(8)}</tr></table>
   <h3 class="c"><span>4</span>九星对五行与吉凶　〔初 p48,401〕</h3><table><tr><th></th>${KD_QUICK.star9.map(x=>`<th>${x[0]}</th>`).join('')}</tr><tr><td>五行</td>${'<td style="height:22px"></td>'.repeat(9)}</tr><tr><td>吉凶</td>${'<td style="height:22px"></td>'.repeat(9)}</tr></table>
   <h3 class="c"><span>5</span>穴上九星对杨公九星　〔中 p9,19〕</h3><table><tr><th></th>${KD_QUICK.xue9.map(x=>`<th>${x[0]}</th>`).join('')}</tr><tr><td>杨公九星</td>${'<td style="height:22px"></td>'.repeat(9)}</tr></table>
-  <h3 class="c"><span>6</span>判一判：下列情况犯什么？</h3><table><tr><th style="width:40%">情况</th><th>答案</th></tr>${[['子山午向，辰方来水'],['乾山巽向，卯方有垃圾桶'],['未山丑向，去癸水'],['酉山卯向，入首龙坤'],['坤山艮向，来寅水'],['申龙入首，辛山乙向，走寅水'],['甲山庚向，见辛峰'],['甲山庚向，见丑峰']].map(r=>`<tr><td class="l">${r[0]}</td><td style="height:24px"></td></tr>`).join('')}</table></div>`;
+  <h3 class="c"><span>6</span>子午斜流：写出子煞、午煞位（双山）　〔中 p294–296〕</h3><table><tr>${['子','亥','卯','坤','癸','乙'].map(x=>`<th>${x}山</th>`).join('')}</tr><tr>${'<td style="height:24px"></td>'.repeat(6)}</tr></table>
+  <h3 class="c"><span>7</span>判一判：下列情况犯什么？</h3><table><tr><th style="width:40%">情况</th><th>答案</th></tr>${[['子山午向，辰方来水'],['乾山巽向，卯方有垃圾桶'],['未山丑向，去癸水'],['酉山卯向，入首龙坤'],['坤山艮向，来寅水'],['申龙入首，辛山乙向，走寅水'],['甲山庚向，见辛峰'],['甲山庚向，见丑峰'],['丙山壬向，来庚水'],['庚山甲向，见艮水']].map(r=>`<tr><td class="l">${r[0]}</td><td style="height:24px"></td></tr>`).join('')}</table></div>`;
   // 答案
   h+='<div class="pb"><h2 class="t">答案 · 一、问答</h2>';n=0;
   KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="ans"><span class="n">${n}</span><div>${E(x[2])}<span class="src">〔${E(x[3])}〕</span></div></div>`})});
   h+='</div>';
-  const t6=[['子山午向，辰方来水','坐山八煞（坎龙），水克山祸速〔中 p195,196〕'],['乾山巽向，卯方有垃圾桶','劫煞（乾山劫在卯）〔中 p198,200〕'],['未山丑向，去癸水','隔壁口（丑向前后癸、艮）〔中 p200〕'],['酉山卯向，入首龙坤','龙上八煞（坤兔，向来克龙）〔中 p195〕'],['坤山艮向，来寅水','向上八煞，煞带廉贞血满怀〔中 p196〕'],['申龙入首，辛山乙向，走寅水','串珠理（龙冲口），合交媾〔中 p210〕'],['甲山庚向，见辛峰','河图金局（庚向见辛），辛为4生数主丁〔中 p223–225〕'],['甲山庚向，见丑峰','贵人峰（甲戊庚牛羊）〔中 p257〕']];
+  const t6=[['子山午向，辰方来水','坐山八煞（坎龙），水克山祸速〔中 p195,196〕'],['乾山巽向，卯方有垃圾桶','劫煞（乾山劫在卯）〔中 p198,200〕'],['未山丑向，去癸水','隔壁口（丑向前后癸、艮）〔中 p200〕'],['酉山卯向，入首龙坤','龙上八煞（坤兔，向来克龙）〔中 p195〕'],['坤山艮向，来寅水','向上八煞，煞带廉贞血满怀〔中 p196〕'],['申龙入首，辛山乙向，走寅水','串珠理（龙冲口），合交媾〔中 p210〕'],['甲山庚向，见辛峰','河图金局（庚向见辛），辛为4生数主丁〔中 p223–225〕'],['甲山庚向，见丑峰','贵人峰（甲戊庚牛羊）〔中 p257〕'],['丙山壬向，来庚水','洛书四大局：丙8庚3，合38木局〔中 p228〕'],['庚山甲向，见艮水','犯杀人黄泉，但庚3艮8合洛书38木局，半吉半凶〔中 p229〕']];
   h+=`<div class="pb"><h2 class="t">答案 · 二、默写　三、查表</h2>
   <table><tr><th style="width:24%">题</th><th>答案</th></tr>
   <tr><td>① 五星</td><td class="l">木<b>直</b>火<b>尖</b>土星<b>横</b>，金<b>圆</b>水<b>曲</b>（初级首句作"辨五行"）</td></tr>
@@ -127,7 +128,8 @@ if(part==='1'){
   <tr><td>3 隔壁口</td><td class="l">${['子','卯','午','酉','甲','丙','乾','艮'].map(x=>{const i=S.indexOf(x);return x+'向：'+S[(i+23)%24]+'、'+S[(i+1)%24]}).join('　')}</td></tr>
   <tr><td>4 九星</td><td class="l">${KD_QUICK.star9.map(x=>x[0]+' '+x[1]+'·'+x[2]).join('　')}</td></tr>
   <tr><td>5 穴上九星</td><td class="l">${KD_QUICK.xue9.map(x=>x[0]+'＝'+x[2]).join('　')}</td></tr>
-  ${t6.map(r=>`<tr><td class="l" style="font-size:8.5pt">6 ${r[0]}</td><td class="l">${r[1]}</td></tr>`).join('')}
+  <tr><td>6 子午斜流</td><td class="l">${['子','亥','卯','坤','癸','乙'].map(z=>{const r=kdZiwu(z);return z+'山：子煞'+r[0].pos+'、午煞'+r[6].pos}).join('　')}</td></tr>
+  ${t6.map(r=>`<tr><td class="l" style="font-size:8.5pt">7 ${r[0]}</td><td class="l">${r[1]}</td></tr>`).join('')}
   </table></div>`;
 }
 
@@ -171,12 +173,15 @@ const TAIL=`<h3>11 综合论断</h3>${['丁','财','贵','寿'].map(x=>`<div cla
   <h3>12 做法与验证</h3>${F('做法建议')}${LN(1)}${F('东家反馈／应验')}${F('复盘：哪步没把握')}`;
 function quickPages(){
   let q=`<div class="pb"><h2 class="t">二十四山口诀速查表</h2><p class="note" style="font-size:9pt">按坐山查。八煞按一卦三山；劫煞、贵人峰以坐山论；隔壁口、反复黄泉、河图以向上论。命中只是对照：合局应吉、不合局应凶，最后回到整体观。</p>
-  <table><tr><th>坐山</th><th>向</th><th>卦</th><th>坐山八煞<br><small>〔中p195〕</small></th><th>劫煞<br><small>〔中p198〕</small></th><th>隔壁口<br><small>向前后字〔中p200〕</small></th><th>反复黄泉<br><small>向上见〔中p186〕</small></th><th>归元水<br><small>〔中p241〕</small></th><th>河图<br><small>向见〔中p224〕</small></th><th>贵人峰<br><small>〔中p257〕</small></th></tr>
-  ${S.map(z=>{const x=xi(z),g=KD_GUA[z],i=S.indexOf(x);return `<tr><td><b>${z}</b></td><td>${x}</td><td>${g}</td><td>${g==='艮'?'（不存在）':KD_BASHA[g]}</td><td>${KD_JIE[z]}</td><td>${S[(i+23)%24]}、${S[(i+1)%24]}</td><td>${(KD_HUANGQUAN[x]||['—']).join('、')}</td><td>${KD_GUIYUAN[z]||'—'}</td><td>${KD_HETU[x]||'—'}</td><td>${(KD_GUIREN[z]||['—']).join('、')}</td></tr>`}).join('')}</table>
-  <p class="note" style="margin-top:6px">龙上八煞＝入首龙所属卦的八煞落在向上（例：酉山卯向坤龙）；向上八煞只有坤山艮向来寅水；串珠＝入首龙与出水口在罗盘一条直线上（对宫字）。</p>
+  <table><tr><th>坐山</th><th>向</th><th>卦</th><th>坐山八煞<br><small>〔中p195〕</small></th><th>劫煞<br><small>〔中p198〕</small></th><th>隔壁口<br><small>向前后字〔中p200〕</small></th><th>反复黄泉<br><small>向上见〔中p186〕</small></th><th>归元水<br><small>〔中p241〕</small></th><th>河图<br><small>向见〔中p224〕</small></th><th>贵人峰<br><small>〔中p257〕</small></th><th>洛书数<br><small>〔中p229〕</small></th><th>子煞·午煞<br><small>室内〔中p294〕</small></th></tr>
+  ${S.map(z=>{const x=xi(z),g=KD_GUA[z],i=S.indexOf(x);return `<tr><td><b>${z}</b></td><td>${x}</td><td>${g}</td><td>${g==='艮'?'（不存在）':KD_BASHA[g]}</td><td>${KD_JIE[z]}</td><td>${S[(i+23)%24]}、${S[(i+1)%24]}</td><td>${(KD_HUANGQUAN[x]||['—']).join('、')}</td><td>${KD_GUIYUAN[z]||'—'}</td><td>${KD_HETU[x]||'—'}</td><td>${(KD_GUIREN[z]||['—']).join('、')}</td><td>${KD_LUOSHU[z]}</td><td>${(r=>r[0].pos+'·'+r[6].pos)(kdZiwu(z))}</td></tr>`}).join('')}</table>
+  <p class="note" style="margin-top:6px">洛书四大局：坐或向的洛书数与来去水合 16、27、38、49 为合局（一般的小理）。子午斜流：主卧、厨房、书房、入户门、神位避开子煞午煞，卯酉次凶，辰戌丑未吉（财位）。龙上八煞＝入首龙所属卦的八煞落在向上（例：酉山卯向坤龙）；向上八煞只有坤山艮向来寅水；串珠＝入首龙与出水口在罗盘一条直线上（对宫字）。</p>
+</div><div class="pb">
   <h3 class="c"><span>双</span>双龙双水断（只论骑线，超过 3° 不算）〔中 p174–180〕</h3>
   <table>${[0,6,12,18].map(a=>`<tr>${Object.entries(KD_SHUANG).slice(a,a+6).map(([k,v])=>`<td style="width:16.6%"><b>${k}</b> ${v}</td>`).join('')}</tr>`).join('')}</table>
-  <p class="note">最凶六个：艮寅、巽巳、庚申、卯乙、辛酉、壬亥。</p></div>`;
+  <p class="note">最凶六个：艮寅、巽巳、庚申、卯乙、辛酉、壬亥。</p>
+  <h3 class="c"><span>室</span>天喜红鸾（按年支；选安床方位与时间，天喜生男、红鸾生女）〔中 p304〕</h3><table><tr><th>年支</th>${KD_ZHI.map(z=>`<th>${z}</th>`).join('')}</tr><tr><td>天喜</td>${KD_ZHI.map(z=>`<td>${kdXiHong(z).xi}</td>`).join('')}</tr><tr><td>红鸾</td>${KD_ZHI.map(z=>`<td>${kdXiHong(z).hong}</td>`).join('')}</tr></table>
+  <h3 class="c"><span>神</span>三神水法（天井放水转三步，可平级升级跳级，不能降级）〔初 p816｜高 p34｜中 p270〕</h3><table><tr><td class="l"><b>大神</b> 乾坤艮巽寅申巳亥</td><td class="l"><b>初级·高级</b>：小神 乙辛丁癸辰戌丑未｜中神 甲庚壬丙子午卯酉<br><b>中级 p270</b>：小神、中神正相反（照录两说）</td></tr></table></div>`;
   q+=`<div class="pb qk"><h2 class="t">峦头速查</h2>
   <h3 class="c"><span>九</span>九星吉凶〔初 p48,401〕</h3><table><tr><th>星</th><th>五行</th><th>吉凶</th><th>关键</th></tr>${KD_QUICK.star9.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="l">${r[3]}</td></tr>`).join('')}</table>
   <h3 class="c"><span>穴</span>穴上九星（廖家）〔中 p9–19〕</h3><table><tr><th>穴星</th><th>五行</th><th>即杨公</th><th>形</th></tr>${KD_QUICK.xue9.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="l">${r[3]}</td></tr>`).join('')}</table>
@@ -189,7 +194,8 @@ function quickPages(){
   <tr><td class="l"><b>余坪</b></td><td class="l">一般不超过房屋深度；太长龙气未停〔家 p125,465〕</td></tr>
   <tr><td class="l"><b>地漏</b></td><td class="l">阴宅前 1–2 米算地漏，与地大小有关〔初 p178〕</td></tr>
   <tr><td class="l"><b>城市楼层</b></td><td class="l">二楼以上露风、越高越露胎；临江买四至七楼，太高看到割脚水〔中 p40,97〕</td></tr>
-  <tr><td class="l"><b>平原葬深</b></td><td class="l">一米左右；陕北黄土高坡要挖三米以上见五色土〔初 p450〕</td></tr></table></div>`;
+  <tr><td class="l"><b>平原葬深</b></td><td class="l">一米左右；陕北黄土高坡要挖三米以上见五色土〔初 p450〕</td></tr></table>
+</div>`;
   return q;
 }
 if(part==='3'){
@@ -209,7 +215,7 @@ if(part==='3'){
   <h3>8 下罗盘</h3>${O('位置',['滴水处','门楼中心','大门','碑前','烧香方向（无碑坟）'])}${F('坐山','向','兼','分金／度数')}
   <table><tr><th style="width:60px">类别</th><th style="width:64px">方位字</th><th>形／说明（水形、远近、星体、秀丽粗恶）</th></tr>${['来水','来水','来水','去水','去水','山峰','山峰','山峰','路·门·井·破败物'].map(x=>`<tr><td>${x}</td><td></td><td style="height:19px"></td></tr>`).join('')}</table>
   </div><div class="form pb">${COMPASS}${LIQI}</div><div class="form pb">
-  <h3>10 室内（阳宅）</h3>${F('立极点','气口（窗/门）')}${F('入户门','灶位／灶向')}${O('问题',['真穿堂','灶后有窗','劫煞方有门窗/垃圾桶','卫生间不通风','异味'])}
+  <h3>10 室内（阳宅）</h3>${F('立极点','气口（窗/门）')}${F('子煞位（查速查表）','午煞位','八卦文昌')}${F('入户门','灶位／灶向')}${O('问题',['真穿堂','灶后有窗','劫煞方有门窗/垃圾桶','卫生间不通风','异味'])}
   ${TAIL}</div>`+quickPages();
 }
 if(part==='4'){
@@ -228,7 +234,7 @@ if(part==='4'){
   <h3>7 下罗盘</h3>${O('位置',['阳台（当门楼）','入户门（定室内）','单元公共区（分八宫）'])}${F('坐山','向','兼','度数')}
   <table><tr><th style="width:72px">类别</th><th style="width:64px">方位字</th><th>说明（路高低、楼高矮、远近、秀丽粗恶）</th></tr>${['来水(路)','来水(路)','去水(路)','去水(路)','河/湖','高楼(峰)','高楼(峰)','高楼(峰)','尖角/塔','电梯/门'].map(x=>`<tr><td>${x}</td><td></td><td style="height:19px"></td></tr>`).join('')}</table>
   </div><div class="form pb">${COMPASS}${LIQI}</div><div class="form pb">
-  <h3>10 室内</h3>${F('立极点（电梯公共区／主屋门厅）','气口（窗/阳台）方位')}${F('入户门方位','灶位／灶向')}${O('穿堂',['无','假穿堂（入户门对窗）','真穿堂（客厅窗对饭厅窗）'])}${O('问题',['灶后有窗','厨房门对阳台','卫生间对阳台窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味甲醛'])}
+  <h3>10 室内</h3>${F('立极点（电梯公共区／主屋门厅）','气口（窗/阳台）方位')}${F('子煞位（按阳台坐向查）','午煞位','财位（辰戌丑未）')}${F('入户门方位','灶位／灶向')}${O('穿堂',['无','假穿堂（入户门对窗）','真穿堂（客厅窗对饭厅窗）'])}${O('问题',['灶后有窗','厨房门对阳台','卫生间对阳台窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味甲醛'])}
   ${TAIL}</div>`+quickPages();
 }
 

@@ -27,6 +27,17 @@ t('子山午向乙峰=贵人 中p257',{zuo:'子',feng:[{d:'乙'}]},'贵人峰');
 // 题库完整性：精讲每一类都有题，题目无重复
 {const cats=new Set(K.KD_CHECK.map(x=>x[0]));const ok=K.KD_CATS.every(c=>cats.has(c[0]));console.log(ok?'ok':'FAIL','13类都有题');if(!ok)bad++;
  const qs=K.KD_CHECK.map(x=>x[1]);const dup=qs.filter((q,i)=>qs.indexOf(q)!==i);console.log(dup.length?'FAIL':'ok','题目无重复',dup);if(dup.length)bad++;}
+
+// 2026-10-05 回原书补入的规则：全部用原书例子断言
+{const L=p=>K.kdCheck(p).some(h=>h.name==='洛书四大局');const T=(n,c)=>{console.log(c?'ok':'FAIL',n);if(!c)bad++};
+ T('洛书 丙山壬向来庚水 中p228',L({zuo:'丙',lai:[{d:'庚'}]}));T('洛书 癸山丁向出坤水 中p228',L({zuo:'癸',qu:[{d:'坤'}]}));
+ T('洛书 乙山辛向来丁水 中p229',L({zuo:'乙',lai:[{d:'丁'}]}));T('洛书 庚山甲向见艮水 中p229',L({zuo:'庚',lai:[{d:'艮'}]}));
+ T('洛书 丑山未向见坤水(同犯隔壁口) 中p229',L({zuo:'丑',lai:[{d:'坤'}]})&&K.kdCheck({zuo:'丑',lai:[{d:'坤'}]}).some(h=>h.name.includes('隔壁口')));
+ T('洛书 子山午向见甲水 中p228',L({zuo:'子',lai:[{d:'甲'}]}));T('洛书 午山子向去甲水 中p228',L({zuo:'午',qu:[{d:'甲'}]}));
+ const z=K.kdZiwu('子');T('子午斜流 子山 坤申子 艮寅午 乾亥卯 巽巳酉 中p295',z[0].pos==='坤申'&&z[6].pos==='艮寅'&&z[3].pos==='乾亥'&&z[9].pos==='巽巳');
+ const y=K.kdZiwu('亥');T('子午斜流 亥山 丙午子 壬子午 庚酉卯 中p300',y[0].pos==='丙午'&&y[6].pos==='壬子'&&y[3].pos==='庚酉');
+ const xh=K.kdXiHong('丑');T('天喜红鸾 辛丑年 申/寅 中p304',xh.xi==='申'&&xh.hong==='寅');
+ T('八卦文昌 子山巽 午山乾 中p302',K.kdWenchang('子')==='巽'&&K.kdWenchang('午')==='乾');}
 if(bad)process.exit(1);
 const {JSDOM}=require('jsdom');const fs=require('fs');
 const root=__dirname;

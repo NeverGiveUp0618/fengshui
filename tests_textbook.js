@@ -53,7 +53,7 @@ setTimeout(()=>{
     return n===6?true:'实为'+n;});
   t('27 课全部可点',()=>{const n=list.querySelectorAll('[data-tb]').length;
     return n===27?true:'实为'+n;});
-  t('总进度显示 0 / 215（精讲正文188＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 215'?true:
+  t('总进度显示 0 / 218（精讲正文191＋通读27）',()=>d.getElementById('textbook-progress').textContent.trim()==='0 / 218'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
 
   console.log('\n— 阅读页 —');
@@ -84,7 +84,7 @@ setTimeout(()=>{
     return rd['fs01-18']?true:'没写入：'+JSON.stringify(rd);});
   t('按钮变成已读完',()=>{const b=d.getElementById('textbook-content').querySelector('[data-tb-done]');
     return b.classList.contains('done')&&/已读完/.test(b.textContent)?true:'状态没变：'+b.textContent;});
-  t('首页总进度跟着变 1 / 215',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 215'?true:
+  t('首页总进度跟着变 1 / 218',()=>d.getElementById('textbook-progress').textContent.trim()==='1 / 218'?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('目录里该课打了勾',()=>d.querySelector('[data-tb="fs01:18"]').classList.contains('done')?true:'没打勾');
   t('计入连续学习（写了 history）',()=>{const h=JSON.parse(w.localStorage.getItem('guanshan_history')||'{}');
@@ -179,7 +179,7 @@ setTimeout(()=>{
   const LEC=G('LECTURES');
   t('LECTURES 已加载',()=>Array.isArray(LEC)&&LEC.length===13?true:'实为'+(LEC||[]).length);
   t('A–M 十三类全部完成',()=>LEC.map(x=>x.c).join('')==='ABCDEFGHIJKLM'?true:LEC.map(x=>x.c).join(''));
-  t('共 202 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===202?true:'实为'+n;});
+  t('共 205 条',()=>{const n=LEC.reduce((a,c)=>a+c.items.length,0);return n===205?true:'实为'+n;});
   t('每条正文都有块',()=>{const bad=LEC.flatMap(c=>c.items).filter(i=>!i.blocks||!i.blocks.length);
     return bad.length===0?true:bad.map(x=>x.t).join(',');});
   t('正文条目都带教材引文',()=>{
@@ -194,7 +194,7 @@ setTimeout(()=>{
     const bad=qs.filter(q=>!/^(初级|中级|家居|高级|第一课)/.test(q.src));
     return bad.length===0?true:'异常出处：'+bad.slice(0,3).map(q=>q.src).join('｜');});
   const lecList=d.getElementById('lecture-list');
-  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===202?true:
+  t('首页精讲目录已渲染',()=>lecList&&lecList.querySelectorAll('[data-lec]').length===205?true:
     '实为'+(lecList?lecList.querySelectorAll('[data-lec]').length:0));
   t('十三类分组都在',()=>lecList.querySelectorAll('.tb-group').length===13?true:
     '实为'+lecList.querySelectorAll('.tb-group').length);
@@ -233,7 +233,7 @@ setTimeout(()=>{
   t('精讲标记读完也停在原位置',()=>_lp.scrollTop===360?true:'scrollTop 被改成了 '+_lp.scrollTop);
   t('精讲标记读完没有重建正文',()=>d.getElementById('textbook-content').querySelector('h2')===_lh2?true:'正文被整篇重渲染了');
   d.getElementById('textbook-content').querySelector('[data-lec-done]').click();
-  t('总进度含精讲（188+27=215）',()=>/\/ 215$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
+  t('总进度含精讲（191+27=218）',()=>/\/ 218$/.test(d.getElementById('textbook-progress').textContent.trim())?true:
     '实为'+d.getElementById('textbook-progress').textContent);
   t('B 类有表格块（五星各论）',()=>{
     const b=LEC.find(x=>x.c==='B');
@@ -336,7 +336,7 @@ setTimeout(()=>{
     const note=LEC.flatMap(c=>c.items.filter(i=>i.note));
     if(note.length!==14)return '说明条实为'+note.length+'条';
     const real=LEC.flatMap(c=>c.items.filter(i=>!i.note)).length;
-    return real===188?true:'正文实为'+real+'条';});
+    return real===191?true:'正文实为'+real+'条';});
   t('每条说明性小节都标了 note',()=>{
     const bad=LEC.flatMap(c=>c.items).filter(i=>
       /未收入|完成情况|归属说明|待整合/.test(i.t)&&!i.note).map(i=>i.t);
@@ -501,7 +501,7 @@ setTimeout(()=>{
      同名字串误伤成红。要查的是 ASSETS 里的**路径**，不是全文出现过这四个字母。*/
   t('配图没有进 sw 预缓存',()=>/assets\/lecimg/.test(sw)?'lecimg 被写进 ASSETS 了，装 PWA 会先拖 3MB':true);
   t('加图没有改变进度分母',()=>{const n=LEC.reduce((s,c)=>s+c.items.filter(i=>!i.note).length,0);
-    return n===188?true:'正文条数变成 '+n+'（应为 188，图不该计进条目数）';});
+    return n===191?true:'正文条数变成 '+n+'（应为 191，图不该计进条目数）';});
   t('图不计入字数（img 块没有 v 键）',()=>Dcat.items.every(i=>typeof i.c==='number'&&i.c>0)?true:'字数统计坏了');
   t('build_images.py 与映射表都在',()=>fs.existsSync(D+'build_images.py')&&fs.existsSync(D+'_map_lecimg.py')?true:'缺脚本或映射表');
 

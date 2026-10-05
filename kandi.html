@@ -264,7 +264,7 @@ const FIELDS={
   s7:[['tags','lixiang','峦头立向自检',['靠穴星山落脉正中','不斜坐','朝向居中、左右对称','没有为仙命改向']],['area','whyxiang','立这个向的理由']],
   s8:[['sel','luopos','下罗盘位置',['','屋檐滴水处','门楼中心','城市阳台','大门口','碑前','烧香方向（无碑坟）']],['zuo','zuo','坐山'],['text','fenjin','分金／度数'],['list','lai','来水（对准最远端）'],['list','qu','去水／出水口'],['feng','feng','山峰（对准峰尖）'],['dong','dong','路、门楼、井、喷泉、枯树、垃圾桶、电线杆…']],
   s9:[['auto'],['manual','manual','需要人工核的口诀'],['area','linote','理气小结']],
-  s10:[['text','liji','立极点位置'],['text','qikou','气口（窗户/阳台）方位'],['text','door','入户门方位'],['text','zao','灶位／灶向'],['tagsbad','neibad','室内问题',['真穿堂','灶后有窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味/甲醛']],['area','innote','备注']],
+  s10:[['ziwu'],['text','liji','立极点位置'],['text','qikou','气口（窗户/阳台）方位'],['text','door','入户门方位'],['text','zao','灶位／灶向'],['tagsbad','neibad','室内问题',['真穿堂','灶后有窗','劫煞方有门窗/鱼缸/垃圾桶','卫生间不通风','异味/甲醛']],['area','innote','备注']],
   s11:[['four','dcgs','丁 · 财 · 贵 · 寿'],['area','fangfen','房份','青龙长房、白虎小房、中间二房'],['area','problem','主要问题'],['area','duanyu','说给东家的话（留余地，说眼前事）']],
   s12:[['area','zuofa','做法建议','消砂纳水、开水池、照壁、补峰、改门、放水…'],['area','feedback','东家反馈／应验'],['area','fupan','复盘：哪一步我没把握']]
 };
@@ -295,6 +295,8 @@ function fieldHTML(f){
       :`<div class="list-row"><select data-list="${key}" data-i="${i}" data-f="d">${OPTS24().replace(`value="${x.d}"`,`value="${x.d}" selected`).replace(`<option>${x.d}</option>`,`<option selected>${x.d}</option>`)}</select><input type="text" data-list="${key}" data-i="${i}" data-f="n" placeholder="水形、远近、看不看得见" value="${esc(x.n)}"><button data-del="${key}" data-i="${i}">×</button></div>`;
     return `<div class="f">${L}${arr.map(row).join('')}<button class="add" data-add="${key}">＋ 加一条</button></div>`}
   if(type==='four'){const o=v||{};return `<div class="f">${L}${[['ding','丁'],['cai','财'],['gui','贵'],['shou','寿']].map(([k,n])=>`<div class="row" style="margin:6px 0;flex-wrap:nowrap"><b style="font-family:var(--serif);width:22px">${n}</b><select data-four="${k}" data-f="v" style="width:90px;flex:none">${['','旺','平','弱'].map(t=>`<option ${(o[k]||{}).v===t?'selected':''} value="${t}">${t||'未判'}</option>`).join('')}</select><input type="text" data-four="${k}" data-f="n" placeholder="依据" value="${esc((o[k]||{}).n)}"></div>`).join('')}</div>`}
+  if(type==='ziwu'){const z=cur.p.zuo;if(!z)return '<div class="f"><label>子午斜流 <i>（第 8 步填好坐山后自动排出）</i></label></div>';const r=kdZiwu(z);const c=lv=>lv==='大凶'?'凶':lv==='次凶'?'注意':lv==='吉'?'吉':'提示';
+    return `<div class="f"><label>子午斜流 · ${z}山 <i>（主卧、厨房、书房、入户门、神位避开子午煞；财位在辰戌丑未方；八卦文昌在${kdWenchang(z)}）</i></label>${r.filter(x=>x.lv!=='小凶/中平').map(x=>`<div class="hit ${c(x.lv)}"><span class="lv">${x.lv}</span><b>${x.pos}</b>　排为「${x.lab}」</div>`).join('')}<span class="src" style="margin:0">中 p294–296｜家 p401,406</span></div>`}
   if(type==='auto') return `<div class="f"><label>口诀自动对照 <i>（按第 3、8 步填的字查表）</i></label><div id="auto">${autoHTML()}</div></div>`;
   if(type==='manual'){const o=v||{};return `<div class="f">${L}${KD_MANUAL.map((m,i)=>`<div class="manual"><select data-man="${i}"><option value="">未核</option>${['合局','不合局','不适用'].map(t=>`<option ${o[i]===t?'selected':''}>${t}</option>`).join('')}</select><div><b>${esc(m[0])}</b>：${esc(m[1])}<span class="src">${esc(m[2])}</span></div></div>`).join('')}</div>`}
   return '';
