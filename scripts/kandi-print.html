@@ -3,11 +3,11 @@
      导出：Chrome --headless=new --no-pdf-header-footer --print-to-pdf=... "http://localhost:8765/scripts/kandi-print.html?p=N" -->
 <style>
 @page{size:A4;margin:13mm 13mm 15mm}
-:root{--ink:#1f2d38;--ink2:#4a5c69;--mute:#7f919e;--line:#bcd2e2;--line2:#dbe8f1;--dai:#2f6690;--sky:#7fb3d5;--qing:#4f8a74;--zhu:#a9442f;--jin:#9c7a45;--paper:#e9f2f8}
+:root{--ink:#1f2d38;--ink2:#4a5c69;--mute:#7f919e;--line:#bcd2e2;--line2:#dbe8f1;--dai:#2f6690;--sky:#7fb3d5;--soft:#dceaf5;--bg:#f7fbfe;--c1:#2f6690;--c2:#4f90c0;--c3:#9cc7e4;--seal:#a9442f;--qing:#4f8a74;--zhu:#a9442f;--jin:#9c7a45;--paper:#e9f2f8}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);font:10.5pt/1.65 "Songti SC","STSong",serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .sans{font-family:"PingFang SC",sans-serif}
-.cover{height:262mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(circle at 82% 14%,rgba(255,255,255,.2),transparent 28%),radial-gradient(circle at 12% 88%,rgba(255,255,255,.12),transparent 30%),linear-gradient(160deg,#2f6690,#4f90c0 60%,#9cc7e4);color:#fff;border-radius:6px;page-break-after:always}
-.cover .seal{background:var(--zhu);color:#fff;width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.cover{height:262mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(circle at 82% 14%,rgba(255,255,255,.2),transparent 28%),radial-gradient(circle at 12% 88%,rgba(255,255,255,.12),transparent 30%),linear-gradient(160deg,var(--c1),var(--c2) 60%,var(--c3));color:#fff;border-radius:6px;page-break-after:always}
+.cover .seal{background:var(--seal);color:#fff;width:58px;height:58px;display:grid;place-items:center;font:700 20px/1 serif;writing-mode:vertical-rl;border-radius:5px;margin-bottom:22px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .cover h1{font-size:34pt;letter-spacing:.35em;margin:0 0 0 .35em;font-weight:600}
 .cover h2{font-size:16pt;letter-spacing:.2em;font-weight:500;margin:14px 0 26px}
 .cover p{color:rgba(255,255,255,.9);font-size:10pt;max-width:130mm;margin:4px 0;font-family:"PingFang SC",sans-serif}
@@ -24,25 +24,25 @@ h3.c span{display:inline-grid;place-items:center;width:20px;height:20px;backgrou
 .box{font-size:8.5pt;color:var(--mute);font-family:"PingFang SC",sans-serif;text-align:right;padding-top:2px}
 .ans{display:grid;grid-template-columns:24px 1fr;gap:4px;font-size:9pt;font-family:"PingFang SC",sans-serif;padding:2px 0;border-bottom:.5px dotted var(--line2);page-break-inside:avoid}
 .ans .n{color:var(--dai)}
-.poem{font-size:12pt;line-height:2.2;letter-spacing:.06em;margin:4px 0 10px;padding:6px 12px;background:#f5f9fc;border-left:3px solid var(--sky);page-break-inside:avoid}
+.poem{font-size:12pt;line-height:2.2;letter-spacing:.06em;margin:4px 0 10px;padding:6px 12px;background:var(--bg);border-left:3px solid var(--sky);page-break-inside:avoid}
 .poem b{font-size:9pt;color:var(--mute);font-family:"PingFang SC",sans-serif;display:block;letter-spacing:0;line-height:1.4}
 .blank{display:inline-block;width:1.3em;border-bottom:1px solid var(--ink2);margin:0 1px}
 table{border-collapse:collapse;width:100%;font-size:9pt;font-family:"PingFang SC",sans-serif;page-break-inside:avoid}
 th,td{border:.6px solid var(--line);padding:1px 4px;text-align:center}th{background:var(--paper);font-weight:600;color:var(--dai)}
 td.l{text-align:left}
 /* 步骤 */
-.step{border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:6px;background:#f7fbfe;padding:7px 10px 6px;margin:8px 0;page-break-inside:avoid}
+.step{border:1px solid var(--line);border-left:4px solid var(--sky);border-radius:6px;background:var(--bg);padding:7px 10px 6px;margin:8px 0;page-break-inside:avoid}
 .step h3{margin:0;font-size:12.5pt;display:flex;align-items:center;gap:8px;color:var(--dai)}
 .step h3 i{font-style:normal;width:22px;height:22px;background:linear-gradient(135deg,var(--dai),var(--sky));border-radius:50%;display:inline-grid;place-items:center;font-size:10pt;color:#fff}
 .step .one{color:var(--ink2);margin:1px 0 4px 30px;font-size:10pt}
 .blk{display:grid;grid-template-columns:52px 1fr;gap:4px;font-size:9.5pt;font-family:"PingFang SC",sans-serif;margin:2px 0}
 .blk .l{font-size:8.5pt;border-radius:3px;text-align:center;height:16px;line-height:16px;margin-top:2px}
-.l.do{background:#dceaf5;color:var(--dai)}.l.ru{background:#e2efe8;color:var(--qing)}.l.wa{background:#f4e3dc;color:var(--zhu)}.l.out{background:#f3ead8;color:var(--jin)}
+.l.do{background:var(--soft);color:var(--dai)}.l.ru{background:#e2efe8;color:var(--qing)}.l.wa{background:#f4e3dc;color:var(--zhu)}.l.out{background:#f3ead8;color:var(--jin)}
 .blk ul{margin:0;padding-left:14px}.blk li{margin:0}
 .ck li{list-style:none;margin-left:-14px}.ck li:before{content:"☐ ";color:var(--dai)}
 .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 22px;margin:10px 0}
 .flow .g{grid-column:1/-1;font-size:10pt;color:#fff;background:linear-gradient(90deg,var(--dai),var(--sky));border-radius:4px;padding:2px 10px;letter-spacing:.15em}
-.flow div.b{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#f7fbfe;position:relative;min-height:62px}
+.flow div.b{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);position:relative;min-height:62px}
 .flow div.b i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--dai);color:#fff;font-size:9pt;margin-right:5px}
 .flow div.b b{font-size:11pt;color:var(--dai)}
 .flow div.b p{margin:2px 0 0;font-size:8.6pt;color:var(--ink2);font-family:"PingFang SC",sans-serif;line-height:1.45}
@@ -61,7 +61,7 @@ td.l{text-align:left}
 /* 练习册 */
 .case{border:1px solid var(--line);border-radius:6px;padding:7px 11px;margin:9px 0;page-break-inside:avoid}
 .case h4{margin:0 0 3px;font-size:12pt;color:var(--dai);display:flex;gap:8px;align-items:center}
-.case h4 i{font-style:normal;font-size:8.5pt;background:#dceaf5;color:var(--dai);border-radius:3px;padding:0 6px;font-family:"PingFang SC",sans-serif}
+.case h4 i{font-style:normal;font-size:8.5pt;background:var(--soft);color:var(--dai);border-radius:3px;padding:0 6px;font-family:"PingFang SC",sans-serif}
 .case h4 em{font-style:normal;color:#fff;background:var(--dai);border-radius:50%;width:20px;height:20px;display:inline-grid;place-items:center;font-size:9pt}
 .case .sit{font-size:10pt;margin:2px 0 4px}
 .case ol{margin:0;padding-left:18px;font-size:9.6pt;font-family:"PingFang SC",sans-serif}
@@ -72,7 +72,14 @@ td.l{text-align:left}
 </style></head><body><div id="out"></div>
 <script src="../data/kandi.js"></script>
 <script>
-const part=new URLSearchParams(location.search).get('p')||'1';const E=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const part=new URLSearchParams(location.search).get('p')||'1';
+// 五册五色：1 青蓝｜2 青绿｜3 赭石｜4 黛紫｜5 胭脂
+const THEME={'1':['#2f6690','#7fb3d5','#e9f2f8','#dceaf5','#f7fbfe','#bcd2e2','#2f6690','#4f90c0','#9cc7e4','#a9442f'],
+ '2':['#2e6e5a','#7fbfa3','#e7f3ee','#d8ece3','#f6fbf9','#b7d8c9','#2e6e5a','#4f9a7f','#a3d4bf','#a9442f'],
+ '3':['#8a5a2b','#d1a56f','#f6eee2','#efe1cc','#fcf8f2','#e0cdb0','#7a4f26','#a8753f','#dcbc8a','#a9442f'],
+ '4':['#5b4a8a','#a99bd6','#efecf7','#e3def3','#f9f8fd','#d0c8e8','#4f4080','#7a68b0','#c0b4e3','#a9442f'],
+ '5':['#a03c3c','#e09a8f','#f8ebe9','#f3dcd8','#fdf7f6','#e9c3bd','#963636','#c25e55','#e8ada3','#2b3a46']}[part]||[];
+['--dai','--sky','--paper','--soft','--bg','--line','--c1','--c2','--c3','--seal'].forEach((k,i)=>THEME[i]&&document.documentElement.style.setProperty(k,THEME[i]));const E=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const BOOKS='出处缩写：初＝杨公风水初级｜中＝中级｜家＝家居风水高级｜高＝高级｜一课＝风水第一课';
 const cover=(n,t,sub,lines)=>`<div class="cover"><div class="seal">观山</div><h1>${t}</h1><h2>${sub}</h2>${lines.map(l=>`<p>${l}</p>`).join('')}<div class="no">之 ${n}</div></div>`;
 const S=KD_S24;const xi=z=>S[(S.indexOf(z)+12)%24];
@@ -147,12 +154,12 @@ const LN=k=>`<div class="lines">${'<div></div>'.repeat(k)}</div>`;
 function compass(){
   const R=[44,64,92,128],cx=135,cy=135;let g='';
   const P=(r,a)=>[cx+r*Math.sin(a*Math.PI/180),cy-r*Math.cos(a*Math.PI/180)];
-  R.forEach(r=>g+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#7fb3d5" stroke-width="${r===92?1.2:.8}"/>`);
+  R.forEach(r=>g+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--sky)" stroke-width="${r===92?1.2:.8}"/>`);
   for(let i=0;i<24;i++){const a=180+i*15-7.5;const[x1,y1]=P(R[1],a),[x2,y2]=P(R[3],a);g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#bcd2e2" stroke-width=".7"/>`;
     const[tx,ty]=P(78,180+i*15);const gz=['子','卯','午','酉'].includes(S[i]);g+=`<text x="${tx}" y="${ty+4.5}" font-size="13" text-anchor="middle" fill="${gz?'#a9442f':'#1f2d38'}" font-family="Songti SC">${S[i]}</text>`}
   const gua=[['坎',180],['艮',225],['震',270],['巽',315],['离',0],['坤',45],['兑',90],['乾',135]];
   for(let i=0;i<8;i++){const a=180+i*45-22.5;const[x1,y1]=P(R[0],a),[x2,y2]=P(R[1],a);g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#bcd2e2" stroke-width=".7"/>`}
-  gua.forEach(([n,a])=>{const[tx,ty]=P(54,a);g+=`<text x="${tx}" y="${ty+4}" font-size="11" text-anchor="middle" fill="#2f6690" font-family="Songti SC">${n}</text>`});
+  gua.forEach(([n,a])=>{const[tx,ty]=P(54,a);g+=`<text x="${tx}" y="${ty+4}" font-size="11" text-anchor="middle" fill="var(--dai)" font-family="Songti SC">${n}</text>`});
   g+=`<line x1="${cx-6}" y1="${cy}" x2="${cx+6}" y2="${cy}" stroke="#a9442f"/><line x1="${cx}" y1="${cy-6}" x2="${cx}" y2="${cy+6}" stroke="#a9442f"/>`;
   return `<svg width="270" height="270" viewBox="0 0 270 270">${g}</svg>`;
 }
