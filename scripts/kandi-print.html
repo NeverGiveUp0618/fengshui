@@ -24,6 +24,11 @@ h3.c span{display:inline-grid;place-items:center;width:20px;height:20px;backgrou
 .box{font-size:8.5pt;color:var(--mute);font-family:"PingFang SC",sans-serif;text-align:right;padding-top:2px}
 .ans{display:grid;grid-template-columns:24px 1fr;gap:4px;font-size:9pt;font-family:"PingFang SC",sans-serif;padding:2px 0;border-bottom:.5px dotted var(--line2);page-break-inside:avoid}
 .ans .n{color:var(--dai)}
+.ans .aq{display:block;font-weight:600;color:var(--ink);font-size:9.6pt}
+.key .ksit{color:var(--ink2);font-size:9pt;margin:1px 0}
+.key ol.kq{margin:1px 0 3px;padding-left:18px;font-size:9pt;color:var(--dai)}
+.key .ka{background:var(--bg);border-left:3px solid var(--sky);padding:3px 8px}
+.key .ka>span:first-child{display:inline-block;background:var(--dai);color:#fff;border-radius:3px;font-size:8pt;padding:0 5px;margin-right:6px}
 .poem{font-size:12pt;line-height:2.2;letter-spacing:.06em;margin:4px 0 10px;padding:6px 12px;background:var(--bg);border-left:3px solid var(--sky);page-break-inside:avoid}
 .poem b{font-size:9pt;color:var(--mute);font-family:"PingFang SC",sans-serif;display:block;letter-spacing:0;line-height:1.4}
 .blank{display:inline-block;width:1.3em;border-bottom:1px solid var(--ink2);margin:0 1px}
@@ -113,7 +118,7 @@ if(part==='1'){
   <h3 class="c"><span>7</span>判一判：下列情况犯什么？</h3><table><tr><th style="width:40%">情况</th><th>答案</th></tr>${[['子山午向，辰方来水'],['乾山巽向，卯方有垃圾桶'],['未山丑向，去癸水'],['酉山卯向，入首龙坤'],['坤山艮向，来寅水'],['申龙入首，辛山乙向，走寅水'],['甲山庚向，见辛峰'],['甲山庚向，见丑峰'],['丙山壬向，来庚水'],['庚山甲向，见艮水']].map(r=>`<tr><td class="l">${r[0]}</td><td style="height:24px"></td></tr>`).join('')}</table></div>`;
   // 答案
   h+='<div class="pb"><h2 class="t">答案 · 一、问答</h2>';n=0;
-  KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="ans"><span class="n">${n}</span><div>${E(x[2])}<span class="src">〔${E(x[3])}〕</span></div></div>`})});
+  KD_CATS.forEach(([c,name])=>{h+=`<h3 class="c"><span>${c}</span>${name}</h3>`;KD_CHECK.filter(x=>x[0]===c).forEach(x=>{n++;h+=`<div class="ans"><span class="n">${n}</span><div><b class="aq">${E(x[1])}</b>${E(x[2])}<span class="src">〔${E(x[3])}〕</span></div></div>`})});
   h+='</div>';
   const t6=[['子山午向，辰方来水','坐山八煞（坎龙），水克山祸速〔中 p195,196〕'],['乾山巽向，卯方有垃圾桶','劫煞（乾山劫在卯）〔中 p198,200〕'],['未山丑向，去癸水','隔壁口（丑向前后癸、艮）〔中 p200〕'],['酉山卯向，入首龙坤','龙上八煞（坤兔，向来克龙）〔中 p195〕'],['坤山艮向，来寅水','向上八煞，煞带廉贞血满怀〔中 p196〕'],['申龙入首，辛山乙向，走寅水','串珠理（龙冲口），合交媾〔中 p210〕'],['甲山庚向，见辛峰','河图金局（庚向见辛），辛为4生数主丁〔中 p223–225〕'],['甲山庚向，见丑峰','贵人峰（甲戊庚牛羊）〔中 p257〕'],['丙山壬向，来庚水','洛书四大局：丙8庚3，合38木局〔中 p228〕'],['庚山甲向，见艮水','犯杀人黄泉，但庚3艮8合洛书38木局，半吉半凶〔中 p229〕']];
   h+=`<div class="pb"><h2 class="t">答案 · 二、默写　三、查表</h2>
@@ -245,7 +250,7 @@ if(part==='5'){
   h+=cover('五','勘地本','教材案例练习册',[`${KD_PRACTICE.length} 个教材真实案例`,'只给教材写明的参数——先自己判，写在横线上','再翻到后面答案页对照教材原话',BOOKS]);
   h+='<h2 class="t">练习</h2><p class="note">做法：读情况 → 翻参数表或速查表 → 写答案。理气题可以对照「案例参数表」末页速查表。</p>';
   KD_PRACTICE.forEach((c,i)=>{h+=`<div class="case"><h4><em>${i+1}</em>${E(c[0])}<i>${E(c[1])}</i></h4><div class="sit">${E(c[2])}</div><ol>${c[3].map(q=>`<li>${E(q)}</li>`).join('')}</ol></div>`});
-  h+='<div class="pb"><h2 class="t">答案</h2>'+KD_PRACTICE.map((c,i)=>`<div class="key"><b>${i+1}　${E(c[0])}</b><br>${E(c[4])}<span class="src">〔${E(c[5])}〕</span></div>`).join('')+'</div>';
+  h+='<div class="pb"><h2 class="t">答案</h2>'+KD_PRACTICE.map((c,i)=>`<div class="key"><b>${i+1}　${E(c[0])}</b><div class="ksit">${E(c[2])}</div><ol class="kq">${c[3].map(q=>`<li>${E(q)}</li>`).join('')}</ol><div class="ka"><span>答</span>${E(c[4])}<span class="src">〔${E(c[5])}〕</span></div></div>`).join('')+'</div>';
 }
 document.getElementById('out').innerHTML=h;
 </script></body></html>
