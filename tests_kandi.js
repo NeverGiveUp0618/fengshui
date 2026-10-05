@@ -18,6 +18,15 @@ t('曾氏总祠申龙辛山乙向走寅水=串珠 中p210',{zuo:'辛',long:'申'
 t('甲山庚向辛峰=河图 中p223',{zuo:'甲',feng:[{d:'辛'}]},'河图四大局');
 t('甲山庚向丑峰=贵人 中p257',{zuo:'甲',feng:[{d:'丑'}]},'贵人峰');
 t('子山午向乙峰=贵人 中p257',{zuo:'子',feng:[{d:'乙'}]},'贵人峰');
+
+// 劫煞表与教材第二种读法（中 p199，按一卦三山分组）逐字交叉核对；八煞同读
+{const M={'坎':'龙申巳巳','坤':'兔癸乙癸','震':'猴丙丁申','巽':'鸡未癸酉','乾':'马丑卯乙','兑':'蛇午寅丑','艮':'虎辰丁未','离':'猪辛酉寅'};
+ const Z={'龙':'辰','兔':'卯','猴':'申','鸡':'酉','马':'午','蛇':'巳','虎':'寅','猪':'亥'};
+ const order=g=>K.KD_S24.filter(z=>K.KD_GUA[z]===g).sort((a,b)=>((K.KD_S24.indexOf(a)+1)%24)-((K.KD_S24.indexOf(b)+1)%24));
+ Object.entries(M).forEach(([g,v])=>{const three=order(g);const ok=three.every((z,i)=>K.KD_JIE[z]===v[i+1])&&K.KD_BASHA[g]===Z[v[0]];console.log(ok?'ok':'FAIL','劫煞/八煞交叉核对',g,three.join(''));if(!ok)bad++});}
+// 题库完整性：精讲每一类都有题，题目无重复
+{const cats=new Set(K.KD_CHECK.map(x=>x[0]));const ok=K.KD_CATS.every(c=>cats.has(c[0]));console.log(ok?'ok':'FAIL','13类都有题');if(!ok)bad++;
+ const qs=K.KD_CHECK.map(x=>x[1]);const dup=qs.filter((q,i)=>qs.indexOf(q)!==i);console.log(dup.length?'FAIL':'ok','题目无重复',dup);if(dup.length)bad++;}
 if(bad)process.exit(1);
 const {JSDOM}=require('jsdom');const fs=require('fs');
 const root=__dirname;
