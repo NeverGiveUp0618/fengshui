@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111517">
+<title>知识点练习 · 观山</title>
+<style>
+:root{
+  --paper:#111517; --card:#191e20; --card2:#20262a; --ink:#f1eee6; --ink2:#c4c0b5; --mute:#969d9b;
+  --line:rgba(255,255,255,.1); --gold:#b89a67; --gold-soft:rgba(184,154,103,.12);
+  --ok:#7fa88f; --ok-soft:rgba(127,168,143,.16); --bad:#c98278; --bad-soft:rgba(201,130,120,.16);
+  --serif:"Songti SC","STSong","Source Han Serif SC","Noto Serif SC",serif;
+}
+:root[data-theme="light"]{
+  --paper:#f4f1ea; --card:#fffdf8; --card2:#f0ebe0; --ink:#26221b; --ink2:#55503f; --mute:#8a8473;
+  --line:rgba(0,0,0,.1); --gold:#8a6a35; --gold-soft:rgba(138,106,53,.1);
+  --ok:#3f7a56; --ok-soft:rgba(63,122,86,.12); --bad:#a9442f; --bad-soft:rgba(169,68,47,.1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.65 "PingFang SC","Hiragino Sans GB",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.app{max-width:560px;margin:0 auto;padding:0 16px calc(40px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:var(--paper);display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 0 10px;border-bottom:1px solid var(--line)}
+.seal{width:32px;height:32px;border-radius:4px;background:#8c3b2e;color:#fff;display:grid;place-items:center;font:700 15px var(--serif)}
+header h1{margin:0;font:600 18px/1.2 var(--serif);letter-spacing:.1em}
+header p{margin:1px 0 0;font-size:12px;color:var(--mute)}
+header a,header button.lnk{margin-left:auto;color:var(--gold);font-size:13px;text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:3px 11px;background:none}
+.view{display:none;padding-top:14px}.view.on{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 4px;text-align:center}
+.stats b{display:block;font:600 19px/1.2 Georgia,var(--serif);color:var(--gold);font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;color:var(--mute)}
+h2{font:600 15px var(--serif);letter-spacing:.08em;color:var(--gold);margin:20px 0 8px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px;text-align:left;font:inherit;cursor:pointer}
+.mode b{display:block;font:600 15px var(--serif)}
+.mode span{font-size:12px;color:var(--mute)}
+.mode.main{border-color:var(--gold);background:var(--gold-soft)}
+.mode:disabled{opacity:.45;cursor:default}
+.chs{display:flex;flex-direction:column;gap:6px}
+.ch{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.ch .k{width:24px;height:24px;flex:none;border-radius:6px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font:600 13px var(--serif)}
+.ch .t{flex:1;min-width:0}
+.ch .bar{height:3px;border-radius:2px;background:var(--line);margin-top:4px;overflow:hidden}
+.ch .bar i{display:block;height:100%;background:var(--gold)}
+.ch .n{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
+.note{font-size:12.5px;color:var(--mute);margin:14px 0 0}
+/* 答题 */
+.qtop{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-bottom:6px}
+.prog{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;background:var(--gold);transition:width .2s}
+.qt{font:600 17px/1.6 var(--serif);margin:0 0 14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:11px 13px;text-align:left;font:inherit;cursor:pointer;display:flex;gap:9px}
+.opt em{font-style:normal;color:var(--mute);flex:none}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.exp{display:none;margin-top:14px;background:var(--card2);border-left:3px solid var(--gold);border-radius:6px;padding:10px 12px;font-size:14px;color:var(--ink2)}
+.exp.on{display:block}
+.exp .v{font-weight:600;margin-bottom:4px}
+.exp .v.ok{color:var(--ok)}.exp .v.bad{color:var(--bad)}
+.exp .src{display:block;margin-top:6px;font-size:12px;color:var(--mute)}
+.next{display:none;width:100%;margin-top:14px;border:0;border-radius:22px;padding:11px;background:var(--gold);color:#111;font:600 15px inherit;cursor:pointer}
+.next.on{display:block}.next:disabled{opacity:.55;cursor:default}
+.res{text-align:center;padding:20px 0}
+.res b{display:block;font:600 40px Georgia,var(--serif);color:var(--gold)}
+.res p{color:var(--ink2);margin:6px 0 18px}
+.wrongs{text-align:left}
+.wrongs div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:14px}
+.wrongs div i{font-style:normal;display:block;color:var(--ok);margin-top:3px}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{border:1px solid var(--gold);background:var(--gold);color:#111;border-radius:20px;padding:8px 18px;font:600 14px inherit;cursor:pointer}
+.btn.ghost{background:none;color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="seal">练</div>
+    <div><h1>知识点练习</h1><p id="sub">体系精讲 A–M · 断地用得上的规则</p></div>
+    <a href="./" id="back">返回</a>
+  </header>
+
+  <section class="view on" id="v-home">
+    <div class="stats">
+      <div><b id="s-done">0</b><span>已做</span></div>
+      <div><b id="s-total">0</b><span>题库</span></div>
+      <div><b id="s-due">0</b><span>待复习</span></div>
+      <div><b id="s-wrong">0</b><span>错题</span></div>
+    </div>
+    <h2>开始练</h2>
+    <div class="modes">
+      <button class="mode main" data-mode="smart"><b>今日一组</b><span>先复习到期的，再补新题 · 10 题</span></button>
+      <button class="mode" data-mode="rand"><b>随机十题</b><span>全库随机抽</span></button>
+      <button class="mode" data-mode="wrong"><b>错题回炉</b><span id="m-wrong">答对一次就移出</span></button>
+      <button class="mode" data-mode="due"><b>只做复习</b><span id="m-due">按遗忘间隔排到今天的</span></button>
+    </div>
+    <h2>按章练</h2>
+    <div class="chs" id="chs"></div>
+    <p class="note">每章按「没做过的 → 错过的 → 久没复习的」顺序出题，一次 10 题。题目都从站内体系精讲里来，讲解后面附教材页码，可回「学」里查原文。</p>
+  </section>
+
+  <section class="view" id="v-quiz">
+    <div class="qtop"><span id="q-tag"></span><span id="q-n"></span></div>
+    <div class="prog"><i id="q-prog"></i></div>
+    <p class="qt" id="q-t"></p>
+    <div class="opts" id="q-opts"></div>
+    <div class="exp" id="q-exp"></div>
+    <button class="next" id="q-next">下一题</button>
+  </section>
+
+  <section class="view" id="v-res">
+    <div class="res"><b id="r-score"></b><p id="r-msg"></p></div>
+    <div class="wrongs" id="r-wrongs"></div>
+    <div class="btns"><button class="btn" id="r-again">再来一组</button><button class="btn ghost" id="r-home">回目录</button></div>
+  </section>
+</div>
+<script src="data/kq.js"></script>
+<script>
+const KEY='guanshan_kq_v1', WAIT=5, N=10, GAP=[0,1,2,4,7,15,30,60];
+function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):{}}catch(e){return {}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+let st=load(); st.q=st.q||{}; st.w=st.w||[];
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+const LIVE=KQ_DATA.map((q,i)=>i).filter(i=>!KQ_OFF.has(i));
+const CATN=Object.fromEntries(KQ_CATS);
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const isDue=i=>st.q[i]&&st.q[i].d<=today();
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));window.scrollTo(0,0)}
+
+function home(){
+  st.w=st.w.filter(i=>!KQ_OFF.has(i));
+  const done=LIVE.filter(i=>st.q[i]).length, due=LIVE.filter(isDue).length;
+  $('s-done').textContent=done;$('s-total').textContent=LIVE.length;$('s-due').textContent=due;$('s-wrong').textContent=st.w.length;
+  document.querySelector('[data-mode=wrong]').disabled=!st.w.length;
+  document.querySelector('[data-mode=due]').disabled=!due;
+  $('chs').innerHTML=KQ_CATS.map(([k,n])=>{const ids=LIVE.filter(i=>KQ_DATA[i][0]===k);const d=ids.filter(i=>st.q[i]).length;
+    return `<button class="ch" data-ch="${k}"><span class="k">${k}</span><span class="t">${n}<span class="bar"><i style="width:${ids.length?d/ids.length*100:0}%"></i></span></span><span class="n">${d}/${ids.length}</span></button>`}).join('');
+  show('home');
+}
+
+// 出题顺序：没做过 → 错题 → 到期 → 其余按最久没做
+function pick(mode,ch){
+  let pool=LIVE;
+  if(mode==='ch')pool=pool.filter(i=>KQ_DATA[i][0]===ch);
+  if(mode==='wrong')return shuffle(st.w).slice(0,N);
+  if(mode==='due')return shuffle(pool.filter(isDue)).slice(0,N);
+  if(mode==='rand')return shuffle(pool).slice(0,N);
+  if(mode==='smart'){const due=shuffle(pool.filter(isDue)).slice(0,N);const fresh=shuffle(pool.filter(i=>!st.q[i]));let out=due.concat(fresh).slice(0,N);
+    if(out.length<N)out=out.concat(shuffle(pool.filter(i=>!out.includes(i))).slice(0,N-out.length));return out}
+  const w=new Set(st.w), rank=i=>!st.q[i]?0:w.has(i)?1:isDue(i)?2:3;
+  return shuffle(pool).sort((a,b)=>rank(a)-rank(b)||((st.q[a]||{}).t||0)-((st.q[b]||{}).t||0)).slice(0,N);
+}
+
+let run=null,timer=null;
+function start(mode,ch){const list=pick(mode,ch);if(!list.length)return home();run={mode,ch,list,k:0,ok:0,bad:[]};ask()}
+function ask(){
+  const i=run.list[run.k],q=KQ_DATA[i];
+  $('q-tag').textContent=q[0]+' · '+CATN[q[0]];$('q-n').textContent=(run.k+1)+' / '+run.list.length;
+  $('q-prog').style.width=(run.k/run.list.length*100)+'%';
+  $('q-t').textContent=q[1];
+  const opts=shuffle([q[2],...q[3]]);
+  $('q-opts').innerHTML=opts.map((o,j)=>`<button class="opt" data-o="${j}"><em>${'ABCD'[j]}</em><span></span></button>`).join('');
+  $('q-opts').querySelectorAll('.opt span').forEach((s,j)=>s.textContent=opts[j]);
+  $('q-opts').onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;answer(i,opts,+b.dataset.o)};
+  $('q-exp').className='exp';$('q-next').className='next';
+  show('quiz');
+}
+function answer(i,opts,j){
+  const q=KQ_DATA[i],right=opts[j]===q[2],bs=$('q-opts').querySelectorAll('.opt');
+  bs.forEach((b,x)=>{b.disabled=true;if(opts[x]===q[2])b.classList.add('ok')});
+  if(!right)bs[j].classList.add('bad');
+  const r=st.q[i]||{b:0};
+  if(right){r.b=Math.min((r.b||0)+1,GAP.length-1);run.ok++;st.w=st.w.filter(x=>x!==i)}
+  else{r.b=0;if(!st.w.includes(i))st.w.push(i);run.bad.push(i)}
+  r.d=today()+GAP[r.b];r.t=Date.now();st.q[i]=r;save();
+  const e=$('q-exp');e.innerHTML=`<div class="v ${right?'ok':'bad'}"></div><div class="x"></div><span class="src"></span>`;
+  e.querySelector('.v').textContent=right?'答对了':'正确答案：'+q[2];
+  e.querySelector('.x').textContent=q[4];e.querySelector('.src').textContent='出处：'+q[5];e.className='exp on';
+  const nb=$('q-next');nb.className='next on';nb.disabled=true;let s=WAIT;
+  const last=run.k===run.list.length-1, lab=last?'看结果':'下一题';
+  nb.textContent=lab+'（'+s+'）';clearInterval(timer);
+  timer=setInterval(()=>{s--;if(s<=0){clearInterval(timer);nb.disabled=false;nb.textContent=lab}else nb.textContent=lab+'（'+s+'）'},1000);
+}
+$('q-next').onclick=()=>{if($('q-next').disabled)return;run.k++;run.k<run.list.length?ask():result()};
+function result(){
+  $('r-score').textContent=run.ok+' / '+run.list.length;
+  $('r-msg').textContent=run.bad.length?'错的已进错题本，过一天再来复习。':'全对。答对的题会按间隔慢慢再出现。';
+  const w=$('r-wrongs');w.innerHTML='';
+  run.bad.forEach(i=>{const d=document.createElement('div');d.textContent=KQ_DATA[i][1];const a=document.createElement('i');a.textContent='→ '+KQ_DATA[i][2];d.appendChild(a);w.appendChild(d)});
+  show('res');
+}
+$('r-again').onclick=()=>start(run.mode,run.ch);
+$('r-home').onclick=home;
+document.querySelector('.modes').onclick=e=>{const b=e.target.closest('.mode');if(b&&!b.disabled)start(b.dataset.mode)};
+$('chs').onclick=e=>{const b=e.target.closest('.ch');if(b)start('ch',b.dataset.ch)};
+$('back').onclick=e=>{if(!$('v-home').classList.contains('on')){e.preventDefault();clearInterval(timer);home()}};
+const m=location.search.match(/[?&]ch=([A-M])/);
+home(); if(m)start('ch',m[1]);
+</script>
+</body>
+</html>

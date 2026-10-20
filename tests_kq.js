@@ -1,0 +1,34 @@
+// 知识点练习测试：题库结构 + 出处页码在源 md 里确实讲过 + 页面 jsdom 跑一组。跑法：NODE_PATH=<八字象义/node_modules> node tests_kq.js
+const fs=require('fs');const {KQ_CATS,KQ_DATA,KQ_OFF}=require('./data/kq.js');let bad=0;
+const T=(n,c,x)=>{console.log(c?'ok':'FAIL',n,c?'':(x||''));if(!c)bad++};
+const cats=new Set(KQ_CATS.map(c=>c[0]));
+const badRow=KQ_DATA.map((q,i)=>[q,i]).filter(([q])=>q.length!==6||!cats.has(q[0])||q[3].length!==3||new Set([q[2],...q[3]]).size!==4||!q[4]||!q[5]).map(x=>x[1]);
+T('每题六栏、四个选项互不相同、讲解出处齐全',!badRow.length,badRow);
+const qs=KQ_DATA.map(q=>q[1]);T('题目不重复',qs.every((q,i)=>qs.indexOf(q)===i));
+T('13 类都有题',KQ_CATS.every(c=>KQ_DATA.some(q=>q[0]===c[0])));
+T('撤题序号都在范围内',[...KQ_OFF].every(i=>i>=0&&i<KQ_DATA.length));
+// 正确答案不能总是最长的那个（凭长度可猜）
+// 凭长度能猜：答案比三个干扰项都长 5 字以上的题不许超过 15 道（2026-10-20 从 272 道压到 8 道）
+const longest=KQ_DATA.filter(q=>q[3].every(w=>q[2].length>w.length)).length;
+const tooLong=KQ_DATA.map((q,i)=>[q,i]).filter(([q])=>q[3].every(w=>q[2].length>=w.length+5)).map(x=>x[1]);
+console.log('  答案恰为最长选项：',longest,'/',KQ_DATA.length);
+T('答案不靠长度就能猜（长出5字以上≤15题）',tooLong.length<=15,tooLong);
+// 出处里的每个「书 p页」都在对应精讲 md 里出现过
+const md=fs.readdirSync('content').filter(f=>/精讲/.test(f)).map(f=>fs.readFileSync('content/'+f,'utf8')).join('\n');
+const miss=[];KQ_DATA.forEach((q,i)=>q[5].split('｜').forEach(seg=>{const m=seg.match(/^(初级|中级|家居|高级|第一课)\s*(.+)$/);if(!m){miss.push(i+':'+seg);return}
+  const book=m[1];m[2].split(/[,，]/).forEach(p=>{p=p.trim().replace(/[–-].*$/,'');if(book==='第一课'){if(!md.includes('第一课 '+p))miss.push(i+':'+seg)}else{const n=p.replace(/^p/,'');if(!new RegExp(book+' p(?:[\\d,–-]*[,–-])?'+n+'(?!\\d)').test(md))miss.push(i+':'+book+' p'+n)}})}));
+T('出处页码在精讲里都能找到',!miss.length,miss.slice(0,20).join(' '));
+// 页面冒烟
+const {JSDOM}=require('jsdom');
+const html=fs.readFileSync('lianxi.html','utf8').replace('<script src="data/kq.js"></script>','<script>'+fs.readFileSync('data/kq.js','utf8')+'</script>');
+const dom=new JSDOM(html,{runScripts:'dangerously',url:'http://x/lianxi.html',beforeParse(w){w.scrollTo=()=>{}}});const w=dom.window,d=w.document;
+T('首页题库数正确',d.getElementById('s-total').textContent==String(KQ_DATA.length-KQ_OFF.size));
+T('13 个章节按钮',d.querySelectorAll('.ch').length===13);
+d.querySelector('[data-mode=smart]').click();
+let got=0;for(let k=0;k<10;k++){const o=d.querySelectorAll('.opt');if(o.length!==4)break;o[0].click();got++;
+  const nb=d.getElementById('q-next');nb.disabled=false;nb.click()}
+T('跑完一组 10 题进结果页',got===10&&d.getElementById('v-res').classList.contains('on'));
+const st=JSON.parse(w.localStorage.getItem('guanshan_kq_v1'));T('作答记录已保存',Object.keys(st.q).length===10);
+d.getElementById('r-home').click();T('回首页显示已做 10',d.getElementById('s-done').textContent==='10');
+w.close();
+console.log(bad?'\n'+bad+' 项失败':'\n全部通过');process.exit(bad?1:0);
