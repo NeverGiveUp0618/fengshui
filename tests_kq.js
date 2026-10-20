@@ -18,6 +18,12 @@ const md=fs.readdirSync('content').filter(f=>/精讲/.test(f)).map(f=>fs.readFil
 const miss=[];KQ_DATA.forEach((q,i)=>q[5].split('｜').forEach(seg=>{const m=seg.match(/^(初级|中级|家居|高级|第一课)\s*(.+)$/);if(!m){miss.push(i+':'+seg);return}
   const book=m[1];m[2].split(/[,，]/).forEach(p=>{p=p.trim().replace(/[–-].*$/,'');if(book==='第一课'){if(!md.includes('第一课 '+p))miss.push(i+':'+seg)}else{const n=p.replace(/^p/,'');if(!new RegExp(book+' p(?:[\\d,–-]*[,–-])?'+n+'(?!\\d)').test(md))miss.push(i+':'+book+' p'+n)}})}));
 T('出处页码在精讲里都能找到',!miss.length,miss.slice(0,20).join(' '));
+// 覆盖：精讲每一节（## X数字）至少有一道题的出处页码落在该节引用页上；G1 讲理气学习结构，按出题标准不出题
+{const pages=t=>{const s=new Set();for(const m of t.matchAll(/(初级|中级|家居|高级|第一课)\s*((?:p?[\d]+(?:[–-]\d+)?[,，]?\s*)+|第\d+课)/g)){const b=m[1];if(b==='第一课'){s.add(b+m[2]);continue}m[2].replace(/p/g,'').split(/[,，\s]+/).filter(Boolean).forEach(x=>{const [a,c]=x.split(/[–-]/).map(Number);for(let n=a;n<=(c||a);n++)s.add(b+n)})}return s};
+ const qp=KQ_DATA.filter((q,i)=>!KQ_OFF.has(i)).map(q=>[q[0],pages(q[5])]);const SKIP=['G1'];const none=[];
+ fs.readdirSync('content').filter(f=>/精讲/.test(f)).forEach(f=>fs.readFileSync('content/'+f,'utf8').split(/\n(?=## [A-M]\d+)/).slice(1).forEach(s=>{const id=s.slice(3).split(/\s/)[0];const ps=pages(s);
+   if(!SKIP.includes(id)&&!qp.some(([c,p])=>c===id[0]&&[...p].some(x=>ps.has(x))))none.push(id)}));
+ T('精讲每节都有题',!none.length,none);}
 // 页面冒烟
 const {JSDOM}=require('jsdom');
 const html=fs.readFileSync('lianxi.html','utf8').replace('<script src="data/kq.js"></script>','<script>'+fs.readFileSync('data/kq.js','utf8')+'</script>');
