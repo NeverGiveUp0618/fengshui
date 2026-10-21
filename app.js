@@ -165,6 +165,8 @@ function openLecture(code,no){const c=(typeof LECTURES!=='undefined')&&LECTURES.
   const prev=c.items[idx-1],next=c.items[idx+1];
   $('#textbook-content').innerHTML=`<p class="lesson-kicker">体系精讲 · ${c.c} ${c.name} · 第 ${idx+1} / ${c.items.length} 条</p><h2>${it.t}</h2>`+
     `<div class="lec-doc">${it.blocks.map(lecBlock).join('')}</div>`+
+    /* 这节练一练：kq_sec.js 由 build_kq_links.js 生成，出处页码落在本节的知识点练习题 */
+    ((typeof KQ_SECQ!=='undefined'&&it.n&&KQ_SECQ[it.n])?`<a class="lec-quiz" href="lianxi.html?sec=${it.n}">这节练一练 · ${KQ_SECQ[it.n].length} 题<i>›</i></a>`:'')+
     `<div class="tb-foot"><button class="tb-done${isRead?' done':''}" data-lec-done="${code}:${it.n||it.t}">${isRead?'✓ 已读完':'标记读完'}</button>`+
     `<div class="tb-nav">${prev?`<button data-lec="${code}:${prev.n||prev.t}">‹ ${prev.t}</button>`:'<span></span>'}${next?`<button data-lec="${code}:${next.n||next.t}">${next.t} ›</button>`:'<span></span>'}</div></div>`;
   toggleSheet('#textbook-sheet',true);const pn=document.querySelector('#textbook-sheet .sheet-panel');if(pn)pn.scrollTop=0}
@@ -242,5 +244,9 @@ window.addEventListener('popstate',e=>{
   const open=document.querySelector('.sheet.on');
   if(open){toggleSheet('#'+open.id,false);history.pushState({tab:curTab},'','#'+curTab);return}
   showTab((e.state&&e.state.tab)||location.hash.slice(1)||'today',false)});
-(function(){const t=location.hash.slice(1);showTab(TABS[t]?t:'today',false);
-  history.replaceState({tab:curTab},'','#'+curTab)})();
+(function(){const t=location.hash.slice(1);
+  /* #lec=B6：知识点练习里「看原文」跳过来，直接打开精讲那一节 */
+  const lm=t.match(/^lec=([A-M])(\d+)$/);
+  showTab(lm?'book':TABS[t]?t:'today',false);
+  history.replaceState({tab:curTab},'','#'+curTab);
+  if(lm)openLecture(lm[1],lm[1]+lm[2])})();

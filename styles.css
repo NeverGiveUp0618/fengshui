@@ -97,6 +97,8 @@ button{font:inherit}.grain{position:fixed;inset:0;opacity:.18;pointer-events:non
 .tb-links div{display:flex;flex-wrap:wrap;gap:7px}
 .tb-links button{padding:7px 12px;border:1px solid #cfc9be;border-radius:16px;background:#f7f5f0;color:#6b5533;font:11px/1 "PingFang SC",sans-serif}
 .tb-foot{margin-top:22px}
+.lec-quiz{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:12px 14px;border:1px solid rgba(184,154,103,.45);border-radius:3px;color:#9a7b45;text-decoration:none;font-size:14px}
+.lec-quiz i{font-style:normal}
 .tb-done{width:100%;padding:13px;border:0;border-radius:3px;background:#252c2e;color:#fff;font-size:13px}
 .tb-done.done{background:#718b7c}
 .tb-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}

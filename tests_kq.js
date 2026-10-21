@@ -26,7 +26,13 @@ T('出处页码在精讲里都能找到',!miss.length,miss.slice(0,20).join(' ')
  T('精讲每节都有题',!none.length,none);}
 // 页面冒烟
 const {JSDOM}=require('jsdom');
-const html=fs.readFileSync('lianxi.html','utf8').replace('<script src="data/kq.js"></script>','<script>'+fs.readFileSync('data/kq.js','utf8')+'</script>');
+const html=fs.readFileSync('lianxi.html','utf8').replace('<script src="data/kq.js"></script>','<script>'+fs.readFileSync('data/kq.js','utf8')+'</script>')
+  .replace('<script src="data/kq_sec.js"></script>','<script>'+fs.readFileSync('data/kq_sec.js','utf8')+'</script>');
+// 对照表须是最新产物：题库或精讲改了没重跑 build_kq_links.js 就报
+{const {KQ_SEC,KQ_SECQ}=require('./data/kq_sec.js');T('kq_sec.js 与题库同长（改题后要重跑 build_kq_links.js）',KQ_SEC.length===KQ_DATA.length);
+ T('每题都归到精讲一节，且同章',KQ_SEC.every((s,i)=>s&&s[0][0]===KQ_DATA[i][0]));
+ const imgs=[...new Set(KQ_SEC.flatMap(s=>(s[1]||[]).map(x=>x[0])))].filter(f=>!fs.existsSync('assets/lecimg/'+f));T('题下配图文件都在',!imgs.length,imgs.slice(0,5));
+ T('除 G1 外每节都能「这节练一练」',Object.keys(require('./data/kq_sec.js').KQ_SECT).filter(k=>k!=='G1'&&!KQ_SECQ[k]).length===0);}
 const dom=new JSDOM(html,{runScripts:'dangerously',url:'http://x/lianxi.html',beforeParse(w){w.scrollTo=()=>{}}});const w=dom.window,d=w.document;
 T('首页题库数正确',d.getElementById('s-total').textContent==String(KQ_DATA.length-KQ_OFF.size));
 T('13 个章节按钮',d.querySelectorAll('.ch').length===13);
@@ -35,6 +41,29 @@ let got=0;for(let k=0;k<10;k++){const o=d.querySelectorAll('.opt');if(o.length!=
   const nb=d.getElementById('q-next');nb.disabled=false;nb.click()}
 T('跑完一组 10 题进结果页',got===10&&d.getElementById('v-res').classList.contains('on'));
 const st=JSON.parse(w.localStorage.getItem('guanshan_kq_v1'));T('作答记录已保存',Object.keys(st.q).length===10);
-d.getElementById('r-home').click();T('回首页显示已做 10',d.getElementById('s-done').textContent==='10');
+d.getElementById('r-home').click();T('没标记时不显示标记入口（CSS 不许盖掉 hidden）',/\.flagbar\[hidden\]\{display:none\}/.test(html));T('回首页显示已做 10',d.getElementById('s-done').textContent==='10');
+// 全选 A 至少错几道：常混淆记下、弱项按钮可点
+const s2=JSON.parse(w.localStorage.getItem('guanshan_kq_v1'));T('答错的记进常混淆',Object.keys(s2.cf).length===s2.w.length||Object.keys(s2.cf).length>0===s2.w.length>0);
+T('每题记作答次数',Object.values(s2.q).every(r=>r.n===1));
+// 节练：?sec 模式只出这一节的题；看原文链接、标记有问题
+{const {KQ_SECQ}=require('./data/kq_sec.js');w.start('sec','B6');const set=new Set(KQ_SECQ.B6);
+ const first=d.querySelectorAll('.opt');first[0].click();
+ T('节练出的是本节题',set.size>0&&d.getElementById('q-tag').textContent.startsWith('B6'));
+ const a=d.querySelector('.acts a');T('讲解下有「看原文」跳精讲',a&&/#lec=B\d+$/.test(a.getAttribute('href')));
+ d.querySelector('.acts .flag').click();T('点「这题有问题」记下',Object.keys(JSON.parse(w.localStorage.getItem('guanshan_kq_v1')).f).length===1);}
+// 造一段弱项与混淆记录，看首页与专练
+{const S=JSON.parse(w.localStorage.getItem('guanshan_kq_v1'));const {KQ_SEC}=require('./data/kq_sec.js');
+ const ids=KQ_DATA.map((q,i)=>i).filter(i=>!KQ_OFF.has(i)&&KQ_SEC[i][0]==='E6').slice(0,4);ids.forEach(i=>S.q[i]={b:0,d:0,t:1,n:2,c:0});
+ S.cf={'x⇄y':{a:KQ_DATA[ids[0]][2],w:KQ_DATA[ids[0]][3][0],n:3,i:ids[0],t:1}};w.localStorage.setItem('guanshan_kq_v1',JSON.stringify(S));}
+const dom2=new JSDOM(html,{runScripts:'dangerously',url:'http://x/lianxi.html',beforeParse(x){x.scrollTo=()=>{};x.localStorage.setItem('guanshan_kq_v1',w.localStorage.getItem('guanshan_kq_v1'))}});const d2=dom2.window.document;
+T('弱项列出 E6',[...d2.querySelectorAll('#weak [data-sec]')].some(b=>b.dataset.sec==='E6'));
+T('常混的几对显示',/混了 3 次/.test(d2.getElementById('pairs-box').textContent));
+T('标记题入口显示',!d2.getElementById('flagbar').hidden);
+d2.querySelector('[data-mode=mix]').click();T('常混淆专练能开',d2.querySelectorAll('.opt').length===4);
+d2.getElementById('back').click();d2.querySelector('[data-mode=weak]').click();T('弱项专练能开',d2.querySelectorAll('.opt').length===4);
+d2.getElementById('back').click();d2.getElementById('flagbar').click();T('标记清单页',d2.querySelectorAll('#flags [data-unflag]').length===1);
+dom2.window.close();
+// ?sec= 直达
+{const d3=new JSDOM(html,{runScripts:'dangerously',url:'http://x/lianxi.html?sec=C19',beforeParse(x){x.scrollTo=()=>{}}}).window.document;T('?sec=C19 直接开练',d3.getElementById('v-quiz').classList.contains('on')&&d3.getElementById('q-tag').textContent.startsWith('C19'));}
 w.close();
 console.log(bad?'\n'+bad+' 项失败':'\n全部通过');process.exit(bad?1:0);

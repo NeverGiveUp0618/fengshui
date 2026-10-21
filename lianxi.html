@@ -72,6 +72,29 @@ h2{font:600 15px var(--serif);letter-spacing:.08em;color:var(--gold);margin:20px
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .btn{border:1px solid var(--gold);background:var(--gold);color:#111;border-radius:20px;padding:8px 18px;font:600 14px inherit;cursor:pointer}
 .btn.ghost{background:none;color:var(--gold)}
+.modes .mode:nth-child(n+5) b{font-size:14px}
+.weak{display:flex;flex-direction:column;gap:6px}
+.weak button{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.weak button i{font-style:normal;color:var(--gold);font:600 13px var(--serif);flex:none;min-width:30px}
+.weak button span{flex:1;min-width:0}
+.weak button em{font-style:normal;font-size:12px;color:var(--bad);flex:none}
+.acc{display:block;font-size:11px}
+.acc.lo{color:var(--bad)}
+.pairs div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:14px}
+.pairs b{color:var(--gold);font-weight:600}
+.exp figure{margin:10px 0 0}
+.exp figure img{display:block;max-width:100%;border-radius:6px;background:#fff}
+.exp figcaption{font-size:12px;color:var(--mute);margin-top:3px}
+.exp .cmp{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:13.5px}
+.exp .cmp b{color:var(--bad);font-weight:600}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.acts a,.acts button{border:1px solid var(--line);background:none;color:var(--gold);border-radius:14px;padding:4px 11px;font:13px inherit;text-decoration:none;cursor:pointer}
+.acts button.on{border-color:var(--bad);color:var(--bad)}
+.flagbar{display:block;width:100%;margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.flagbar[hidden]{display:none}
+.flags div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:14px}
+.flags small{display:block;color:var(--mute);font-size:12px;margin-top:3px}
+.flags button{margin-top:6px;border:1px solid var(--line);background:none;color:var(--mute);border-radius:12px;padding:2px 10px;font:12px inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -95,10 +118,16 @@ h2{font:600 15px var(--serif);letter-spacing:.08em;color:var(--gold);margin:20px
       <button class="mode" data-mode="rand"><b>随机十题</b><span>全库随机抽</span></button>
       <button class="mode" data-mode="wrong"><b>错题回炉</b><span id="m-wrong">答对一次就移出</span></button>
       <button class="mode" data-mode="due"><b>只做复习</b><span id="m-due">按遗忘间隔排到今天的</span></button>
+      <button class="mode" data-mode="weak"><b>弱项专练</b><span>正确率最低的几节</span></button>
+      <button class="mode" data-mode="mix"><b>常混淆专练</b><span>你选错过的那几对</span></button>
     </div>
+    <h2>弱项</h2>
+    <div class="weak" id="weak"></div>
+    <div id="pairs-box"></div>
+    <button class="flagbar" id="flagbar" hidden></button>
     <h2>按章练</h2>
     <div class="chs" id="chs"></div>
-    <p class="note">每章按「没做过的 → 错过的 → 久没复习的」顺序出题，一次 10 题。题目都从站内体系精讲里来，讲解后面附教材页码，可回「学」里查原文。</p>
+    <p class="note">每章按「没做过的 → 错过的 → 久没复习的」顺序出题，一次 10 题。答完可点「看原文」跳到体系精讲那一节；觉得哪题不对，点「这题有问题」记下来，攒一批发给我改。</p>
   </section>
 
   <section class="view" id="v-quiz">
@@ -110,55 +139,88 @@ h2{font:600 15px var(--serif);letter-spacing:.08em;color:var(--gold);margin:20px
     <button class="next" id="q-next">下一题</button>
   </section>
 
+  <section class="view" id="v-flag">
+    <h2>我标记的题</h2>
+    <p class="note" style="margin-top:0">这些是你点过「这题有问题」的题。截图这一页，或点「复制清单」发给我。</p>
+    <div class="flags" id="flags"></div>
+    <div class="btns"><button class="btn" id="f-copy">复制清单</button><button class="btn ghost" id="f-home">回目录</button></div>
+  </section>
+
   <section class="view" id="v-res">
     <div class="res"><b id="r-score"></b><p id="r-msg"></p></div>
+    <div class="pairs" id="r-pairs"></div>
     <div class="wrongs" id="r-wrongs"></div>
     <div class="btns"><button class="btn" id="r-again">再来一组</button><button class="btn ghost" id="r-home">回目录</button></div>
   </section>
 </div>
 <script src="data/kq.js"></script>
+<script src="data/kq_sec.js"></script>
 <script>
-const KEY='guanshan_kq_v1', WAIT=5, N=10, GAP=[0,1,2,4,7,15,30,60];
+// 作答记录 st.q[题号]={b:间隔档,d:到期日,t:上次时间,n:作答次数,c:答对次数}；st.w 错题本；
+// st.cf 常混淆 {「正确⇄选错」:{a,w,n,i,t}}；st.f 标记有问题的题 {题号:时间}
+const KEY='guanshan_kq_v1', WAIT=5, N=10, GAP=[0,1,2,4,7,15,30,60], WEAK_MIN=3, WEAK_ACC=.8;
 function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):{}}catch(e){return {}}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
-let st=load(); st.q=st.q||{}; st.w=st.w||[];
+let st=load(); st.q=st.q||{}; st.w=st.w||[]; st.cf=st.cf||{}; st.f=st.f||{};
 const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
 const LIVE=KQ_DATA.map((q,i)=>i).filter(i=>!KQ_OFF.has(i));
 const CATN=Object.fromEntries(KQ_CATS);
 const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const isDue=i=>st.q[i]&&st.q[i].d<=today();
+const secOf=i=>KQ_SEC[i]&&KQ_SEC[i][0];
+// 答案 → 以它为正确答案的题（常混淆时拿来对照「你选的那个到底是什么」）
+const BYANS={};LIVE.forEach(i=>(BYANS[KQ_DATA[i][2]]=BYANS[KQ_DATA[i][2]]||[]).push(i));
 function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));window.scrollTo(0,0)}
+function acc(ids){let n=0,c=0;ids.forEach(i=>{const r=st.q[i];if(r&&r.n){n+=r.n;c+=r.c||0}});return {n,c,p:n?c/n:null}}
+// 弱项：按主归节统计，作答满 WEAK_MIN 次、正确率低于 WEAK_ACC 的节，最低的在前
+function weakSecs(){const by={};LIVE.forEach(i=>{const s=secOf(i);if(s)(by[s]=by[s]||[]).push(i)});
+  return Object.entries(by).map(([s,ids])=>({s,ids,...acc(ids)})).filter(x=>x.n>=WEAK_MIN&&x.p<WEAK_ACC).sort((a,b)=>a.p-b.p||b.n-a.n)}
+const pairList=min=>Object.values(st.cf).filter(e=>e.n>=min&&!KQ_OFF.has(e.i)).sort((a,b)=>b.n-a.n||b.t-a.t);
 
 function home(){
   st.w=st.w.filter(i=>!KQ_OFF.has(i));
-  const done=LIVE.filter(i=>st.q[i]).length, due=LIVE.filter(isDue).length;
+  const done=LIVE.filter(i=>st.q[i]).length, due=LIVE.filter(isDue).length, weak=weakSecs(), pairs=pairList(1);
   $('s-done').textContent=done;$('s-total').textContent=LIVE.length;$('s-due').textContent=due;$('s-wrong').textContent=st.w.length;
   document.querySelector('[data-mode=wrong]').disabled=!st.w.length;
   document.querySelector('[data-mode=due]').disabled=!due;
-  $('chs').innerHTML=KQ_CATS.map(([k,n])=>{const ids=LIVE.filter(i=>KQ_DATA[i][0]===k);const d=ids.filter(i=>st.q[i]).length;
-    return `<button class="ch" data-ch="${k}"><span class="k">${k}</span><span class="t">${n}<span class="bar"><i style="width:${ids.length?d/ids.length*100:0}%"></i></span></span><span class="n">${d}/${ids.length}</span></button>`}).join('');
+  document.querySelector('[data-mode=weak]').disabled=!weak.length&&!st.w.length;
+  document.querySelector('[data-mode=mix]').disabled=!pairs.length;
+  $('weak').innerHTML=weak.length?weak.slice(0,5).map(x=>`<button data-sec="${x.s}"><i>${x.s}</i><span>${esc(KQ_SECT[x.s]||'')}</span><em>${Math.round(x.p*100)}%</em></button>`).join('')
+    :`<p class="note" style="margin:0">一节答满 ${WEAK_MIN} 次以后，正确率低于 ${WEAK_ACC*100}% 的小节会列在这里，点进去专练那一节。</p>`;
+  const p2=pairList(2);
+  $('pairs-box').innerHTML=p2.length?`<h2>常混的几对</h2><div class="pairs">${p2.slice(0,5).map(e=>`<div>「<b>${esc(e.a)}</b>」和「${esc(e.w)}」混了 ${e.n} 次</div>`).join('')}</div>`:'';
+  const nf=Object.keys(st.f).length;$('flagbar').hidden=!nf;$('flagbar').textContent=`我标记的问题题 · ${nf} 道 ›`;
+  $('chs').innerHTML=KQ_CATS.map(([k,n])=>{const ids=LIVE.filter(i=>KQ_DATA[i][0]===k);const d=ids.filter(i=>st.q[i]).length,a=acc(ids);
+    const at=a.p===null?'':`<span class="acc${a.p<WEAK_ACC?' lo':''}">正确率 ${Math.round(a.p*100)}%</span>`;
+    return `<button class="ch" data-ch="${k}"><span class="k">${k}</span><span class="t">${n}<span class="bar"><i style="width:${ids.length?d/ids.length*100:0}%"></i></span></span><span class="n">${d}/${ids.length}${at}</span></button>`}).join('');
   show('home');
 }
 
-// 出题顺序：没做过 → 错题 → 到期 → 其余按最久没做
-function pick(mode,ch){
+// 章、节、弱项按「没做过 → 错题 → 到期 → 掌握浅的 → 其余按最久没做」排
+function ranked(pool){const w=new Set(st.w), rank=i=>!st.q[i]?0:w.has(i)?1:isDue(i)?2:3;
+  return shuffle(pool).sort((a,b)=>rank(a)-rank(b)||((st.q[a]||{}).b||0)-((st.q[b]||{}).b||0)||((st.q[a]||{}).t||0)-((st.q[b]||{}).t||0)).slice(0,N)}
+function pick(mode,arg){
   let pool=LIVE;
-  if(mode==='ch')pool=pool.filter(i=>KQ_DATA[i][0]===ch);
   if(mode==='wrong')return shuffle(st.w).slice(0,N);
   if(mode==='due')return shuffle(pool.filter(isDue)).slice(0,N);
   if(mode==='rand')return shuffle(pool).slice(0,N);
   if(mode==='smart'){const due=shuffle(pool.filter(isDue)).slice(0,N);const fresh=shuffle(pool.filter(i=>!st.q[i]));let out=due.concat(fresh).slice(0,N);
     if(out.length<N)out=out.concat(shuffle(pool.filter(i=>!out.includes(i))).slice(0,N-out.length));return out}
-  const w=new Set(st.w), rank=i=>!st.q[i]?0:w.has(i)?1:isDue(i)?2:3;
-  return shuffle(pool).sort((a,b)=>rank(a)-rank(b)||((st.q[a]||{}).t||0)-((st.q[b]||{}).t||0)).slice(0,N);
+  if(mode==='ch')return ranked(pool.filter(i=>KQ_DATA[i][0]===arg));
+  if(mode==='sec')return ranked((KQ_SECQ[arg]||[]).filter(i=>!KQ_OFF.has(i)));
+  if(mode==='weak'){const ids=new Set(st.w);weakSecs().slice(0,3).forEach(x=>x.ids.forEach(i=>ids.add(i)));return ranked([...ids])}
+  if(mode==='mix'){const out=[];for(const e of pairList(1)){[e.i,...(BYANS[e.w]||[]),...(BYANS[e.a]||[])].forEach(i=>{if(!KQ_OFF.has(i)&&!out.includes(i))out.push(i)});if(out.length>=N)break}
+    return shuffle(out.slice(0,N))}
+  return [];
 }
 
 let run=null,timer=null;
-function start(mode,ch){const list=pick(mode,ch);if(!list.length)return home();run={mode,ch,list,k:0,ok:0,bad:[]};ask()}
+function start(mode,arg){const list=pick(mode,arg);if(!list.length)return home();run={mode,arg,list,k:0,ok:0,bad:[],pairs:[]};ask()}
 function ask(){
   const i=run.list[run.k],q=KQ_DATA[i];
-  $('q-tag').textContent=q[0]+' · '+CATN[q[0]];$('q-n').textContent=(run.k+1)+' / '+run.list.length;
+  $('q-tag').textContent=run.mode==='sec'?run.arg+' · '+(KQ_SECT[run.arg]||''):q[0]+' · '+CATN[q[0]];$('q-n').textContent=(run.k+1)+' / '+run.list.length;
   $('q-prog').style.width=(run.k/run.list.length*100)+'%';
   $('q-t').textContent=q[1];
   const opts=shuffle([q[2],...q[3]]);
@@ -172,13 +234,24 @@ function answer(i,opts,j){
   const q=KQ_DATA[i],right=opts[j]===q[2],bs=$('q-opts').querySelectorAll('.opt');
   bs.forEach((b,x)=>{b.disabled=true;if(opts[x]===q[2])b.classList.add('ok')});
   if(!right)bs[j].classList.add('bad');
-  const r=st.q[i]||{b:0};
-  if(right){r.b=Math.min((r.b||0)+1,GAP.length-1);run.ok++;st.w=st.w.filter(x=>x!==i)}
-  else{r.b=0;if(!st.w.includes(i))st.w.push(i);run.bad.push(i)}
+  const r=st.q[i]||{b:0};r.n=(r.n||0)+1;
+  if(right){r.b=Math.min((r.b||0)+1,GAP.length-1);r.c=(r.c||0)+1;run.ok++;st.w=st.w.filter(x=>x!==i)}
+  else{r.b=0;if(!st.w.includes(i))st.w.push(i);run.bad.push(i);
+    const k=[q[2],opts[j]].sort().join('⇄'),e=st.cf[k]=st.cf[k]||{a:q[2],w:opts[j],n:0};
+    e.n++;e.t=Date.now();e.a=q[2];e.w=opts[j];e.i=i;if(!run.pairs.includes(k))run.pairs.push(k)}
   r.d=today()+GAP[r.b];r.t=Date.now();st.q[i]=r;save();
-  const e=$('q-exp');e.innerHTML=`<div class="v ${right?'ok':'bad'}"></div><div class="x"></div><span class="src"></span>`;
+  const sec=KQ_SEC[i]||[],e=$('q-exp');
+  // 选错的那个若是别题的正确答案，把那题的讲解并排给出来：常混淆就是这么分清的
+  const other=!right&&(BYANS[opts[j]]||[]).find(x=>x!==i);
+  e.innerHTML=`<div class="v ${right?'ok':'bad'}"></div><div class="x"></div><span class="src"></span>`+
+    (other!==undefined&&other!==false?`<div class="cmp">你选的「<b></b>」是：<span></span></div>`:'')+
+    (sec[1]||[]).map(([f,c])=>`<figure><img src="assets/lecimg/${esc(f)}" alt="${esc(c)}" loading="lazy"><figcaption>${esc(c)}</figcaption></figure>`).join('')+
+    `<div class="acts">${sec[0]?`<a href="./#lec=${sec[0]}">看原文 · ${sec[0]} ${esc(KQ_SECT[sec[0]]||'')}</a>`:''}<button type="button" class="flag${st.f[i]?' on':''}">${st.f[i]?'已标记有问题':'这题有问题'}</button></div>`;
   e.querySelector('.v').textContent=right?'答对了':'正确答案：'+q[2];
-  e.querySelector('.x').textContent=q[4];e.querySelector('.src').textContent='出处：'+q[5];e.className='exp on';
+  e.querySelector('.x').textContent=q[4];e.querySelector('.src').textContent='出处：'+q[5];
+  if(e.querySelector('.cmp')){e.querySelector('.cmp b').textContent=opts[j];e.querySelector('.cmp span').textContent=KQ_DATA[other][4]}
+  e.querySelector('.flag').onclick=ev=>{const b=ev.currentTarget;if(st.f[i])delete st.f[i];else st.f[i]=Date.now();save();b.classList.toggle('on',!!st.f[i]);b.textContent=st.f[i]?'已标记有问题':'这题有问题'};
+  e.className='exp on';
   const nb=$('q-next');nb.className='next on';nb.disabled=true;let s=WAIT;
   const last=run.k===run.list.length-1, lab=last?'看结果':'下一题';
   nb.textContent=lab+'（'+s+'）';clearInterval(timer);
@@ -188,17 +261,31 @@ $('q-next').onclick=()=>{if($('q-next').disabled)return;run.k++;run.k<run.list.l
 function result(){
   $('r-score').textContent=run.ok+' / '+run.list.length;
   $('r-msg').textContent=run.bad.length?'错的已进错题本，过一天再来复习。':'全对。答对的题会按间隔慢慢再出现。';
+  const rp=run.pairs.map(k=>st.cf[k]).filter(e=>e&&e.n>=2);
+  $('r-pairs').innerHTML=rp.length?`<h2>这几对你反复搞混</h2>${rp.slice(0,5).map(e=>`<div>「<b>${esc(e.a)}</b>」和「${esc(e.w)}」已经混了 ${e.n} 次</div>`).join('')}<p class="note" style="margin:0 0 10px">首页「常混淆专练」会把这几对放在一起练。</p>`:'';
   const w=$('r-wrongs');w.innerHTML='';
   run.bad.forEach(i=>{const d=document.createElement('div');d.textContent=KQ_DATA[i][1];const a=document.createElement('i');a.textContent='→ '+KQ_DATA[i][2];d.appendChild(a);w.appendChild(d)});
   show('res');
 }
-$('r-again').onclick=()=>start(run.mode,run.ch);
+function flags(){const ids=Object.keys(st.f).map(Number).sort((a,b)=>st.f[a]-st.f[b]);
+  $('flags').innerHTML=ids.map(i=>`<div>#${i}　${esc(KQ_DATA[i][1])}<small>答案：${esc(KQ_DATA[i][2])}　出处：${esc(KQ_DATA[i][5])}</small><button data-unflag="${i}">取消标记</button></div>`).join('')||'<p class="note">没有标记的题。</p>';
+  show('flag')}
+$('flagbar').onclick=flags;
+$('flags').onclick=e=>{const b=e.target.closest('[data-unflag]');if(b){delete st.f[b.dataset.unflag];save();flags()}};
+$('f-home').onclick=home;
+$('f-copy').onclick=()=>{const t='观山知识点练习 · 我标记有问题的题\n'+Object.keys(st.f).map(i=>`#${i} ${KQ_DATA[i][1]}（答案：${KQ_DATA[i][2]}）`).join('\n');
+  const done=()=>{$('f-copy').textContent='已复制'};
+  try{navigator.clipboard.writeText(t).then(done,()=>fallback())}catch(e){fallback()}
+  function fallback(){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){}ta.remove()}};
+$('r-again').onclick=()=>start(run.mode,run.arg);
 $('r-home').onclick=home;
 document.querySelector('.modes').onclick=e=>{const b=e.target.closest('.mode');if(b&&!b.disabled)start(b.dataset.mode)};
 $('chs').onclick=e=>{const b=e.target.closest('.ch');if(b)start('ch',b.dataset.ch)};
+$('weak').onclick=e=>{const b=e.target.closest('[data-sec]');if(b)start('sec',b.dataset.sec)};
 $('back').onclick=e=>{if(!$('v-home').classList.contains('on')){e.preventDefault();clearInterval(timer);home()}};
-const m=location.search.match(/[?&]ch=([A-M])/);
-home(); if(m)start('ch',m[1]);
+// ?ch=B 按章开练；?sec=B6 从体系精讲某节末尾「这节练一练」过来
+const m=location.search.match(/[?&]ch=([A-M])\b/), ms=location.search.match(/[?&]sec=([A-M]\d+)/);
+home(); if(ms&&KQ_SECQ[ms[1]])start('sec',ms[1]); else if(m)start('ch',m[1]);
 </script>
 </body>
 </html>

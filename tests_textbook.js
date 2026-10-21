@@ -8,7 +8,7 @@ const dom=new JSDOM(fs.readFileSync(D+'index.html','utf8'),{runScripts:'dangerou
 const errs=[];
 dom.virtualConsole.on('jsdomError',e=>{if(!/scrollTo|Not implemented|scrollIntoView/.test(e.message))errs.push(e.message)});
 const w=dom.window,d=w.document;
-['data/textbook.js','data/lectures.js','library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
+['data/textbook.js','data/lectures.js','data/kq_sec.js','library.js','image-bank.js','knowledge-detail.js','app.js'].forEach(f=>{
   const sc=d.createElement('script'); sc.textContent=fs.readFileSync(D+f,'utf8'); d.body.appendChild(sc);
 });
 setTimeout(()=>{
@@ -515,6 +515,10 @@ setTimeout(()=>{
     if(!m)return'sw 里找不到 guanshan-vN 版本号';
     return +m[1]>=SW_MIN?true:'还是 v'+m[1]+'，没 bump（基线 v'+SW_MIN+'）';});
   t('sw 缓存了 data/lectures.js',()=>/data\/lectures\.js/.test(sw)?true:'没加进 ASSETS');
+  t('sw 缓存了 data/kq_sec.js',()=>/data\/kq_sec\.js/.test(sw)?true:'没加进 ASSETS');
+  t('精讲节末有「这节练一练」并带题数',()=>{w.eval('openLecture("B","B6")');const a=d.querySelector('#textbook-content .lec-quiz');
+    return a&&a.getAttribute('href')==='lianxi.html?sec=B6'&&/\d+ 题/.test(a.textContent)?true:'没找到或链接不对';});
+  t('index.html 引入了 kq_sec.js',()=>/data\/kq_sec\.js/.test(fs.readFileSync(D+'index.html','utf8'))?true:'没引入');
   t('build_lectures.py 在项目里',()=>fs.existsSync(D+'build_lectures.py')?true:'不见了');
   t('sw 缓存了 data/textbook.js',()=>/data\/textbook\.js/.test(sw)?true:'没加进 ASSETS');
   t('index.html 引了 data/textbook.js',()=>/data\/textbook\.js/.test(fs.readFileSync(D+'index.html','utf8'))?true:'没引');
