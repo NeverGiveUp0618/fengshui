@@ -230,6 +230,18 @@ render();renderLibrary();renderReport();renderField();renderImageBank();renderLe
       隔着弹层去切 tab —— 安卓上这是最容易踩的一步。 */
 const TABS={today:'以图识形 · 由形察气',book:'体系精讲 · 原文通读',drill:'识形题库 · 实地勘察',find:'知识图鉴 · 识形速查',me:'学习报告 · 本机保存'};
 let curTab='today';
+/* 笔记位置钩子（易术堂共用 notes.js）：记下最近打开的精讲/原文通读那一节；回到出处＝切到「book」页再打开那一节 */
+(function(){var ol=openLecture,ot=openTextbook;
+  openLecture=function(c,n){window.__ygnLast={k:'lec',c:c,n:n};return ol.apply(this,arguments)};
+  openTextbook=function(b,n){window.__ygnLast={k:'tb',b:b,n:n};return ot.apply(this,arguments)};
+  window.YGN_HOOK={
+    loc:function(){var sh=document.querySelector('#textbook-sheet.on'),l=window.__ygnLast;
+      if(sh&&l)return Object.assign({},l);return{k:'tab',tab:curTab}},
+    go:function(l){if(!l)return;
+      if(l.k==='lec'){showTab('book',false);openLecture(l.c,l.n)}
+      else if(l.k==='tb'){showTab('book',false);openTextbook(l.b,l.n)}
+      else if(l.tab)showTab(l.tab,false)},
+    label:function(){var h=document.querySelector('#textbook-sheet.on #textbook-content h2');return h?h.textContent.trim():''}}})();
 function showTab(name,push=true){
   if(!TABS[name])name='today';
   curTab=name;
